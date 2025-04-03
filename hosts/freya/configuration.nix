@@ -2,7 +2,11 @@
 {
   flake.nixosConfigurations.freya = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
-    modules = [ 
+    modules = [
+      inputs.spicetify-nix.nixosModules.default
+      {
+        nixpkgs.overlays = [ inputs.emacs-overlay.overlay ];
+      }      
 	    ./default.nix
       {nixpkgs.config.allowUnfree = true;}
       ../../modules/common/default.nix
