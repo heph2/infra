@@ -14,6 +14,27 @@
       url = "github:nix-community/NixOS-WSL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # xremap = {
+    #   url = "github:xremap/nix-flake";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    emacs-overlay = {
+      url =
+        "github:nix-community/emacs-overlay/db47b2483942771a725cf10e7cd3b1ec562750b7";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };    
   };
   outputs = inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
