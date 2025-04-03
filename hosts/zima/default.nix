@@ -71,16 +71,6 @@
       };
   };
 
-  services.dokuwiki.sites."wiki.zima.lan" = {
-    enable = true;
-    settings = {
-      title = "My Wiki";
-      userewrite = 1;
-      useacl = true;
-      superuser = "root";
-    };
-  };  
-
   services.miniflux = {
     enable = true;
     adminCredentialsFile = "/etc/nixos/miniflux.credentials";
@@ -149,6 +139,6 @@
   environment.systemPackages = with pkgs; [
     vim mg
     wget ncdu
-    git
+    git borgbackup
   ];
 }
