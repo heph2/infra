@@ -14,6 +14,7 @@
     hostName = "hermes";
     firewall.allowedTCPPorts = [ 80 25 143 465 ];
   };
+  
   services.murmur = {
     enable = true;
     welcometext = "Welcome back stranger!";

@@ -58,7 +58,7 @@
                 '';
             };
         };
-        certificateScheme = 3;
+        certificateScheme = "acme-nginx";
     };
     security.acme = {
         acceptTerms = true;
