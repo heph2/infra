@@ -1,16 +1,23 @@
-{ pkgs, inputs, ... }:
-{
+{ pkgs, inputs, ... }: {
   flake.nixosConfigurations.freya = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
     modules = [
       inputs.spicetify-nix.nixosModules.default
+      { nixpkgs.overlays = [ inputs.emacs-overlay.overlay ]; }
+      ./default.nix
+      inputs.home-manager.nixosModules.home-manager
       {
-        nixpkgs.overlays = [ inputs.emacs-overlay.overlay ];
-      }      
-	    ./default.nix
-      {nixpkgs.config.allowUnfree = true;}
+
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.users.heph = import ./home.nix;
+        home-manager.backupFileExtension = "backup";
+      }
+      { nixpkgs.config.allowUnfree = true; }
       ../../modules/common/default.nix
-      ({ modulesPath, ... }: { imports = [(modulesPath + "/installer/scan/not-detected.nix")]; })
+      ({ modulesPath, ... }: {
+        imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+      })
     ];
   };
 }
