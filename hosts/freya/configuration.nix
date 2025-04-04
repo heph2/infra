@@ -1,13 +1,14 @@
 { pkgs, inputs, ... }: {
   flake.nixosConfigurations.freya = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
+    specialArgs = { inherit inputs; };
     modules = [
       inputs.spicetify-nix.nixosModules.default
       { nixpkgs.overlays = [ inputs.emacs-overlay.overlay ]; }
       ./default.nix
+      inputs.spicetify-nix.nixosModules.default
       inputs.home-manager.nixosModules.home-manager
       {
-
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
         home-manager.users.heph = import ./home.nix;

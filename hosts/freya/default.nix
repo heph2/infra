@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 let
   user = "heph";
   platform = "amd";
@@ -11,7 +11,6 @@ in {
       builtins.fetchTarball
       "https://github.com/nix-community/disko/archive/master.tar.gz"
     }/module.nix"
-    # ./cachix.nix
   ];
 
   specialisation."VFIO".configuration = {
@@ -279,18 +278,18 @@ in {
     enable = false; # currently broken
   };
 
-  # programs.spicetify =
-  #   let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
-  #   in {
-  #     enable = true;
-  #     enabledExtensions = with spicePkgs.extensions; [
-  #       adblock
-  #       hidePodcasts
-  #       shuffle # shuffle+ (special characters are sanitized out of extension names)
-  #     ];
-  #     theme = spicePkgs.themes.catppuccin;
-  #     colorScheme = "mocha";
-  #   };
+  programs.spicetify =
+    let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+    in {
+      enable = true;
+      enabledExtensions = with spicePkgs.extensions; [
+        adblock
+        hidePodcasts
+        shuffle # shuffle+ (special characters are sanitized out of extension names)
+      ];
+      theme = spicePkgs.themes.catppuccin;
+      colorScheme = "mocha";
+    };
 
   programs.streamdeck-ui = {
     enable = true;
