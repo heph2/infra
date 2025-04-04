@@ -1,16 +1,24 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 let
   user = "heph";
   platform = "amd";
-  vfioIds = [ "10de:2204" "10de:1aef" ];
-in {
-  imports = [ # Include the results of the hardware scan.
+  vfioIds = [
+    "10de:2204"
+    "10de:1aef"
+  ];
+in
+{
+  imports = [
+    # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./disk-config.nix
-    "${
-      builtins.fetchTarball
-      "https://github.com/nix-community/disko/archive/master.tar.gz"
-    }/module.nix"
+    "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
   ];
 
   specialisation."VFIO".configuration = {
@@ -30,46 +38,52 @@ in {
   security.polkit.enable = true;
   services.blueman.enable = true;
 
-  services.borgbackup.jobs = let
-    common-excludes = [
-      ".cache"
-      "*/cache2" # firefox
-      "*/Cache"
-      ".mozilla"
-      "*/.cargo"
-      ".compose-cache"
-      ".npm"
-      ".ollama"
-      "*/.terraform.d"
-      ".rustup"
-      ".config/Slack/logs"
-      ".config/Code/CachedData"
-      ".container-diff"
-      ".npm/_cacache"
-      "*/node_modules"
-      "*/_build"
-      "*/.tox"
-      "*/venv"
-      "*/.venv"
-    ];
-    basicBorgJob = name: {
-      encryption.mode = "none";
-      environment.BORG_RSH =
-        "ssh -o 'StrictHostKeyChecking=no' -i /home/heph/.ssh/sekai_ed";
-      environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
-      extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
-      repo = "ssh://zima//data/backup/${name}";
-      compression = "zstd,1";
-      startAt = "daily";
-      user = "heph";
+  services.borgbackup.jobs =
+    let
+      common-excludes = [
+        ".cache"
+        "*/cache2" # firefox
+        "*/Cache"
+        ".mozilla"
+        "*/.cargo"
+        ".compose-cache"
+        ".npm"
+        ".ollama"
+        "*/.terraform.d"
+        ".rustup"
+        ".config/Slack/logs"
+        ".config/Code/CachedData"
+        ".container-diff"
+        ".npm/_cacache"
+        "*/node_modules"
+        "*/_build"
+        "*/.tox"
+        "*/venv"
+        "*/.venv"
+      ];
+      basicBorgJob = name: {
+        encryption.mode = "none";
+        environment.BORG_RSH = "ssh -o 'StrictHostKeyChecking=no' -i /home/heph/.ssh/sekai_ed";
+        environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
+        extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
+        repo = "ssh://zima//data/backup/${name}";
+        compression = "zstd,1";
+        startAt = "daily";
+        user = "heph";
+      };
+    in
+    {
+      home-heph = basicBorgJob "freya/home-heph" // rec {
+        paths = "/home/heph";
+        exclude = map (x: paths + "/" + x) (
+          common-excludes
+          ++ [
+            "Downloads"
+            "Videos"
+          ]
+        );
+      };
     };
-  in {
-    home-heph = basicBorgJob "freya/home-heph" // rec {
-      paths = "/home/heph";
-      exclude =
-        map (x: paths + "/" + x) (common-excludes ++ [ "Downloads" "Videos" ]);
-    };
-  };
 
   services.samba = {
     enable = false;
@@ -113,7 +127,9 @@ in {
     settings.downloadDirPermissions = "0770";
   };
 
-  services.fstrim = { enable = true; };
+  services.fstrim = {
+    enable = true;
+  };
   nixpkgs.config.allowUnfree = true;
 
   #  services.xremap = {
@@ -135,7 +151,10 @@ in {
     };
 
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       auto-optimise-store = true;
     };
   };
@@ -143,58 +162,55 @@ in {
   hardware.cpu.amd.updateMicrocode = true;
   networking.hostId = "d81f3ea4";
   nix.settings.trusted-substituters = [ "https://ai.cachix.org" ];
-  nix.settings.trusted-public-keys =
-    [ "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc=" ];
+  nix.settings.trusted-public-keys = [
+    "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="
+  ];
 
   boot.extraModprobeConfig = ''
     blacklist nouveau
     options nouveau modeset=0
   '';
 
-  boot.kernelModules =
-    [ "kvm-${platform}" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
+  boot.kernelModules = [
+    "kvm-${platform}"
+    "vfio_virqfd"
+    "vfio_pci"
+    "vfio_iommu_type1"
+    "vfio"
+  ];
 
-  #boot.supportedFilesystems = [ "btrfs" ];
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.enable = true;
-  #boot.loader.grub = {
-  #  enable = true;
-  #  device = "nodev";
-  #  efiSupport = true;
-  #  enableCryptodisk = true;
-  #};
-
-  #boot.initrd.luks.devices = {
-  #  root = {
-  #    device = "/dev/disk/by-uuid/04bbb87f-8a7a-4f68-9cad-3978a9e5fb90";
-  #    preLVM = true;
-  #  };
-  #};
 
   ## Nvidia
-  #hardware.nvidia.open = true;
-  #hardware.nvidia = {
-  #  modesetting.enable = true;
-  #  powerManagement.enable = false;
-  #  powerManagement.finegrained = false;
-  #  open = false;
-  #  nvidiaSettings = true;
-  #};
 
-  #hardware.nvidia.prime = {
-  #  offload.enable = true;
-  #  nvidiaBusId = "PCI:7:0:0";
-  #  amdgpuBusId = "PCI:4:0:0";
-  #};
+  hardware.nvidia = {
+    modesetting.enable = true;
+    powerManagement.enable = false;
+    powerManagement.finegrained = false;
+    open = false;
+    nvidiaSettings = true;
+  };
+
+  hardware.nvidia.prime = {
+    offload.enable = true;
+    nvidiaBusId = "PCI:7:0:0";
+    amdgpuBusId = "PCI:4:0:0";
+  };
 
   ## yubikey
   services.pcscd.enable = true;
-  services.udev.packages = [ pkgs.libfido2 pkgs.yubikey-personalization ];
+  services.udev.packages = [
+    pkgs.libfido2
+    pkgs.yubikey-personalization
+  ];
   security.pam.services = {
     login.u2fAuth = true;
     sudo.u2fAuth = true;
   };
-  programs = { yubikey-touch-detector.enable = true; };
+  programs = {
+    yubikey-touch-detector.enable = true;
+  };
   hardware.gpgSmartcards.enable = true;
   services.yubikey-agent.enable = true;
 
@@ -236,7 +252,7 @@ in {
 
   services.xserver.videoDrivers = [
     "amdgpu"
-    # "nvidia"
+    "nvidia"
   ];
 
   services.displayManager.defaultSession = "none+i3";
@@ -248,7 +264,9 @@ in {
     ${pkgs.xorg.xinput} set-prop 'ELECOM TrackBall Mouse DEFT Pro TrackBall Mouse' 'libinput Accel Speed' -0.5
   '';
 
-  services.xserver = { windowManager.i3.enable = true; };
+  services.xserver = {
+    windowManager.i3.enable = true;
+  };
 
   services.emacs.enable = true;
 
@@ -279,8 +297,10 @@ in {
   };
 
   programs.spicetify =
-    let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
-    in {
+    let
+      spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+    in
+    {
       enable = true;
       enabledExtensions = with spicePkgs.extensions; [
         adblock
@@ -321,7 +341,11 @@ in {
     tls.enable = false;
   };
 
-  virtualisation = { docker = { enable = true; }; };
+  virtualisation = {
+    docker = {
+      enable = true;
+    };
+  };
 
   users.users.root = {
     openssh = {
@@ -371,17 +395,11 @@ in {
     btrfs-assistant
   ];
 
-  services.btrfs.autoScrub = {
-    enable = true;
-    fileSystems = [ "/" ];
-    interval = "monthly";
-  };
-
   virtualisation = {
     spiceUSBRedirection.enable = true;
     libvirtd = {
       enable = true;
-      onBoot = "ignore";
+      onBoot = "start";
       onShutdown = "shutdown";
     };
   };
@@ -393,9 +411,17 @@ in {
   };
 
   services.openssh.enable = true;
-  networking.firewall.allowedTCPPorts = [ 22 24800 57621 ];
-  networking.firewall.allowedUDPPorts = [ 24800 5353 ];
+  networking.firewall.allowedTCPPorts = [
+    22
+    24800
+    57621
+  ];
+  networking.firewall.allowedUDPPorts = [
+    24800
+    5353
+  ];
   networking.firewall.enable = true;
+  networking.firewall.trustedInterfaces = [ "virbr0" ];
   networking.interfaces.enp6s0.wakeOnLan.enable = true;
 
   system.stateVersion = "23.11";
