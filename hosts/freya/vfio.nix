@@ -31,9 +31,9 @@ in { pkgs, lib, config, ... }: {
         "${platform}_iommu=pt"
         "kvm.ignore_msrs=1"
         "pcie_acs_override=downstream,multifunction"
-#        "default_hugepagesz=1G"
-#        "hugepagesz=1G"
-#        "hugepages=16"
+        #        "default_hugepagesz=1G"
+        #        "hugepagesz=1G"
+        #        "hugepages=16"
       ] ++ lib.optional cfg.enable
         # isolate the GPU
         ("vfio-pci.ids=" + lib.concatStringsSep "," gpuIDs);

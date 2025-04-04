@@ -6,6 +6,11 @@ let
 in {
   imports = [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./disk-config.nix
+    "${
+      builtins.fetchTarball
+      "https://github.com/nix-community/disko/archive/master.tar.gz"
+    }/module.nix"
     # ./cachix.nix
   ];
 
@@ -26,48 +31,46 @@ in {
   security.polkit.enable = true;
   services.blueman.enable = true;
 
-  services.borgbackup.jobs =
-    let common-excludes = [
-          ".cache"
-          "*/cache2" # firefox
-          "*/Cache"
-          ".mozilla"
-          "*/.cargo"
-          ".compose-cache"
-          ".npm"
-          ".ollama"
-          "*/.terraform.d"
-          ".rustup"
-          ".config/Slack/logs"
-          ".config/Code/CachedData"
-          ".container-diff"
-          ".npm/_cacache"
-          "*/node_modules"
-          "*/_build"
-          "*/.tox"
-          "*/venv"
-          "*/.venv"
-        ];
-        basicBorgJob = name: {
-          encryption.mode = "none";
-          environment.BORG_RSH = "ssh -o 'StrictHostKeyChecking=no' -i /home/heph/.ssh/sekai_ed";
-          environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
-          extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
-          repo = "ssh://zima//data/backup/${name}";
-          compression = "zstd,1";
-          startAt = "daily";
-          user = "heph";
-        };
-    in {
-      home-heph = basicBorgJob "freya/home-heph" // rec {
-        paths = "/home/heph";
-        exclude = map (x: paths + "/" + x) (common-excludes ++ [
-          "Downloads"
-          "Videos"
-        ]);
-      };
+  services.borgbackup.jobs = let
+    common-excludes = [
+      ".cache"
+      "*/cache2" # firefox
+      "*/Cache"
+      ".mozilla"
+      "*/.cargo"
+      ".compose-cache"
+      ".npm"
+      ".ollama"
+      "*/.terraform.d"
+      ".rustup"
+      ".config/Slack/logs"
+      ".config/Code/CachedData"
+      ".container-diff"
+      ".npm/_cacache"
+      "*/node_modules"
+      "*/_build"
+      "*/.tox"
+      "*/venv"
+      "*/.venv"
+    ];
+    basicBorgJob = name: {
+      encryption.mode = "none";
+      environment.BORG_RSH =
+        "ssh -o 'StrictHostKeyChecking=no' -i /home/heph/.ssh/sekai_ed";
+      environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
+      extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
+      repo = "ssh://zima//data/backup/${name}";
+      compression = "zstd,1";
+      startAt = "daily";
+      user = "heph";
     };
-
+  in {
+    home-heph = basicBorgJob "freya/home-heph" // rec {
+      paths = "/home/heph";
+      exclude =
+        map (x: paths + "/" + x) (common-excludes ++ [ "Downloads" "Videos" ]);
+    };
+  };
 
   services.samba = {
     enable = false;
@@ -114,16 +117,16 @@ in {
   services.fstrim = { enable = true; };
   nixpkgs.config.allowUnfree = true;
 
-#  services.xremap = {
-#    withX11 = false;
-#    serviceMode = "system";
-#    debug = false;
-#  };
-#  services.xremap.config.keymap = [{
-#    name = "Google Chrome";
-#    application.only = [ "Chromium-browser" ];
-#    remap = { "Super-s" = "C-f"; };
-#  }];
+  #  services.xremap = {
+  #    withX11 = false;
+  #    serviceMode = "system";
+  #    debug = false;
+  #  };
+  #  services.xremap.config.keymap = [{
+  #    name = "Google Chrome";
+  #    application.only = [ "Chromium-browser" ];
+  #    remap = { "Super-s" = "C-f"; };
+  #  }];
 
   nix = {
     gc = {
@@ -139,6 +142,7 @@ in {
   };
 
   hardware.cpu.amd.updateMicrocode = true;
+  networking.hostId = "d81f3ea4";
   nix.settings.trusted-substituters = [ "https://ai.cachix.org" ];
   nix.settings.trusted-public-keys =
     [ "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc=" ];
@@ -151,21 +155,22 @@ in {
   boot.kernelModules =
     [ "kvm-${platform}" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
 
-  boot.supportedFilesystems = [ "btrfs" ];
+  #boot.supportedFilesystems = [ "btrfs" ];
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.grub = {
-    enable = true;
-    device = "nodev";
-    efiSupport = true;
-    enableCryptodisk = true;
-  };
+  boot.loader.systemd-boot.enable = true;
+  #boot.loader.grub = {
+  #  enable = true;
+  #  device = "nodev";
+  #  efiSupport = true;
+  #  enableCryptodisk = true;
+  #};
 
-  boot.initrd.luks.devices = {
-    root = {
-      device = "/dev/disk/by-uuid/04bbb87f-8a7a-4f68-9cad-3978a9e5fb90";
-      preLVM = true;
-    };
-  };
+  #boot.initrd.luks.devices = {
+  #  root = {
+  #    device = "/dev/disk/by-uuid/04bbb87f-8a7a-4f68-9cad-3978a9e5fb90";
+  #    preLVM = true;
+  #  };
+  #};
 
   ## Nvidia
   #hardware.nvidia.open = true;
@@ -230,10 +235,10 @@ in {
     { output = "DisplayPort-1"; }
   ];
 
-  services.xserver.videoDrivers = [ 
-    "amdgpu" 
-   # "nvidia"
-   ];
+  services.xserver.videoDrivers = [
+    "amdgpu"
+    # "nvidia"
+  ];
 
   services.displayManager.defaultSession = "none+i3";
   services.xserver.displayManager = {
@@ -317,12 +322,7 @@ in {
     tls.enable = false;
   };
 
-  virtualisation = {
-    docker = {
-      enable = true;
-      storageDriver = "btrfs";
-    };
-  };
+  virtualisation = { docker = { enable = true; }; };
 
   users.users.root = {
     openssh = {
@@ -337,12 +337,13 @@ in {
     man-db.enable = false;
     mandoc.enable = true;
   };
-  
+
   environment.systemPackages = with pkgs; [
     vim
     wget
     firefox
-    man-pages man-pages-posix
+    man-pages
+    man-pages-posix
     ffmpeg
     kubectl
     bind
