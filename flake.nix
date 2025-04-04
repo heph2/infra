@@ -2,9 +2,10 @@
   description = "Infrastructure flake";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/master";
+    simple-nixos-mailserver.url =
+      "gitlab:simple-nixos-mailserver/nixos-mailserver/master";
     home-manager = {
-      url = github:nix-community/home-manager;
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nur.url = "github:nix-community/NUR";
@@ -34,18 +35,18 @@
       url =
         "github:nix-community/emacs-overlay/db47b2483942771a725cf10e7cd3b1ec562750b7";
       inputs.nixpkgs.follows = "nixpkgs";
-    };    
+    };
   };
   outputs = inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         #./hosts/fafnir/default.nix ## Router
-        ./hosts/freya/configuration.nix ## Desktop
-        ./hosts/hermes/configuration.nix ## Hetzner VPS
+        ./hosts/freya/configuration.nix # # Desktop
+        ./hosts/hermes/configuration.nix # # Hetzner VPS
         #./hosts/tyr/default.nix ## Intel NUC
-        ./hosts/timballo/configuration.nix ## Laptop t480
-        ./hosts/zima/configuration.nix ## ZimaBoard
-        ./hosts/ushi/configuration.nix ## Nixos WSL 2
+        ./hosts/timballo/configuration.nix # # Laptop t480
+        ./hosts/zima/configuration.nix # # ZimaBoard
+        ./hosts/ushi/configuration.nix # # Nixos WSL 2
         ./dev.nix
       ];
       systems = [
