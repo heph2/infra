@@ -1,7 +1,14 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
-let cfg = config.xsession.windowManager.i3;
-in {
+let
+  cfg = config.xsession.windowManager.i3;
+in
+{
   imports = [
     #    ../../modules/graphical/firefox/default.nix
   ];
@@ -11,12 +18,13 @@ in {
   home.stateVersion = "24.05";
   home.enableNixpkgsReleaseCheck = false;
   programs.home-manager.enable = true;
-  home.packages = with pkgs;
+  home.packages =
+    with pkgs;
     [
       (pkgs.emacsWithPackagesFromUsePackage {
         config = ./emacs.el;
         defaultInitFile = true;
-        package = pkgs.emacs;
+        package = pkgs.emacs-git;
         alwaysEnsure = true;
         extraEmacsPackages = epkgs: [
           epkgs.vterm
@@ -24,8 +32,8 @@ in {
           epkgs.notmuch
           epkgs.mu4e
           epkgs.pdf-tools
-          (epkgs.treesit-grammars.with-grammars (grammars:
-            with grammars; [
+          (epkgs.treesit-grammars.with-grammars (
+            grammars: with grammars; [
               tree-sitter-bash
               tree-sitter-css
               tree-sitter-dockerfile
@@ -44,9 +52,11 @@ in {
               tree-sitter-tsx
               tree-sitter-typescript
               tree-sitter-yaml
-            ]))
+            ]
+          ))
         ];
       })
+      # (pkgs.callPackage ../../pkgs/amused.nix { })
       # (pkgs.callPackage ./pkgs/thorium.nix { })
       # zen-browser.packages."${system}".default
       brave
@@ -96,7 +106,12 @@ in {
       yubikey-agent
       libu2f-host
       pam_u2f
-    ] ++ (with haskellPackages; [ ghcid xmobar yeganesh ]);
+    ]
+    ++ (with haskellPackages; [
+      ghcid
+      xmobar
+      yeganesh
+    ]);
 
   programs.ssh = {
     enable = true;
@@ -180,7 +195,9 @@ in {
     '';
   };
 
-  programs.nushell = { enable = true; };
+  programs.nushell = {
+    enable = true;
+  };
 
   programs = {
     direnv = {
@@ -193,9 +210,13 @@ in {
     bash.enable = true;
   };
 
-  programs.yazi = { enable = true; };
+  programs.yazi = {
+    enable = true;
+  };
 
-  programs.qutebrowser = { enable = true; };
+  programs.qutebrowser = {
+    enable = true;
+  };
 
   services.picom = {
     enable = true;
@@ -212,13 +233,18 @@ in {
   programs.ghostty = {
     enable = true;
     enableZshIntegration = true;
-    settings = { window-decoration = "none"; };
+    settings = {
+      window-decoration = "none";
+    };
   };
   programs.rofi = {
     enable = true;
     theme = "arthur";
     terminal = "${pkgs.alacritty}/bin/alacritty";
-    plugins = [ pkgs.rofi-calc pkgs.rofi-power-menu ];
+    plugins = [
+      pkgs.rofi-calc
+      pkgs.rofi-power-menu
+    ];
     extraConfig = {
       modi = "combi";
       combi-modi = "windowcd,drun,ssh";
@@ -236,11 +262,13 @@ in {
         select = "underline";
       };
     };
-    languages.language = [{
-      name = "nix";
-      auto-format = true;
-      formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
-    }];
+    languages.language = [
+      {
+        name = "nix";
+        auto-format = true;
+        formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+      }
+    ];
     themes = {
       autumn_night_transparent = {
         "inherits" = "autumn_night";
@@ -253,12 +281,16 @@ in {
     enable = true;
     settings = {
       env.TERM = "xterm-256color";
-      font = { size = 12; };
+      font = {
+        size = 12;
+      };
       scrolling.multiplier = 5;
       selection.save_to_clipboard = true;
     };
   };
-  programs.fzf = { enable = true; };
+  programs.fzf = {
+    enable = true;
+  };
   programs.htop.enable = true;
   programs.zathura.enable = true;
   programs.gpg.enable = true;
@@ -293,8 +325,7 @@ in {
       mg = "mg -n";
       zzz = "shutdown now";
       k = "kubectl";
-      k-switch =
-        "kubectl config get-contexts |  awk 'NR>1 { print $2 }' | fzf | xargs kubectl config use-context";
+      k-switch = "kubectl config get-contexts |  awk 'NR>1 { print $2 }' | fzf | xargs kubectl config use-context";
       update = "sudo nixos-rebuild switch";
       game = "sudo virsh start win11-2";
     };
@@ -304,7 +335,10 @@ in {
         { name = "zsh-users/zsh-autosuggestions"; } # Simple plugin installation
         {
           name = "romkatv/powerlevel10k";
-          tags = [ "as:theme" "depth:1" ];
+          tags = [
+            "as:theme"
+            "depth:1"
+          ];
         } # Installations with additional options. For the list of options, please refer to Zplug README.
       ];
     };
@@ -332,7 +366,9 @@ in {
   };
 
   programs.mbsync.enable = true;
-  programs.msmtp = { enable = true; };
+  programs.msmtp = {
+    enable = true;
+  };
   programs.notmuch = {
     enable = true;
     hooks = {
@@ -445,10 +481,8 @@ in {
         outer = 5;
       };
       keybindings = {
-        "XF86AudioRaiseVolume" =
-          "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
-        "XF86AudioLowerVolume" =
-          "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+        "XF86AudioRaiseVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
+        "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
         "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
         "${cfg.config.modifier}+Return" = "exec ${cfg.config.terminal}";
         "${cfg.config.modifier}+Shift+q" = "kill";
@@ -491,26 +525,16 @@ in {
         "${cfg.config.modifier}+9" = "workspace number 9";
         "${cfg.config.modifier}+0" = "workspace number 10";
 
-        "${cfg.config.modifier}+Shift+1" =
-          "move container to workspace number 1";
-        "${cfg.config.modifier}+Shift+2" =
-          "move container to workspace number 2";
-        "${cfg.config.modifier}+Shift+3" =
-          "move container to workspace number 3";
-        "${cfg.config.modifier}+Shift+4" =
-          "move container to workspace number 4";
-        "${cfg.config.modifier}+Shift+5" =
-          "move container to workspace number 5";
-        "${cfg.config.modifier}+Shift+6" =
-          "move container to workspace number 6";
-        "${cfg.config.modifier}+Shift+7" =
-          "move container to workspace number 7";
-        "${cfg.config.modifier}+Shift+8" =
-          "move container to workspace number 8";
-        "${cfg.config.modifier}+Shift+9" =
-          "move container to workspace number 9";
-        "${cfg.config.modifier}+Shift+0" =
-          "move container to workspace number 10";
+        "${cfg.config.modifier}+Shift+1" = "move container to workspace number 1";
+        "${cfg.config.modifier}+Shift+2" = "move container to workspace number 2";
+        "${cfg.config.modifier}+Shift+3" = "move container to workspace number 3";
+        "${cfg.config.modifier}+Shift+4" = "move container to workspace number 4";
+        "${cfg.config.modifier}+Shift+5" = "move container to workspace number 5";
+        "${cfg.config.modifier}+Shift+6" = "move container to workspace number 6";
+        "${cfg.config.modifier}+Shift+7" = "move container to workspace number 7";
+        "${cfg.config.modifier}+Shift+8" = "move container to workspace number 8";
+        "${cfg.config.modifier}+Shift+9" = "move container to workspace number 9";
+        "${cfg.config.modifier}+Shift+0" = "move container to workspace number 10";
 
         "${cfg.config.modifier}+Shift+c" = "reload";
         "${cfg.config.modifier}+Shift+r" = "restart";
@@ -519,20 +543,20 @@ in {
 
         "${cfg.config.modifier}+r" = "mode resize";
       };
-      bars = [{
-        position = "top";
-        #statusCommand = "${pkgs.polybar}/bin/polybar";
-        statusCommand =
-          "${pkgs.i3status-rust}/bin/i3status-rs ~/.config/i3status-rust/config-top.toml";
-        colors = {
-          separator = "#666666";
-          background = "#222222";
-          statusline = "#dddddd";
-        };
-      }];
+      bars = [
+        {
+          position = "top";
+          #statusCommand = "${pkgs.polybar}/bin/polybar";
+          statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ~/.config/i3status-rust/config-top.toml";
+          colors = {
+            separator = "#666666";
+            background = "#222222";
+            statusline = "#dddddd";
+          };
+        }
+      ];
       terminal = "alacritty";
-      menu =
-        "rofi -show drun -run-shell-command '{terminal} -e zsh -ic \"{cmd} && read\"'";
+      menu = "rofi -show drun -run-shell-command '{terminal} -e zsh -ic \"{cmd} && read\"'";
     };
     extraConfig = ''
       exec --no-startup-id feh --bg-scale /home/heph/Pictures/wallpaper.png
@@ -555,10 +579,12 @@ in {
         blocks = [
           {
             block = "sound";
-            click = [{
-              button = "left";
-              cmd = "pavucontrol";
-            }];
+            click = [
+              {
+                button = "left";
+                cmd = "pavucontrol";
+              }
+            ];
           }
           {
             block = "cpu";
@@ -578,8 +604,7 @@ in {
           }
           {
             block = "custom";
-            command =
-              "sed 's/  //' <(curl 'https://wttr.in/Nova_Milanese?format=1' -s)";
+            command = "sed 's/  //' <(curl 'https://wttr.in/Nova_Milanese?format=1' -s)";
             interval = 600;
           }
         ];
