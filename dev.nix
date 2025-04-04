@@ -5,6 +5,7 @@
       mkShell {
         buildInputs = [
           sops
+          just
           ssh-to-age
           age
           nixos-rebuild
