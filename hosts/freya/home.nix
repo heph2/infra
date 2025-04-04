@@ -56,7 +56,7 @@ in
           ))
         ];
       })
-      # (pkgs.callPackage ../../pkgs/amused.nix { })
+      (pkgs.callPackage ../../pkgs/amused.nix { })
       # (pkgs.callPackage ./pkgs/thorium.nix { })
       # zen-browser.packages."${system}".default
       brave
