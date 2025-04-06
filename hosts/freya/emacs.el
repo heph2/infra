@@ -209,6 +209,19 @@
 (use-package eyebrowse)
 (use-package shackle)
 
+
+(use-package treesit
+  :mode (("\\.tsx\\'" . tsx-ts-mode)
+         ("\\.js\\'" . typescript-ts-mode)
+         ("\\.mjs\\'" . typescript-ts-mode)
+         ("\\.mts\\'" . typescript-ts-mode)
+         ("\\.cjs\\'" . typescript-ts-mode)
+         ("\\.ts\\'" . typescript-ts-mode)
+	 ("\\.go\\'" . go-ts-mode)
+         ("\\.jsx\\'" . tsx-ts-mode)
+         ("\\.json\\'" . json-ts-mode)
+         ("\\Dockerfile\\'" . dockerfile-ts-mode)))
+
 (use-package treesit-auto
   :config
   (global-treesit-auto-mode))

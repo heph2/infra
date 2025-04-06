@@ -32,33 +32,14 @@ in
           epkgs.notmuch
           epkgs.mu4e
           epkgs.pdf-tools
-          (epkgs.treesit-grammars.with-grammars (
-            grammars: with grammars; [
-              tree-sitter-bash
-              tree-sitter-css
-              tree-sitter-dockerfile
-              tree-sitter-elisp
-              tree-sitter-go
-              tree-sitter-php
-              tree-sitter-elixir
-              tree-sitter-heex
-              tree-sitter-html
-              tree-sitter-javascript
-              tree-sitter-json
-              tree-sitter-nix
-              tree-sitter-ruby
-              tree-sitter-rust
-              tree-sitter-toml
-              tree-sitter-tsx
-              tree-sitter-typescript
-              tree-sitter-yaml
-            ]
-          ))
+          epkgs.treesit-grammars.with-all-grammars
         ];
       })
       (pkgs.callPackage ../../pkgs/amused.nix { })
       # (pkgs.callPackage ./pkgs/thorium.nix { })
       # zen-browser.packages."${system}".default
+      mpv
+      nix-output-monitor
       brave
       transmission_4-qt
       libreoffice
@@ -559,7 +540,7 @@ in
       menu = "rofi -show drun -run-shell-command '{terminal} -e zsh -ic \"{cmd} && read\"'";
     };
     extraConfig = ''
-      exec --no-startup-id feh --bg-scale /home/heph/Pictures/wallpaper.png
+      exec --no-startup-id feh --bg-scale /home/heph/Pictures/wool-linux.png
       default_border pixel 1
     '';
   };

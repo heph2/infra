@@ -362,6 +362,7 @@ in
   };
 
   environment.systemPackages = with pkgs; [
+    inputs.zen-browser.packages."${system}".default
     vim
     wget
     firefox
