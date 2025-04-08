@@ -69,6 +69,7 @@ in
         repo = "ssh://zima//data/backup/${name}";
         compression = "zstd,1";
         startAt = "daily";
+        persistentTimer = true;
         user = "heph";
       };
     in
