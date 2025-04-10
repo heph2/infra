@@ -38,6 +38,6 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-terraform/backend.conf
+terraform/*/backend.conf
 secrets/age-privkey.txt
 secrets/ssh-sops.priv
