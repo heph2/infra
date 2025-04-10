@@ -36,8 +36,9 @@ in
         ];
       })
       (pkgs.callPackage ../../pkgs/amused.nix { })
-      # (pkgs.callPackage ./pkgs/thorium.nix { })
-      # zen-browser.packages."${system}".default
+      (pkgs.writers.writePython3Bin "totp" {
+
+      } (builtins.readFile ../../pkgs/totp.py))
       mpv
       nix-output-monitor
       brave
@@ -173,6 +174,7 @@ in
     shell = "${pkgs.zsh}/bin/zsh";
     extraConfig = ''
       set-option -g mouse on
+      bind-key v split-window -v
     '';
   };
 
@@ -302,6 +304,7 @@ in
     enable = true;
     initExtra = "source ~/.p10k.zsh";
     shellAliases = {
+      a = "amused";
       ll = "ls -l";
       mg = "mg -n";
       zzz = "shutdown now";
@@ -465,6 +468,10 @@ in
         "XF86AudioRaiseVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
         "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
         "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+        "XF86AudioPlay" = "exec playerctl play";
+        "XF86AudioPause" = "exec playerctl pause";
+        "XF86AudioNext" = "exec playerctl next";
+        "XF86AudioPrev" = "exec playerctl prev";
         "${cfg.config.modifier}+Return" = "exec ${cfg.config.terminal}";
         "${cfg.config.modifier}+Shift+q" = "kill";
         "${cfg.config.modifier}+d" = "exec ${cfg.config.menu}";
