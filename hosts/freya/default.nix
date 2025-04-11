@@ -48,6 +48,7 @@ in
         "*/.cargo"
         ".compose-cache"
         ".npm"
+        ".local/share"
         ".ollama"
         "*/.terraform.d"
         ".rustup"
