@@ -30,6 +30,11 @@
         age-default-recipient "~/env/infra/secrets/age-pubkey.txt")
   (age-file-enable))
 
+(quelpa '(passage :fetcher github :repo "anticomputer/passage.el"))
+(setq age-default-identity (expand-file-name "~/env/infra/secrets/age-privkey.txt"))
+(setenv "PASSAGE_IDENTITIES_FILE" age-default-identity)
+  ;; (fset #'pass (lambda () (interactive) (passage))))
+
 (use-package emacs
   :config
   ;; Set the Terminus font and font size
@@ -188,7 +193,7 @@
   :bind
   ("C-s" . consult-line))
 
-;;(use-package magit)
+(use-package magit)
 
 (use-package moody
   :config
