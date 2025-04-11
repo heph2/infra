@@ -21,6 +21,15 @@
     (eval-buffer)
     (quelpa-self-upgrade)))
 
+(use-package age
+  :after (org)
+  :commands (age-file-enable)
+  :init
+  ;; (setq age-program "rage"
+  (setq age-default-identity "~/env/infra/secrets/age-privkey.txt"
+        age-default-recipient "~/env/infra/secrets/age-pubkey.txt")
+  (age-file-enable))
+
 (use-package emacs
   :config
   ;; Set the Terminus font and font size
@@ -209,8 +218,7 @@
 (use-package eyebrowse)
 (use-package shackle)
 
-
-(use-package treesit
+(use-package tree-sitter
   :mode (("\\.tsx\\'" . tsx-ts-mode)
          ("\\.js\\'" . typescript-ts-mode)
          ("\\.mjs\\'" . typescript-ts-mode)

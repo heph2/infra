@@ -42,6 +42,7 @@ in
       mpv
       nix-output-monitor
       brave
+      ispell
       transmission_4-qt
       libreoffice
       kdePackages.okular
