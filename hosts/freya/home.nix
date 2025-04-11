@@ -39,6 +39,8 @@ in
       (pkgs.writers.writePython3Bin "totp" {
 
       } (builtins.readFile ../../pkgs/totp.py))
+      (pkgs.writers.writeBashBin "m4b2mp3" {
+      } (builtins.readFile ../../pkgs/m4b2mp3.sh))
       mpv
       nix-output-monitor
       brave
@@ -49,6 +51,7 @@ in
       ranger
       gnumake
       xclip
+      id3v2
       jq
       pnpm_10
       jless
