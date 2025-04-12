@@ -114,6 +114,12 @@ in
         user = "root";
         identityFile = "/home/heph/.ssh/sekai_ed";
       };
+      tyr = {
+        port = 22;
+        hostname = "192.168.1.122";
+        user = "root";
+        identityFile = "/home/heph/.ssh/sekai_ed";
+      };
       github = {
         port = 22;
         hostname = "github.com";

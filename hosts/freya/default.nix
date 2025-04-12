@@ -119,6 +119,10 @@ in
     openFirewall = true;
   };
 
+  programs.steam = {
+    enable = true;
+  };
+
   services.transmission = {
     enable = true;
     user = "heph";
