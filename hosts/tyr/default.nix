@@ -1,72 +1,34 @@
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
+
 { config, pkgs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-#      ../../modules/compose/firefly/default.nix
     ];
 
+  # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "tyr"; # Define your hostname.
-  networking.firewall.checkReversePath = "loose";
   time.timeZone = "Europe/Rome";
-
   i18n.defaultLocale = "en_US.UTF-8";
-
-  nix.settings.sandbox = false;
+  users.users.root.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK heph@fenrir"
+  ];
 
   environment.systemPackages = with pkgs; [
-     vim mg
+     vim
      wget
-     podman-compose
   ];
 
-  services.caddy = {
-    enable = true;
-    globalConfig = ''
-      auto_https disable_redirects
-    '';
-    virtualHosts."http://wallet.zaru.cc" = {
-      listenAddresses = [ "100.76.226.130" ];
-      extraConfig = ''
-        reverse_proxy http://127.0.0.1:8080
-      '';
-    };
-    virtualHosts."http://wallet-importer.zaru.cc" = {
-      listenAddresses = [ "100.76.226.130" ];
-      extraConfig = ''
-        reverse_proxy http://127.0.0.1:8081
-      '';
-    };
-  };
-
-  services.netdata = {
-    enable = true;
-  };
-
-  virtualisation = {
-    podman = {
-      enable = true;
-      dockerCompat = true;
-    };
-  };
-
-  networking.firewall.allowedTCPPorts = [ 
-    22 # ssh
-    80 443 # http/https
-    4648 4647 4646 # nomad
-    8600 8500 8300 8301 8302 # consul
-  ];
-  
-  networking.firewall.allowedUDPPorts = [ 
-    8600 8301 8302 # consul
-  ];
-
+  services.openssh.enable = true;
+  networking.firewall.allowedTCPPorts = [ 22 ];
   networking.firewall.enable = true;
-
   system.stateVersion = "22.11"; # Did you read the comment?
 
 }
