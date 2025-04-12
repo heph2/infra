@@ -178,7 +178,8 @@ in
     shell = "${pkgs.zsh}/bin/zsh";
     extraConfig = ''
       set-option -g mouse on
-      bind-key v split-window -v
+      bind-key h split-window -v
+      bind-key v split-window -h
     '';
   };
 
