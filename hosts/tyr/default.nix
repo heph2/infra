@@ -13,6 +13,9 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  services.tailscale = {
+    enable = true;
+  };
 
   networking.hostName = "tyr"; # Define your hostname.
   time.timeZone = "Europe/Rome";
