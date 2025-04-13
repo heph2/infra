@@ -371,6 +371,7 @@ in
     inputs.zen-browser.packages."${system}".default
     vim
     wget
+    quickemu
     firefox
     man-pages
     man-pages-posix
