@@ -294,6 +294,9 @@ in
   services.ollama = {
     enable = true;
     host = "0.0.0.0";
+    environmentVariables = {
+      OLLAMA_CONTEXT_LENGTH = "32768";
+    };
     acceleration = "cuda";
     openFirewall = true;
   };
@@ -372,6 +375,8 @@ in
     vim
     wget
     quickemu
+    goose-cli
+    aider-chat
     firefox
     man-pages
     man-pages-posix
