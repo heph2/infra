@@ -203,6 +203,8 @@
 
 (use-package minions)
 
+(use-package aider)
+
 (use-package envrc
   :init
   (envrc-global-mode))
