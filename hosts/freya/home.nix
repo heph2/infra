@@ -24,7 +24,7 @@ in
       (pkgs.emacsWithPackagesFromUsePackage {
         config = ./emacs.el;
         defaultInitFile = true;
-        package = pkgs.emacs-git;
+        package = pkgs.emacs;
         alwaysEnsure = true;
         extraEmacsPackages = epkgs: [
           epkgs.vterm
@@ -42,6 +42,7 @@ in
       (pkgs.writers.writeBashBin "m4b2mp3" {
       } (builtins.readFile ../../pkgs/m4b2mp3.sh))
       mpv
+      nodejs_23
       nix-output-monitor
       brave
       ispell
