@@ -43,6 +43,7 @@ in
       } (builtins.readFile ../../pkgs/m4b2mp3.sh))
       mpv
       nodejs_23
+      bambu-studio
       nix-output-monitor
       brave
       ispell
@@ -132,6 +133,12 @@ in
         hostname = "192.168.1.24";
         user = "root";
         identityFile = "/home/heph/.ssh/id_rsa_remarkable";
+      };
+      sauron = {
+        port = 22;
+        hostname = "192.168.1.153";
+        user = "root";
+        identityFile = "/home/heph/.ssh/sekai_ed";
       };
     };
   };
