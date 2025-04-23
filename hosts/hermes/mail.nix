@@ -1,4 +1,10 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   mailserver = {
     enable = true;
     borgbackup = {
@@ -36,6 +42,7 @@
           "pirate@mbauce.com" # # Pirating stuff
           "subs@mbauce.com" # # Subscriptions in general
           "discord@mbauce.com" # # Discord
+          "kagi-2@mbauce.com"
           "lang@mbauce.com" # # Languages, Anki
         ];
         sieveScript = ''
