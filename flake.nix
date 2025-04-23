@@ -46,6 +46,7 @@
         ./hosts/timballo/configuration.nix # # Laptop t480
         ./hosts/zima/configuration.nix # # ZimaBoard
         ./hosts/ushi/configuration.nix # # Nixos WSL 2
+        ./hosts/sauron/configuration.nix # # NAS
         ./dev.nix
       ];
       systems = [
