@@ -82,6 +82,7 @@ in
           ++ [
             "Downloads"
             "Videos"
+            ".models"
           ]
         );
       };
@@ -376,6 +377,7 @@ in
     wget
     quickemu
     goose-cli
+    python3
     aider-chat
     firefox
     man-pages
@@ -434,6 +436,12 @@ in
     5353
   ];
   networking.firewall.enable = true;
+  networking.firewall = {
+    extraCommands = ''
+      iptables -I INPUT 1 -i docker0 -p tcp -d 172.17.0.1 -j ACCEPT
+      iptables -I INPUT 2 -i docker0 -p udp -d 172.17.0.1 -j ACCEPT
+    '';
+  };
   networking.firewall.trustedInterfaces = [ "virbr0" ];
   networking.interfaces.enp6s0.wakeOnLan.enable = true;
 
