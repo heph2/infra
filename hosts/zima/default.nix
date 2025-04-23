@@ -1,19 +1,19 @@
-
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "sd_mod" "sdhci_pci" ];
+  boot.initrd.availableKernelModules =
+    [ "ahci" "xhci_pci" "sd_mod" "sdhci_pci" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];  
+  boot.extraModulePackages = [ ];
 
   virtualisation.docker.enable = true;
   virtualisation.docker.storageDriver = "btrfs";
@@ -22,6 +22,11 @@
     enable = true;
     interval = "monthly";
     fileSystems = [ "/" "/data" ];
+  };
+
+  services.beanstalkd = {
+    enable = true;
+    listen.address = "0.0.0.0";
   };
 
   nix = {
@@ -36,39 +41,34 @@
       auto-optimise-store = true;
     };
   };
-  
 
   services.nginx = {
-      enable = true;
-      recommendedProxySettings = true;
+    enable = true;
+    recommendedProxySettings = true;
 
-      virtualHosts."netflics.zima.lan" =  {
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:8096";
-          proxyWebsockets = true; # needed if you need to use WebSocket
-        };
+    virtualHosts."netflics.zima.lan" = {
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:8096";
+        proxyWebsockets = true;
       };
-      # virtualHosts."goat.zima.lan" = {
-      #   locations."/" = {
-      #     proxyPass = "http://127.0.0.1:8081";
-      #   };
-      # };
-      virtualHosts."torrent.zima.lan" =  {
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:9091";
-          extraConfig = ''
-        proxy_pass_header  X-Transmission-Session-Id;
-        proxy_set_header   X-Forwarded-Host $host;
-        proxy_set_header   X-Forwarded-Server $host;
-        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-          '';
-        };
+    };
+    virtualHosts."aurora.zima.lan" = {
+      locations."/" = { proxyPass = "http://192.168.1.30:3000"; };
+    };
+    virtualHosts."torrent.zima.lan" = {
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:9091";
+        extraConfig = ''
+          proxy_pass_header  X-Transmission-Session-Id;
+          proxy_set_header   X-Forwarded-Host $host;
+          proxy_set_header   X-Forwarded-Server $host;
+          proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        '';
       };
-      virtualHosts."rss.zima.lan" = {
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:8080";
-        };
-      };
+    };
+    virtualHosts."rss.zima.lan" = {
+      locations."/" = { proxyPass = "http://127.0.0.1:8080"; };
+    };
   };
 
   services.miniflux = {
@@ -102,7 +102,7 @@
       };
     };
   };
-  
+
   services.transmission = {
     enable = true;
     settings = {
@@ -119,6 +119,10 @@
   };
 
   networking.firewall = {
+    extraCommands = ''
+      iptables -I INPUT 1 -i docker0 -p tcp -d 172.17.0.1 -j ACCEPT
+      iptables -I INPUT 2 -i docker0 -p udp -d 172.17.0.1 -j ACCEPT
+    '';
     allowedTCPPorts = [
       80 # Nginx reverse proxy
       8096 # Jellyfin
@@ -136,9 +140,5 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
-  environment.systemPackages = with pkgs; [
-    vim mg
-    wget ncdu
-    git borgbackup
-  ];
+  environment.systemPackages = with pkgs; [ vim mg wget ncdu git borgbackup ];
 }
