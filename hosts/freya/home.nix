@@ -185,6 +185,21 @@ in
     root: shopping@mbauce.com
   '';
 
+  home.file.".config/helix/yazi-picker.sh".text = ''
+    #!/usr/bin/env bash
+
+    paths=$(yazi "$2" --chooser-file=/dev/stdout | while read -r; do printf "%q " "$REPLY"; done)
+
+    if [[ -n "$paths" ]]; then
+    	zellij action toggle-floating-panes
+    	zellij action write 27 # send <Escape> key
+    	zellij action write-chars ":$1 $paths"
+    	zellij action write 13 # send <Enter> key
+    else
+    	zellij action toggle-floating-panes
+    fi
+  '';
+
   programs.tmux = {
     enable = true;
     terminal = "tmux-256color";
@@ -213,6 +228,10 @@ in
   };
 
   programs.yazi = {
+    enable = true;
+  };
+
+  programs.zellij = {
     enable = true;
   };
 
@@ -262,6 +281,14 @@ in
         normal = "block";
         insert = "bar";
         select = "underline";
+      };
+      # keys.normal = {
+      #  C-y = ":sh zellij run -n Yazi -c -f -x 10% -y 10% --width 80% --height 80% -- bash ~/.config/helix/yazi-picker.sh open";
+      #};
+      keys.normal.C-y = {
+        y = ":sh zellij run -n Yazi -c -f -x 10% -y 10% --width 80% --height 80% -- bash ~/.config/helix/yazi-picker.sh open";
+        v = ":sh zellij run -n Yazi -c -f -x 10% -y 10% --width 80% --height 80% -- bash ~/.config/helix/yazi-picker.sh vsplit";
+        h = ":sh zellij run -n Yazi -c -f -x 10% -y 10% --width 80% --height 80% -- bash ~/.config/helix/yazi-picker.sh hsplit";
       };
     };
     languages.language = [
