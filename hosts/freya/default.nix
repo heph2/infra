@@ -37,6 +37,7 @@ in
   systemd.targets.hybrid-sleep.enable = false;
   security.polkit.enable = true;
   services.blueman.enable = true;
+  services.zfs.autoScrub.enable = true;
 
   services.borgbackup.jobs =
     let
@@ -69,7 +70,7 @@ in
         extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
         repo = "ssh://zima//data/backup/${name}";
         compression = "zstd,1";
-        startAt = "daily";
+        startAt = "hourly";
         persistentTimer = true;
         user = "heph";
       };
