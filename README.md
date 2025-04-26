@@ -21,6 +21,8 @@ It is structured to manage multiple machines and user configurations.
 - `Tyr`: Intel Nuc (Currently not used)
 - `Ushi`: WSL Experiment (Currently not used)
 - `Zima`: Zimaboard
+- `Sauron`: NAS
+- `Aron`: Macbook Pro
 
 ## Usage
 
@@ -34,6 +36,12 @@ Or using:
 
 ```
 just deploy-remote <name_of_host`
+```
+
+For Darwin:
+
+```
+just deploy-darwin
 ```
 
 This will build the closure using `--build-host` and `--target-host` for avoiding cross-compiling issues.
