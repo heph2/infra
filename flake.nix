@@ -7,6 +7,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    darwin = {
+      url = "github:lnl7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nur.url = "github:nix-community/NUR";
     flake-parts.url = "github:hercules-ci/flake-parts";
     sops-nix.url = "github:Mic92/sops-nix";
@@ -47,6 +51,7 @@
         ./hosts/zima/configuration.nix # # ZimaBoard
         ./hosts/ushi/configuration.nix # # Nixos WSL 2
         ./hosts/sauron/configuration.nix # # NAS
+        ./hosts/aron/configuration.nix # # MacBook
         ./dev.nix
       ];
       systems = [
