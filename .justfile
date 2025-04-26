@@ -3,3 +3,6 @@ deploy HOST:
 
 deploy-remote HOST:
     nixos-rebuild --fast --impure --target-host {{HOST}} --flake .#{{HOST}} switch
+
+deploy-darwin:
+    darwin-rebuild switch --flake '.#aron'
