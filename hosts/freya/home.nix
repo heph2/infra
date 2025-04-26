@@ -41,6 +41,9 @@ in
       } (builtins.readFile ../../pkgs/totp.py))
       (pkgs.writers.writeBashBin "m4b2mp3" {
       } (builtins.readFile ../../pkgs/m4b2mp3.sh))
+      (pkgs.writers.writePython3Bin "jack" {
+          libraries = [ pkgs.python3Packages.requests pkgs.python3Packages.beautifulsoup4 ];
+      } (builtins.readFile ../../pkgs/jack.py))
       mpv
       nodejs_23
       bambu-studio
