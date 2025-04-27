@@ -3,7 +3,6 @@
     system = "x86_64-linux";
     specialArgs = { inherit inputs; };
     modules = [
-      inputs.spicetify-nix.nixosModules.default
       { nixpkgs.overlays = [ inputs.emacs-overlay.overlay ]; }
       ./default.nix
       inputs.spicetify-nix.nixosModules.default
