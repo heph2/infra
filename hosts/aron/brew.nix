@@ -4,6 +4,7 @@
     casks = [
       "telegram-desktop"
       "vagrant"
+      "openscad"
       "yacreader"
       "caffeine"
       "alfred"
