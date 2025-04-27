@@ -216,7 +216,7 @@ in
   };
 
   programs.nushell = {
-    enable = true;
+    enable = false;
   };
 
   programs = {
@@ -348,17 +348,29 @@ in
   #   wantedBy = [ "default.target" ];
   #   serviceConfig.ExecStart = "${pkgs.bluez}/bin/mpris-proxy";
   # };
+  # programs = {
+  #   atuin = {
+  #     enable = true;
+  #     enableZshIntegration = true;
+  #     settings = {
+  #       dialect = "us";
+  #       style = "compact";
+  #       inline_height = 15;
+  #     };
+  #   };
+  # };
 
   programs.zsh = {
     enable = true;
-    initExtra = "source ~/.p10k.zsh";
+    initContent = "source ~/.p10k.zsh";
     shellAliases = {
       a = "amused";
+      d = "docker";
       ll = "ls -l";
       mg = "mg -n";
       zzz = "shutdown now";
       k = "kubectl";
-      k-switch = "kubectl config get-contexts |  awk 'NR>1 { print $2 }' | fzf | xargs kubectl config use-context";
+      ks = "kubectl config get-contexts |  awk 'NR>1 { print $2 }' | fzf | xargs kubectl config use-context";
       update = "sudo nixos-rebuild switch";
       game = "sudo virsh start win11-2";
     };
