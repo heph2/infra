@@ -12,6 +12,7 @@
       inputs.home-manager.darwinModules.home-manager
       #inputs.spicetify-nix.nixosModules.default      
       {
+        home-manager.backupFileExtension = "backup";
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
         home-manager.users.marco = import ./home.nix;
