@@ -51,6 +51,13 @@ with lib; {
         theme = "robbyrussell";
       };
     };
+    zellij.enable = true;
+    yazi.enable = true;
+    atuin = {
+      enable = true;
+      enableZshIntegration = true;
+      settings.sync_address = "http://192.168.1.30:8888";
+    };
     tmux = {
       enable = true;
       shell = "/etc/profiles/per-user/marco/bin/fish";
