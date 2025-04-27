@@ -24,6 +24,25 @@
     fileSystems = [ "/" "/data" ];
   };
 
+  services.postgresql = {
+    enable = true;
+    package = pkgs.postgresql_16;
+    ensureDatabases = [ "atuin" ];
+    ensureUsers = [{
+      name = "atuin";
+      ensureDBOwnership = true;
+    }];
+  };
+
+  services.atuin = {
+    enable = true;
+    openFirewall = true;
+    openRegistration = true;
+    host = "0.0.0.0";
+    database.createLocally = false;
+    database.uri = "postgresql://atuin:atuin@localhost:5432/atuin";
+  };
+
   services.beanstalkd = {
     enable = true;
     listen.address = "0.0.0.0";
