@@ -62,7 +62,7 @@
 
 (load-theme 'solarized-dark t)
 
-;; (use-package eat)
+(use-package eat)
 
 (use-package elfeed
   :bind ("C-x w" . elfeed)
@@ -249,71 +249,79 @@
   (editorconfig-mode 1))
 
 ;; GTD Setup
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "WAIT(w)" "NEXT(n)" "PROJ(p)" "|" "DONE(d)" "CANC(c)")
-        ))
+;; (setq org-todo-keywords
+;;       '((sequence "TODO(t)" "WAIT(w)" "NEXT(n)" "PROJ(p)" "|" "DONE(d)" "CANC(c)")
+;;         ))
 
-(setq org-agenda-span 90)
-(setq org-agenda-files (file-expand-wildcards "~/env/org/main.org"))
+;; (setq org-agenda-span 90)
+;; (setq org-agenda-files (file-expand-wildcards "~/env/org/main.org"))
 
-(setq org-agenda-custom-commands
-      '(
-        ("i" "Inbox" tags-todo "+TODO=\"TODO\""
-         ((org-agenda-files (file-expand-wildcards "~/env/org/inbox.org"))))
-        ("n" "Next actions" tags-todo "+TODO=\"NEXT\"")
-        ("p" "Projects" tags-todo "+TODO=\"PROJ\"")
-        ("w" "Waiting" tags-todo "+TODO=\"WAIT\"")
-        ("s" "Someday" tags-todo "+TODO=\"TODO\"|TODO=\"PROJ\""
-         ((org-agenda-files (file-expand-wildcards "~/env/org/someday.org"))))
-        ("o" "Actions and Projects" tags-todo "+TODO=\"TODO\"|TODO=\"PROJ\"")
-        ))
+;; (setq org-agenda-custom-commands
+;;       '(
+;;         ("i" "Inbox" tags-todo "+TODO=\"TODO\""
+;;          ((org-agenda-files (file-expand-wildcards "~/env/org/inbox.org"))))
+;;         ("n" "Next actions" tags-todo "+TODO=\"NEXT\"")
+;;         ("p" "Projects" tags-todo "+TODO=\"PROJ\"")
+;;         ("w" "Waiting" tags-todo "+TODO=\"WAIT\"")
+;;         ("s" "Someday" tags-todo "+TODO=\"TODO\"|TODO=\"PROJ\""
+;;          ((org-agenda-files (file-expand-wildcards "~/env/org/someday.org"))))
+;;         ("o" "Actions and Projects" tags-todo "+TODO=\"TODO\"|TODO=\"PROJ\"")
+;;         ))
 
-(setq org-agenda-prefix-format '((agenda . "  %-25:c%?-12t% s")
-				 (timeline . "  % s")
-				 (todo . "  %-12:c")
-				 (tags . "  %-25:c")
-				 (search . "  %-12:c")))
+;; (setq org-agenda-prefix-format '((agenda . "  %-25:c%?-12t% s")
+;; 				 (timeline . "  % s")
+;; 				 (todo . "  %-12:c")
+;; 				 (tags . "  %-25:c")
+;; 				 (search . "  %-12:c")))
 
-(setq org-agenda-tags-column -120)
-(setq org-tags-column -80)
+;; (setq org-agenda-tags-column -120)
+;; (setq org-tags-column -80)
 
-(setq org-agenda-sorting-strategy
-      '((agenda habit-down time-up priority-down category-keep)
-        (todo priority-down todo-state-up category-keep)
-        (tags priority-down todo-state-up category-keep)
-        (search category-keep)))
+;; (setq org-agenda-sorting-strategy
+;;       '((agenda habit-down time-up priority-down category-keep)
+;;         (todo priority-down todo-state-up category-keep)
+;;         (tags priority-down todo-state-up category-keep)
+;;         (search category-keep)))
 
-;; M-x org-agenda # to show the stuck projects
-(setq org-stuck-projects
-      '("+TODO=\"PROJ\"" ("TODO") nil "") )
+;; ;; M-x org-agenda # to show the stuck projects
+;; (setq org-stuck-projects
+;;       '("+TODO=\"PROJ\"" ("TODO") nil "") )
 
-(setq org-refile-use-outline-path 'file)
-(setq org-outline-path-complete-in-steps 'nil)
-(setq refile-targets (file-expand-wildcards "~/env/org/*.org"))
-(setq org-refile-targets '(( refile-targets :todo . "PROJ" )))
+;; (setq org-refile-use-outline-path 'file)
+;; (setq org-outline-path-complete-in-steps 'nil)
+;; (setq refile-targets (file-expand-wildcards "~/env/org/*.org"))
+;; (setq org-refile-targets '(( refile-targets :todo . "PROJ" )))
 
+
+;; (setq org-capture-templates
+;;       '(
+;;         ("i" "Inbox" entry
+;;          (file "~/env/org/inbox.org")
+;;          "* TODO %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+
+;;         ("n" "Next action" entry
+;;          (file "~/env/org/main.org")
+;;          "** NEXT %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+
+;;         ("w" "Waiting" entry
+;;          (file "~/env/org/main.org")
+;;          "** WAIT %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+
+;;         ("p" "Project" entry
+;;          (file "~/env/org/main.org")
+;;          "* PROJ %^{Brief Description}\n:PROPERTIES:\n:CATEGORY: %^{Id}\n:END:\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+
+;;          ("s" "Someday" entry
+;;          (file "~/env/org/someday.org")
+;;          "* TODO %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+;;         ))
 (setq org-capture-templates
       '(
-        ("i" "Inbox" entry
-         (file "~/env/org/inbox.org")
-         "* TODO %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-
-        ("n" "Next action" entry
-         (file "~/env/org/main.org")
-         "** NEXT %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-
-        ("w" "Waiting" entry
-         (file "~/env/org/main.org")
-         "** WAIT %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-
-        ("p" "Project" entry
-         (file "~/env/org/main.org")
-         "* PROJ %^{Brief Description}\n:PROPERTIES:\n:CATEGORY: %^{Id}\n:END:\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-
-         ("s" "Someday" entry
-         (file "~/env/org/someday.org")
-         "* TODO %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-        ))
+	("i"
+      )
+(setq org-agenda-files (list "~/env/notes/org/work.org"
+                             "~/env/notes/org/uni.org" 
+                             "~/env/notes/org/home.org"))
 
 (define-key global-map "\C-cc" 'org-capture)
 
