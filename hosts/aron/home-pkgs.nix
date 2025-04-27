@@ -35,6 +35,7 @@
           ]))
       ];
     })
+    # (pkgs.callPackage ../../pkgs/amused.nix { })
     (pkgs.writers.writePython3Bin "jack" {
       flakeIgnore = [ "E114" "E117" "E501" "E128" "E111" "E302" "E226" "E303" "E203" "W504" ];
       libraries =
@@ -44,6 +45,7 @@
     jsonnet
     sketchybar
     gopls
+    ncdu
     nixos-rebuild
     zls
     zig
@@ -85,6 +87,8 @@
     caddy
     bun
     nest-cli
+    openscad-unstable
+    openscad-lsp
     kubernetes-helm
     helix
     kubeseal
@@ -101,7 +105,7 @@
     hexedit
     spicetify-cli
     ffmpeg
-    ansible
+    # ansible
     openssl
     yamllint
     timewarrior
