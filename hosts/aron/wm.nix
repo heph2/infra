@@ -77,7 +77,7 @@
   };
 
   services.yabai = {
-    enable = true;
+    enable = false;
     config = {
       external_bar = "off:40:0";
       menubar_opacity = 1.0;
@@ -112,8 +112,7 @@
   };
 
   services.skhd = {
-
-    enable = true;
+    enable = false;
     skhdConfig = ''
       # skhdrc example configuration
 
@@ -210,7 +209,7 @@
   };
 
   services.sketchybar = {
-    enable = true;
+    enable = false;
     config = ''
       sketchybar --bar height=24
       sketchybar --update
