@@ -20,7 +20,7 @@ with lib; {
     msmtp.enable = true;
     # ghostty = {
     #   enable = true;
-    #   shellIntegration.enableZshIntegration = true;
+    #   enableZshIntegration = true;
     #   keybindings = {
     #      "global:ctrl+shift+e" = "toggle_quick_terminal";
     #   };
@@ -56,6 +56,7 @@ with lib; {
     atuin = {
       enable = true;
       enableZshIntegration = true;
+      flags = ["--disable-up-arrow"];
       settings.sync_address = "http://192.168.1.30:8888";
     };
     tmux = {
