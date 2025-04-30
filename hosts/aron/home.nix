@@ -44,6 +44,7 @@ with lib; {
         assume = "source ${pkgs.granted}/bin/assume";
         dw = "darwin-rebuild switch --flake '.#aron'";
         k = "kubectl";
+        ks = "kubectl config get-contexts |  awk 'NR>1 { print $2 }' | fzf | xargs kubectl config use-context";
       };
       oh-my-zsh = {
         enable = true;
