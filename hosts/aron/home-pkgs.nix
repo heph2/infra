@@ -37,7 +37,7 @@
     })
     # (pkgs.callPackage ../../pkgs/amused.nix { })
     (pkgs.writers.writePython3Bin "jack" {
-      flakeIgnore = [ "E114" "E117" "E501" "E128" "E111" "E302" "E226" "E303" "E203" "W504" ];
+      flakeIgnore = [ "E114" "E117" "E501" "E128" "E111" "E302" "E226" "E303" "E203" "W504" "E261" "W391" "F841" ];
       libraries =
         [ pkgs.python3Packages.requests pkgs.python3Packages.beautifulsoup4 ];
     } (builtins.readFile ../../pkgs/jack.py))
