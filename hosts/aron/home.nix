@@ -12,8 +12,59 @@ with lib; {
     LEDGER_FILE = "~/env/finance/2024.journal";
     GRANTED_ALIAS_CONFIGURED = "true";
   };
-
+  accounts.email = {
+    accounts.personal = {
+      address = "me@mbauce.com";
+      imap.host = "mail.mbauce.com";
+      mbsync = {
+        enable = true;
+        create = "maildir";
+      };
+      msmtp.enable = true;
+      notmuch.enable = true;
+      primary = true;
+      realName = "Marco Bauce";
+      passwordCommand = "passage show me@mbauce.com";
+      smtp.host = "mail.mbauce.com";
+      userName = "me@mbauce.com";
+    };
+    # accounts.ovh = {
+    #   address = "hephaestus@mrkeebs.eu";
+    #   imap.host = "ssl0.ovh.net";
+    #   imap.tls.useStartTls = true;
+    #   imap.port = 465;
+    #   mbsync = {
+    #     enable = true;
+    #     create = "maildir";
+    #   };
+    #   msmtp.enable = true;
+    #   notmuch.enable = true;
+    #   realName = "Heph";
+    #   passwordCommand = "passage show hephaestus@mrkeebs.eu";
+    #   smtp.host = "pro2.mail.ovh.net";
+    #   userName = "hephaestus@mrkeebs.eu";
+    # };
+    # accounts.work = {
+    #   address = "m.bauce@davinci.care";
+    #   imap.host = "imap.gmail.com";
+    #   mbsync = {
+    #     enable = true;
+    #     create = "maildir";
+    #   };
+    #   msmtp.enable = true;
+    #   notmuch.enable = true;
+    #   realName = "Marco Bauce";
+    #   passwordCommand = "passage show m.bauce@davinci.care-oauth2";
+    #   smtp.host = "smtp.gmail.com";
+    #   userName = "m.bauce@davinci.care";
+    # };
+  };
   programs = {
+    zoxide = {
+      enable = true;
+      enableZshIntegration = true;
+    };
+    mbsync.enable = true;
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
     htop.enable = true;
@@ -39,6 +90,7 @@ with lib; {
       enableCompletion = true;
       syntaxHighlighting.enable = true;
       shellAliases = {
+        mnew = "mlist ~/Maildir/personal/inbox | mthread | msort -d -r | mseq -S";
         ll = "ls -l";
         update = "sudo nixos-rebuild switch";
         assume = "source ${pkgs.granted}/bin/assume";
@@ -103,12 +155,5 @@ with lib; {
     #     theme = spicePkgs.themes.catppuccin;
     #     colorScheme = "mocha";
     #   };
-  };
-
-  accounts.email.accounts."work" = {
-    address = "m.bauce@davinci.care";
-    maildir.path = "/Users/marco/.maildir/work";
-    mu.enable = true;
-    primary = true;
   };
 }

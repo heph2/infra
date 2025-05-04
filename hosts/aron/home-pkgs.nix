@@ -42,10 +42,13 @@
         [ pkgs.python3Packages.requests pkgs.python3Packages.beautifulsoup4 ];
     } (builtins.readFile ../../pkgs/jack.py))
     aerc
+    passage
+    mblaze
     jsonnet
     sketchybar
     gopls
     ncdu
+    llama-cpp
     nixos-rebuild
     zls
     zig
