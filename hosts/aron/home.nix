@@ -30,7 +30,7 @@ with lib; {
     };
     # accounts.ovh = {
     #   address = "hephaestus@mrkeebs.eu";
-    #   imap.host = "ssl0.ovh.net";
+    #   imap.host = "pro2.mail.ovh.net";
     #   imap.tls.useStartTls = true;
     #   imap.port = 465;
     #   mbsync = {
@@ -44,20 +44,20 @@ with lib; {
     #   smtp.host = "pro2.mail.ovh.net";
     #   userName = "hephaestus@mrkeebs.eu";
     # };
-    # accounts.work = {
-    #   address = "m.bauce@davinci.care";
-    #   imap.host = "imap.gmail.com";
-    #   mbsync = {
-    #     enable = true;
-    #     create = "maildir";
-    #   };
-    #   msmtp.enable = true;
-    #   notmuch.enable = true;
-    #   realName = "Marco Bauce";
-    #   passwordCommand = "passage show m.bauce@davinci.care-oauth2";
-    #   smtp.host = "smtp.gmail.com";
-    #   userName = "m.bauce@davinci.care";
-    # };
+    accounts.work = {
+      address = "m.bauce@davinci.care";
+      imap.host = "imap.gmail.com";
+      mbsync = {
+        enable = true;
+        create = "maildir";
+      };
+      msmtp.enable = true;
+      notmuch.enable = true;
+      realName = "Marco Bauce";
+      passwordCommand = "passage show m.bauce@davinci.care-oauth2";
+      smtp.host = "smtp.gmail.com";
+      userName = "m.bauce@davinci.care";
+    };
   };
   programs = {
     zoxide = {
