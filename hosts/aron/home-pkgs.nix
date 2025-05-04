@@ -35,6 +35,7 @@
           ]))
       ];
     })
+    (pkgs.callPackage ../../pkgs/mblaze-tui.nix { })
     # (pkgs.callPackage ../../pkgs/amused.nix { })
     (pkgs.writers.writePython3Bin "jack" {
       flakeIgnore = [ "E114" "E117" "E501" "E128" "E111" "E302" "E226" "E303" "E203" "W504" "E261" "W391" "F841" ];

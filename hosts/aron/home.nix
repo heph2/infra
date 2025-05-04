@@ -90,6 +90,7 @@ with lib; {
       enableCompletion = true;
       syntaxHighlighting.enable = true;
       shellAliases = {
+        lz = "lazygit";
         mnew = "mlist ~/Maildir/personal/inbox | mthread | msort -d -r | mseq -S";
         ll = "ls -l";
         update = "sudo nixos-rebuild switch";
@@ -127,6 +128,7 @@ with lib; {
         gp = "add -p";
         co = "checkout";
         s = "switch";
+        st = "status";
       };
       extraConfig = {
         pull.ff = "only";
