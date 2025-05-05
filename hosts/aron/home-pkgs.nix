@@ -44,7 +44,7 @@
     } (builtins.readFile ../../pkgs/jack.py))
     aerc
     passage
-    mblaze
+    nb
     jsonnet
     sketchybar
     gopls
