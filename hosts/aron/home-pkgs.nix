@@ -45,6 +45,7 @@
     aerc
     passage
     nb
+    chawan
     jsonnet
     sketchybar
     gopls
