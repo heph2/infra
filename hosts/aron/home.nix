@@ -7,7 +7,7 @@ with lib; {
 
   home.stateVersion = "22.05";
   home.sessionVariables = {
-    EDITOR = "mg";
+    EDITOR = "hx";
     LIMA_HOME = "$HOME/env/colima";
     LEDGER_FILE = "~/env/finance/2024.journal";
     GRANTED_ALIAS_CONFIGURED = "true";
