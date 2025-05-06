@@ -91,7 +91,7 @@ with lib; {
       syntaxHighlighting.enable = true;
       shellAliases = {
         lz = "lazygit";
-        mnew = "mlist ~/Maildir/personal/inbox | mthread | msort -d -r | mseq -S";
+        mnew = "(mlist ~/Maildir/work/inbox; mlist ~/Maildir/personal/inbox) | mthread | msort -d -r | mseq -S";
         ll = "ls -l";
         update = "sudo nixos-rebuild switch";
         assume = "source ${pkgs.granted}/bin/assume";
