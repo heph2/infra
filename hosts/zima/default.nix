@@ -18,6 +18,11 @@
   virtualisation.docker.enable = true;
   virtualisation.docker.storageDriver = "btrfs";
 
+  programs = {
+    direnv.enable = true;
+    direnv.nix-direnv.enable = true;
+  };
+
   services.btrfs.autoScrub = {
     enable = true;
     interval = "monthly";
