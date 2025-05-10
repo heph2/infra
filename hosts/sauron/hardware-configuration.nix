@@ -23,4 +23,15 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode =
     lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+  fileSystems."/media" = {
+    device = "data/media";  # Replace with your actual ZFS dataset
+    fsType = "zfs";
+  };
+
+  fileSystems."/bck" = {
+    device = "data/bck";  # Optional: mount other datasets
+    fsType = "zfs";
+  };
+
 }

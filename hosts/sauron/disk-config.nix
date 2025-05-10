@@ -29,20 +29,20 @@
       };
     };
     zpool = {
-      data = {
-        type = "zpool";
-        datasets = {
-          "media" = {
-            type = "zfs_fs";
-            mountpoint = "/media";
-          };
-          "bck" = {
-            type = "zfs_fs";
-            mountpoint = "/bck";
-          };
-        };
-        options.ashift = "12";
-      };
+      # data = {
+      #   type = "zpool";
+      #   datasets = {
+      #     "media" = {
+      #       type = "zfs_fs";
+      #       mountpoint = "/media";
+      #     };
+      #     "bck" = {
+      #       type = "zfs_fs";
+      #       mountpoint = "/bck";
+      #     };
+      #   };
+      #   options.ashift = "12";
+      # };
       zroot = {
         type = "zpool";
         rootFsOptions = {

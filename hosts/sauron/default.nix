@@ -17,6 +17,7 @@ in
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.grub.efiSupport = true;
+  boot.zfs.extraPools = ["data"];
 
   networking.hostName = hostname; # Define your hostname.
   boot.loader.grub.enable = true; # Enables wireless support via wpa_suppli
@@ -43,8 +44,10 @@ in
     enable = true;
     recommendedProxySettings = true;
     virtualHosts."jelly.${localDomain}" = {
-      proxyPass = "http://127.0.0.1:8096";
-      proxyWebSockets = true;
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:8096";
+        proxyWebsockets = true;
+      };
     };
   };
 
@@ -56,7 +59,7 @@ in
 
   services.openssh.enable = true;
 
-  networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
   networking.firewall.enable = true;
 
 }
