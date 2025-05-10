@@ -1,5 +1,10 @@
 { config, pkgs, ... }:
 
+let
+  hostname = "zima";
+  localDomain = hostname + ".hephnet.lan";
+in
+
 {
   imports = [
     # Include the results of the hardware scan.
@@ -70,16 +75,16 @@
     enable = true;
     recommendedProxySettings = true;
 
-    virtualHosts."netflics.zima.lan" = {
+    virtualHosts."jelly.${localDomain}" = {
       locations."/" = {
         proxyPass = "http://127.0.0.1:8096";
         proxyWebsockets = true;
       };
     };
-    virtualHosts."aurora.zima.lan" = {
+    virtualHosts."aurora.${localDomain}" = {
       locations."/" = { proxyPass = "http://192.168.1.30:3000"; };
     };
-    virtualHosts."torrent.zima.lan" = {
+    virtualHosts."torrent.${localDomain}" = {
       locations."/" = {
         proxyPass = "http://127.0.0.1:9091";
         extraConfig = ''
@@ -90,7 +95,7 @@
         '';
       };
     };
-    virtualHosts."rss.zima.lan" = {
+    virtualHosts."rss.${localDomain}" = {
       locations."/" = { proxyPass = "http://127.0.0.1:8080"; };
     };
   };
@@ -156,7 +161,7 @@
 
   services.jellyfin.enable = true;
 
-  networking.hostName = "zima"; # Define your hostname.
+  networking.hostName = hostname; # Define your hostname.
 
   # Set your time zone.
   time.timeZone = "Europe/Rome";
@@ -164,5 +169,5 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
-  environment.systemPackages = with pkgs; [ vim mg wget ncdu git borgbackup ];
+  environment.systemPackages = with pkgs; [ vim mg wget ncdu git borgbackup bind dnsutils ];
 }
