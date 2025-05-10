@@ -39,6 +39,20 @@ in
     enable = true;
     dataDir = "/media";
   };
+  services.transmission = {
+    enable = true;
+    settings = {
+      download-dir = "/media/torrent/downloads";
+      incomplete-dir-enabled = false;
+      rpc-bind-address = "127.0.0.1";
+      downloadDirPermissions = "770";
+      rpc-whitelist = "192.168.1.* 127.0.0.1";
+      rpc-whitelist-enabled = false;
+      rpc-host-whitelist-enabled = false;
+    };
+    openRPCPort = true;
+    openFirewall = true;
+  };
 
   services.nginx = {
     enable = true;
@@ -47,6 +61,17 @@ in
       locations."/" = {
         proxyPass = "http://127.0.0.1:8096";
         proxyWebsockets = true;
+      };
+    };
+    virtualHosts."torrent.${localDomain}" = {
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:9091";
+        extraConfig = ''
+          proxy_pass_header  X-Transmission-Session-Id;
+          proxy_set_header   X-Forwarded-Host $host;
+          proxy_set_header   X-Forwarded-Server $host;
+          proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        '';
       };
     };
   };
@@ -59,7 +84,7 @@ in
 
   services.openssh.enable = true;
 
-  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
+  networking.firewall.allowedTCPPorts = [ 22 80 443 8096 9091 ];
   networking.firewall.enable = true;
 
 }
