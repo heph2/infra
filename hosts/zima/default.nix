@@ -58,6 +58,13 @@ in
     listen.address = "0.0.0.0";
   };
 
+  services.k3s = {
+    enable = true;
+    role = "agent";
+    token = "uasdfnl8yho";
+    serverAddr = "https://192.168.1.122:6443";
+  };
+
   nix = {
     gc = {
       automatic = true;
@@ -156,10 +163,17 @@ in
       80 # Nginx reverse proxy
       8096 # Jellyfin
       9091 # Transmission
+      6443
+      6444
+      2380
+      2379
+    ];
+    allowedUDPPorts = [
+      8472
     ];
   };
 
-  services.jellyfin.enable = true;
+  # services.jellyfin.enable = true;
 
   networking.hostName = hostname; # Define your hostname.
 
