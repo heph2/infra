@@ -12,37 +12,33 @@
         epkgs.notmuch
         epkgs.mu4e
         epkgs.pdf-tools
-        (epkgs.treesit-grammars.with-grammars (grammars:
-          with grammars; [
-            tree-sitter-bash
-            tree-sitter-css
-            tree-sitter-dockerfile
-            tree-sitter-elisp
-            tree-sitter-go
-            tree-sitter-php
-            tree-sitter-elixir
-            tree-sitter-heex
-            tree-sitter-html
-            tree-sitter-javascript
-            tree-sitter-json
-            tree-sitter-nix
-            tree-sitter-ruby
-            tree-sitter-rust
-            tree-sitter-toml
-            tree-sitter-tsx
-            tree-sitter-typescript
-            tree-sitter-yaml
-          ]))
+        epkgs.treesit-grammars.with-all-grammars
       ];
     })
     (pkgs.callPackage ../../pkgs/mblaze-tui.nix { })
     # (pkgs.callPackage ../../pkgs/amused.nix { })
     (pkgs.writers.writePython3Bin "jack" {
-      flakeIgnore = [ "E114" "E117" "E501" "E128" "E111" "E302" "E226" "E303" "E203" "W504" "E261" "W391" "F841" ];
+      flakeIgnore = [
+        "E114"
+        "E117"
+        "E501"
+        "E128"
+        "E111"
+        "E302"
+        "E226"
+        "E303"
+        "E203"
+        "W504"
+        "E261"
+        "W391"
+        "F841"
+      ];
       libraries =
         [ pkgs.python3Packages.requests pkgs.python3Packages.beautifulsoup4 ];
     } (builtins.readFile ../../pkgs/jack.py))
     aerc
+    copilot-language-server
+    age
     passage
     nb
     chawan
@@ -108,7 +104,6 @@
     kubernetes-helm
     cowsay
     hexedit
-    spicetify-cli
     ffmpeg
     # ansible
     openssl
