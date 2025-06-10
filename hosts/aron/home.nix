@@ -91,13 +91,17 @@ with lib; {
       syntaxHighlighting.enable = true;
       shellAliases = {
         lz = "lazygit";
-        mnew = "(mlist ~/Maildir/work/inbox; mlist ~/Maildir/personal/inbox) | mthread | msort -d -r | mseq -S";
+        mnew =
+          "(mlist ~/Maildir/work/inbox; mlist ~/Maildir/personal/inbox) | mthread | msort -d -r | mseq -S";
         ll = "ls -l";
         update = "sudo nixos-rebuild switch";
         assume = "source ${pkgs.granted}/bin/assume";
         dw = "darwin-rebuild switch --flake '.#aron'";
         k = "kubectl";
-        ks = "kubectl config get-contexts |  awk 'NR>1 { print $2 }' | fzf | xargs kubectl config use-context";
+        wgup = "sudo wg-quick up wg0";
+        wgdown = "sudo wg-quick down wg0";
+        ks =
+          "kubectl config get-contexts |  awk 'NR>1 { print $2 }' | fzf | xargs kubectl config use-context";
       };
       oh-my-zsh = {
         enable = true;
@@ -110,7 +114,7 @@ with lib; {
     atuin = {
       enable = true;
       enableZshIntegration = true;
-      flags = ["--disable-up-arrow"];
+      flags = [ "--disable-up-arrow" ];
       settings.sync_address = "http://192.168.1.30:8888";
     };
     tmux = {
