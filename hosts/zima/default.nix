@@ -3,9 +3,8 @@
 let
   hostname = "zima";
   localDomain = hostname + ".hephnet.lan";
-in
 
-{
+in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -168,9 +167,7 @@ in
       2380
       2379
     ];
-    allowedUDPPorts = [
-      8472
-    ];
+    allowedUDPPorts = [ 8472 ];
   };
 
   # services.jellyfin.enable = true;
@@ -183,5 +180,14 @@ in
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
-  environment.systemPackages = with pkgs; [ vim mg wget ncdu git borgbackup bind dnsutils ];
+  environment.systemPackages = with pkgs; [
+    vim
+    mg
+    wget
+    ncdu
+    git
+    borgbackup
+    bind
+    dnsutils
+  ];
 }

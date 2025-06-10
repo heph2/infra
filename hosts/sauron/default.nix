@@ -3,9 +3,8 @@
 let
   hostname = "sauron";
   localDomain = hostname + ".hephnet.lan";
-in
 
-{
+in {
   imports = [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./disk-config.nix
@@ -17,7 +16,7 @@ in
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.grub.efiSupport = true;
-  boot.zfs.extraPools = ["data"];
+  boot.zfs.extraPools = [ "data" ];
 
   networking.hostName = hostname; # Define your hostname.
   boot.loader.grub.enable = true; # Enables wireless support via wpa_suppli
@@ -29,9 +28,7 @@ in
 
   hardware.graphics = {
     enable = true;
-    extraPackages = with pkgs; [
-      vpl-gpu-rt
-    ];
+    extraPackages = with pkgs; [ vpl-gpu-rt ];
   };
 
   services.zfs.autoScrub.enable = true;

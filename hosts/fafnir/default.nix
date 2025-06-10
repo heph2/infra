@@ -1,5 +1,4 @@
-{ config, pkgs, ... }:
-{
+{ config, pkgs, ... }: {
 
   boot = {
     kernel = {
@@ -37,7 +36,7 @@
     enp1s0.useDHCP = false;
     enp2s0.useDHCP = false;
     enp3s0.useDHCP = false;
-    
+
     # Handle the VLANs
     wan.useDHCP = false;
     lan = {
@@ -64,7 +63,7 @@
         enable = true;
         config = ''
           plugin rp-pppoe.so wan
-          
+
           # pppd supports multiple ways of entering credentials,
           # this is just 1 way
           name "vodafonedsl"

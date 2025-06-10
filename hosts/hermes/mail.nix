@@ -1,10 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-{
+{ config, lib, pkgs, ... }: {
   mailserver = {
     enable = true;
     borgbackup = {
