@@ -10,7 +10,7 @@
       }
       #inputs.nur.nixosModules.nur
       inputs.home-manager.darwinModules.home-manager
-      #inputs.spicetify-nix.nixosModules.default      
+      inputs.spicetify-nix.darwinModules.spicetify
       {
         home-manager.backupFileExtension = "backup";
         home-manager.useGlobalPkgs = true;
