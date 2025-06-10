@@ -61,6 +61,9 @@
 (use-package go-mode
   :mode ("\\.go?\\'" . go-mode))
 
+(use-package bison-mode
+  :mode ("\\.l?\\'" . bison-mode))
+
 (use-package rust-mode
   :mode ("\\.rs?\\'" . rust-mode))
 
@@ -272,6 +275,10 @@
           :fetcher github
           :repo "glittershark/org-clubhouse"))
 
+(quelpa '(quelpa-use-package
+ :fetcher git
+ :url "https://github.com/quelpa/quelpa-use-package.git"))
+
 (quelpa '(elysium
 	  :fetcher github
 	  :repo "lanceberge/elysium"))
@@ -288,30 +295,42 @@
   :hook
   (prog-mode . smerge-mode))
 
-(use-package gptel
-  :config
-  (setq
-   gptel-model 'qwen2.5-coder:latest
-   gptel-backend (gptel-make-ollama "Ollama"
-                   :host "192.168.1.18:11434"
-                   :stream t
-                   :models '("qwen2.5-coder:32b"))))
 
-(use-package chatgpt-shell)
-(setq chatgpt-shell-model-version "qwen2.5-coder:32b")
-(setq chatgpt-shell-ollama-api-url-base "http://192.168.1.18:11434")
-(setq chatgpt-shell-api-url-base "http://192.168.1.18:11434")
-(setq chatgpt-shell-openai-key "")
-(setq chatgpt-shell-model-versions
-      '("qwen2.5-coder:32b"
-        "gemma:latest"
-        ))
+;; (gptel-make-gh-copilot "Copilot")
 
-(setq chatgpt-shell-transmitted-context-length 8192)
+;; (use-package gptel
+  ;; :config
+  ;; (setq
+  ;;  ;; OPTIONAL configuration
+  ;;  gptel-model 'claude-3.7-sonnet
+  ;;  gptel-backend (gptel-make-gh-copilot "Copilot")))
+
+(use-package copilot
+  :quelpa (copilot :fetcher github
+                   :repo "copilot-emacs/copilot.el"
+                   :branch "main"
+                   :files ("*.el")))
+
+;; (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+;; (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+
+;; (defun heph/copilot-tab ()
+;;   "Tab will complete with copilot if available. Otherwise will try other completion framework"
+;;   (interactive)
+;;   (or (copilot-accept-completion)
+;;       (corfu-complete)
+;;       (indent-for-tab-command)))
+
+;; (define-key global-map (kbd "<tab>") #'heph/copilot-tab)
+
 (use-package vterm)
 (use-package kubel
   :after (vterm)
   :config (kubel-vterm-setup))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((shell . t)))
 
 (add-hook 'org-mode-hook #'org-shortcut-mode nil nil)
 (setq org-shortcut-state-alist
@@ -462,13 +481,13 @@ fi"
 (meow-setup)
 (meow-global-mode 1)
 
-(use-package centaur-tabs
-  :demand
-  :config
-  (centaur-tabs-mode t)
-  :bind
-  ("C-<prior>" . centaur-tabs-backward)
-  ("C-<next>" . centaur-tabs-forward))
+;; (use-package centaur-tabs
+;;   :demand
+;;   :config
+;;   (centaur-tabs-mode t)
+;;   :bind
+;;   ("C-<prior>" . centaur-tabs-backward)
+;;   ("C-<next>" . centaur-tabs-forward))
 
 (use-package ace-window
   :bind ("M-o" . ace-window))
