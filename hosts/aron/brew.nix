@@ -8,6 +8,7 @@
       "yacreader"
       "caffeine"
       "alfred"
+      "mars"
       "raycast"
       "rustrover"
       "joplin"
