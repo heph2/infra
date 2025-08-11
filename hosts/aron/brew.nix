@@ -10,6 +10,7 @@
       "yacreader"
       "caffeine"
       "alfred"
+      "blender"
       "mars"
       "raycast"
       "rustrover"
