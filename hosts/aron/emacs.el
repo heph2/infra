@@ -270,58 +270,14 @@
 
 (define-key global-map "\C-cc" 'org-capture)
 
-;; Shortcut integration
-(quelpa '(org-shortcut
-          :fetcher github
-          :repo "glittershark/org-clubhouse"))
-
 (quelpa '(quelpa-use-package
  :fetcher git
  :url "https://github.com/quelpa/quelpa-use-package.git"))
-
-(quelpa '(elysium
-	  :fetcher github
-	  :repo "lanceberge/elysium"))
-(setq elysium-window-size 0.33) ; The elysium buffer will be 1/3 your screen
-(setq elysium-window-style 'vertical) ; Can be customized to horizontal
-
-(quelpa '(evedel
-	  :fetcher github
-          :stable nil
-	  :repo "daedsidog/evedel"))
 
 (use-package smerge-mode
   :ensure nil
   :hook
   (prog-mode . smerge-mode))
-
-
-;; (gptel-make-gh-copilot "Copilot")
-
-;; (use-package gptel
-  ;; :config
-  ;; (setq
-  ;;  ;; OPTIONAL configuration
-  ;;  gptel-model 'claude-3.7-sonnet
-  ;;  gptel-backend (gptel-make-gh-copilot "Copilot")))
-
-(use-package copilot
-  :quelpa (copilot :fetcher github
-                   :repo "copilot-emacs/copilot.el"
-                   :branch "main"
-                   :files ("*.el")))
-
-;; (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
-;; (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
-
-;; (defun heph/copilot-tab ()
-;;   "Tab will complete with copilot if available. Otherwise will try other completion framework"
-;;   (interactive)
-;;   (or (copilot-accept-completion)
-;;       (corfu-complete)
-;;       (indent-for-tab-command)))
-
-;; (define-key global-map (kbd "<tab>") #'heph/copilot-tab)
 
 (use-package vterm)
 (use-package kubel
@@ -477,17 +433,12 @@ fi"
    '("z" . meow-pop-selection)
    '("'" . repeat)
    '("<escape>" . ignore)))
+
 (use-package meow)
 (meow-setup)
 (meow-global-mode 1)
 
-;; (use-package centaur-tabs
-;;   :demand
-;;   :config
-;;   (centaur-tabs-mode t)
-;;   :bind
-;;   ("C-<prior>" . centaur-tabs-backward)
-;;   ("C-<next>" . centaur-tabs-forward))
+(use-package kubernetes)
 
 (use-package ace-window
   :bind ("M-o" . ace-window))
