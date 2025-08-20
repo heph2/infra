@@ -1,5 +1,20 @@
 {
   "nodes": {
+    "avf": {
+      "locked": {
+        "lastModified": 1755349137,
+        "narHash": "sha256-xwgq0DinLBYKqo/FegSUkh4Pr0oexYfJzv+MMB/Xy4c=",
+        "owner": "nix-community",
+        "repo": "nixos-avf",
+        "rev": "5615d1f6e268709dfed168dc7c5762a1e612bbd0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixos-avf",
+        "type": "github"
+      }
+    },
     "blobs": {
       "flake": false,
       "locked": {
@@ -364,6 +379,7 @@
     },
     "root": {
       "inputs": {
+        "avf": "avf",
         "darwin": "darwin",
         "emacs-overlay": "emacs-overlay",
         "firefox-addons": "firefox-addons",

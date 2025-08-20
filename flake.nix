@@ -11,6 +11,10 @@
       url = "github:lnl7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    avf = {
+      url = "github:nix-community/nixos-avf";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nur.url = "github:nix-community/NUR";
     flake-parts.url = "github:hercules-ci/flake-parts";
     sops-nix.url = "github:Mic92/sops-nix";
@@ -52,12 +56,14 @@
         ./hosts/ushi/configuration.nix # # Nixos WSL 2
         ./hosts/sauron/configuration.nix # # NAS
         ./hosts/aron/configuration.nix # # MacBook
+        ./hosts/pixie/configuration.nix # # Google Pixel 6a AVF
         ./dev.nix
       ];
       systems = [
         # systems for which you want to build the `perSystem` attributes
         "x86_64-linux"
         "aarch64-darwin"
+        "aarch64-linux"
       ];
     };
 }
