@@ -26,15 +26,17 @@
     ];
   };
 
-  users.users.marco.home = "/Users/marco";
+  # nix.linux-builder = {
+  #   enable = true;
+  #   ephemeral = true;
+  #   systems = [
+  #     "aarch64-linux"
+  #   ];
+  # };
 
+  users.users.marco.home = "/Users/marco";
   programs.zsh.enable = true;
   programs.nix-index.enable = true;
-
-  # programs.spicetify = {
-  #   enable = true;
-  #   enabledExtensions = with spicePkgs
-  # };
   programs.spicetify =
     let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
     in {
