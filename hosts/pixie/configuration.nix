@@ -7,7 +7,10 @@
         nixpkgs.config.allowUnfree = true;
       }
       ({ modulesPath, ... }: {
-        imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+        imports = [
+          (modulesPath + "/installer/scan/not-detected.nix")
+          inputs.avf.nixosModules.avf
+        ];
       })
     ];
   };

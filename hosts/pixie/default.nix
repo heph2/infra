@@ -10,7 +10,6 @@
 {
   imports = [
     # include nixos-avf modules
-    <nixos-avf/avf>
   ];
 
   avf.defaultUser = "droid";
