@@ -26,13 +26,13 @@
     ];
   };
 
-  # nix.linux-builder = {
-  #   enable = true;
-  #   ephemeral = true;
-  #   systems = [
-  #     "aarch64-linux"
-  #   ];
-  # };
+  nix.linux-builder = {
+    enable = true;
+    ephemeral = true;
+    systems = [
+      "aarch64-linux"
+    ];
+  };
   system.primaryUser = "marco";
 
   users.users.marco.home = "/Users/marco";
