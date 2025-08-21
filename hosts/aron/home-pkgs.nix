@@ -121,7 +121,7 @@
     nodePackages.pnpm
     nodePackages.typescript
     nodePackages.npm-check-updates
-    nodejs
+    # nodejs
     yarn
     perl
     openstackclient
