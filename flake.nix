@@ -13,7 +13,6 @@
     };
     avf = {
       url = "github:nix-community/nixos-avf";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     nur.url = "github:nix-community/NUR";
     flake-parts.url = "github:hercules-ci/flake-parts";

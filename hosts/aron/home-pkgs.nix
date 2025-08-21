@@ -54,7 +54,6 @@
     poppler
     ffmpegthumbnailer
     mediainfo
-    thefuck
     imagemagick
     yubikey-manager
     clojure
