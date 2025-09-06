@@ -26,7 +26,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     spicetify-nix = {
-      url = "github:Gerg-L/spicetify-nix/24.11";
+      url = "github:Gerg-L/spicetify-nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # xremap = {
