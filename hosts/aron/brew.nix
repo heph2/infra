@@ -5,6 +5,7 @@
       "telegram-desktop"
       "vagrant"
       "godot"
+      "arc"
       "steam"
       "godot-mono"
       "openscad"
