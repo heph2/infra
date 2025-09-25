@@ -55,6 +55,7 @@
     enable = true;
     addresses = {
       localhost = "127.0.0.1";
+      "railway.com" = "104.18.24.53";
       # lan = "192.168.1.30";
     };
   };
