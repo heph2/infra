@@ -7,7 +7,7 @@
 
 buildNpmPackage rec {
   pname = "claude-code";
-  version = "1.0.71";
+  version = "2.0.14";
 
   nodejs = nodejs_20; # required for sandboxed Nix builds on Darwin
 
