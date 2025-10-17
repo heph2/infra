@@ -33,9 +33,25 @@
     2380 # k3s, etcd peers: required if using a "High Availability Embedded etcd" configuration
   ];
   networking.firewall.allowedUDPPorts = [
+    51820
     8472 # k3s, flannel: required if using multi-node for inter-node networking
   ];
+  networking.wireguard.interfaces = {
+    wg0 = {
+      ips = [ "10.1.1.5/32" "2a0f:85c1:c4d:1234::5/128" ];
+      listenPort = 51820;
+      privateKeyFile = "/root/vellutata.wg0.priv";
 
+      peers = [
+        {
+          publicKey = "JE3KvXkupkYkM3eJ2mSmSeBCAZvHBqv7k4XZ/WSUc1w=";
+          allowedIPs = [ "0.0.0.0/0" "::/0" ];
+          endpoint = "193.57.159.213:51820";
+          persistentKeepalive = 25;
+        }
+      ];
+    };
+  };
   services.k3s = {
     enable = true;
     role = "server";
