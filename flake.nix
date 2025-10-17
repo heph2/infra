@@ -29,14 +29,7 @@
       url = "github:Gerg-L/spicetify-nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # xremap = {
-    #   url = "github:xremap/nix-flake";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nix-ai-tools.url = "github:numtide/nix-ai-tools";
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay/db47b2483942771a725cf10e7cd3b1ec562750b7";
       inputs.nixpkgs.follows = "nixpkgs";
