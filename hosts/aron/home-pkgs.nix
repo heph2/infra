@@ -16,7 +16,6 @@
       ];
     })
     (pkgs.callPackage ../../pkgs/mblaze-tui.nix { })
-    (pkgs.callPackage ../../pkgs/cc/package.nix { })
     # (pkgs.callPackage ../../pkgs/amused.nix { })
     (pkgs.writers.writePython3Bin "jack" {
       flakeIgnore = [
