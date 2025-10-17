@@ -14,11 +14,17 @@ in {
     }/module.nix"
   ];
 
-  specialisation."VFIO".configuration = {
-    imports = [ ./vfio.nix ];
-    system.nixos.tags = [ "with-vfio" ];
-    vfio.enable = true;
-  };
+  # specialisation."VFIO".configuration = {
+  #   imports = [ ./vfio.nix ];
+  #   system.nixos.tags = [ "with-vfio" ];
+  #   vfio.enable = true;
+  # };
+  #
+  #
+  nixpkgs.config.permittedInsecurePackages = [
+                "libsoup-2.74.3"
+  ];
+  environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
 
   environment.extraInit = ''
     xset s off -dpms
@@ -102,6 +108,9 @@ in {
     };
   };
 
+  services.displayManager.cosmic-greeter.enable = true;
+  services.desktopManager.cosmic.enable = true;
+
   services.samba-wsdd = {
     enable = false;
     openFirewall = true;
@@ -110,7 +119,7 @@ in {
   programs.steam = { enable = true; };
 
   services.transmission = {
-    enable = true;
+    enable = false;
     user = "heph";
     group = "users";
     home = "/home/heph/";
@@ -165,19 +174,19 @@ in {
 
   ## Nvidia
 
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
-    open = false;
-    nvidiaSettings = true;
-  };
+  # hardware.nvidia = {
+  #   modesetting.enable = true;
+  #   powerManagement.enable = false;
+  #   powerManagement.finegrained = false;
+  #   open = false;
+  #   nvidiaSettings = true;
+  # };
 
-  hardware.nvidia.prime = {
-    offload.enable = true;
-    nvidiaBusId = "PCI:7:0:0";
-    amdgpuBusId = "PCI:4:0:0";
-  };
+  # hardware.nvidia.prime = {
+  #   offload.enable = true;
+  #   nvidiaBusId = "PCI:7:0:0";
+  #   amdgpuBusId = "PCI:4:0:0";
+  # };
 
   ## yubikey
   services.pcscd.enable = true;
@@ -226,22 +235,22 @@ in {
     { output = "DisplayPort-1"; }
   ];
 
-  services.xserver.videoDrivers = [ "amdgpu" "nvidia" ];
+  services.xserver.videoDrivers = [ "amdgpu" ];
 
-  services.displayManager.defaultSession = "none+i3";
-  services.xserver.displayManager = {
-    #ly.enable = true;
-  };
+  # services.displayManager.defaultSession = "none+i3";
+  # services.xserver.displayManager = {
+  #   #ly.enable = true;
+  # };
 
-  services.xserver.displayManager.sessionCommands = ''
-    ${pkgs.xorg.xinput} set-prop 'ELECOM TrackBall Mouse DEFT Pro TrackBall Mouse' 'libinput Accel Speed' -0.5
-  '';
+  # services.xserver.displayManager.sessionCommands = ''
+  #   ${pkgs.xorg.xinput} set-prop 'ELECOM TrackBall Mouse DEFT Pro TrackBall Mouse' 'libinput Accel Speed' -0.5
+  # '';
 
-  services.xserver = { windowManager.i3.enable = true; };
+  # services.xserver = { windowManager.i3.enable = true; };
 
   services.emacs.enable = true;
 
-  services.displayManager.ly.enable = true;
+  services.displayManager.ly.enable = false;
   services.xserver.desktopManager.plasma5.enable = false;
 
   services.xserver.xkb.layout = "us";
@@ -257,7 +266,7 @@ in {
   };
 
   services.ollama = {
-    enable = true;
+    enable = false;
     host = "0.0.0.0";
     environmentVariables = { OLLAMA_CONTEXT_LENGTH = "32768"; };
     acceleration = "cuda";
@@ -268,25 +277,23 @@ in {
     enable = false; # currently broken
   };
 
-  programs.spicetify =
-    let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
-    in {
-      enable = true;
-      enabledExtensions = with spicePkgs.extensions; [
-        adblock
-        hidePodcasts
-        shuffle # shuffle+ (special characters are sanitized out of extension names)
-      ];
-      theme = spicePkgs.themes.catppuccin;
-      colorScheme = "mocha";
-    };
+  # programs.spicetify =
+  #   let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+  #   in {
+  #     enable = true;
+  #     enabledExtensions = with spicePkgs.extensions; [
+  #       adblock
+  #       hidePodcasts
+  #       shuffle # shuffle+ (special characters are sanitized out of extension names)
+  #     ];
+  #     theme = spicePkgs.themes.catppuccin;
+  #     colorScheme = "mocha";
+  #   };
 
   programs.streamdeck-ui = {
     enable = true;
     autoStart = true; # optional
   };
-
-  services.pulseaudio.enable = false;
 
   users.users.heph = {
     isNormalUser = true;
@@ -328,11 +335,9 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
-    inputs.zen-browser.packages."${system}".default
     vim
     wget
     quickemu
-    goose-cli
     python3
     aider-chat
     firefox
@@ -392,7 +397,7 @@ in {
     '';
   };
   networking.firewall.trustedInterfaces = [ "virbr0" ];
-  networking.interfaces.enp6s0.wakeOnLan.enable = true;
+  # networking.interfaces.enp6s0.wakeOnLan.enable = true;
 
   system.stateVersion = "23.11";
 }

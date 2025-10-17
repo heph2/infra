@@ -21,14 +21,14 @@
     (eval-buffer)
     (quelpa-self-upgrade)))
 
-(use-package age
-  :after (org)
-  :commands (age-file-enable)
-  :init
-  ;; (setq age-program "rage"
-  (setq age-default-identity "~/env/infra/secrets/age-privkey.txt"
-        age-default-recipient "~/env/infra/secrets/age-pubkey.txt")
-  (age-file-enable))
+; (use-package age
+;   :after (org)
+;   :commands (age-file-enable)
+;   :init
+;   ;; (setq age-program "rage"
+;   (setq age-default-identity "~/env/infra/secrets/age-privkey.txt"
+;         age-default-recipient "~/env/infra/secrets/age-pubkey.txt")
+;   (age-file-enable))
 
 (quelpa '(passage :fetcher github :repo "anticomputer/passage.el"))
 (setq age-default-identity (expand-file-name "~/env/infra/secrets/age-privkey.txt"))
@@ -62,7 +62,7 @@
 
 (load-theme 'solarized-dark t)
 
-(use-package eat)
+; (use-package eat)
 
 (use-package elfeed
   :bind ("C-x w" . elfeed)

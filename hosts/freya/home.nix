@@ -13,32 +13,31 @@ in {
   programs.home-manager.enable = true;
   home.packages = with pkgs;
     [
-      (pkgs.emacsWithPackagesFromUsePackage {
-        config = ./emacs.el;
-        defaultInitFile = true;
-        package = pkgs.emacs;
-        alwaysEnsure = true;
-        extraEmacsPackages = epkgs: [
-          epkgs.vterm
-          epkgs.transient
-          epkgs.notmuch
-          epkgs.mu4e
-          epkgs.pdf-tools
-          epkgs.treesit-grammars.with-all-grammars
-        ];
-      })
-      (pkgs.callPackage ../../pkgs/amused.nix { })
-      (pkgs.writers.writePython3Bin "totp" {
+    #   (pkgs.emacsWithPackagesFromUsePackage {
+    #     config = ./emacs.el;
+    #     defaultInitFile = true;
+    #     package = pkgs.emacs;
+    #     alwaysEnsure = true;
+    #     extraEmacsPackages = epkgs: [
+    #       epkgs.vterm
+    #       epkgs.transient
+    #       epkgs.notmuch
+    #       epkgs.mu4e
+    #       epkgs.pdf-tools
+    #       epkgs.treesit-grammars.with-all-grammars
+    #     ];
+    #   })
+      # (pkgs.callPackage ../../pkgs/amused.nix { })
+      # (pkgs.writers.writePython3Bin "totp" {
 
-      } (builtins.readFile ../../pkgs/totp.py))
-      (pkgs.writers.writeBashBin "m4b2mp3" { }
-        (builtins.readFile ../../pkgs/m4b2mp3.sh))
-      (pkgs.writers.writePython3Bin "jack" {
-        libraries =
-          [ pkgs.python3Packages.requests pkgs.python3Packages.beautifulsoup4 ];
-      } (builtins.readFile ../../pkgs/jack.py))
+      # } (builtins.readFile ../../pkgs/totp.py))
+      # (pkgs.writers.writeBashBin "m4b2mp3" { }
+      #   (builtins.readFile ../../pkgs/m4b2mp3.sh))
+      # (pkgs.writers.writePython3Bin "jack" {
+      #   libraries =
+      #     [ pkgs.python3Packages.requests pkgs.python3Packages.beautifulsoup4 ];
+      # } (builtins.readFile ../../pkgs/jack.py))
       mpv
-      nodejs_23
       bambu-studio
       nix-output-monitor
       brave
@@ -485,7 +484,7 @@ in {
   };
 
   xsession.windowManager.i3 = {
-    enable = true;
+    enable = false;
     package = pkgs.i3-gaps;
     config = {
       modifier = "Mod4";
@@ -594,14 +593,14 @@ in {
   };
 
   services.polybar = {
-    enable = true;
+    enable = false;
     script = ''
       polybar top &
     '';
   };
 
   programs.i3status-rust = {
-    enable = true;
+    enable = false;
     bars = {
       top = {
         theme = "solarized-dark";
