@@ -1,17 +1,24 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 let
   user = "heph";
   platform = "amd";
-  vfioIds = [ "10de:2204" "10de:1aef" ];
-in {
+  vfioIds = [
+    "10de:2204"
+    "10de:1aef"
+  ];
+in
+{
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./disk-config.nix
-    "${
-      builtins.fetchTarball
-      "https://github.com/nix-community/disko/archive/master.tar.gz"
-    }/module.nix"
+    "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
   ];
 
   # specialisation."VFIO".configuration = {
@@ -22,7 +29,7 @@ in {
   #
   #
   nixpkgs.config.permittedInsecurePackages = [
-                "libsoup-2.74.3"
+    "libsoup-2.74.3"
   ];
   environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
 
@@ -38,48 +45,55 @@ in {
   services.blueman.enable = true;
   services.zfs.autoScrub.enable = true;
 
-  services.borgbackup.jobs = let
-    common-excludes = [
-      ".cache"
-      "*/cache2" # firefox
-      "*/Cache"
-      ".mozilla"
-      "*/.cargo"
-      ".compose-cache"
-      ".npm"
-      ".local/share"
-      ".ollama"
-      "*/.terraform.d"
-      ".rustup"
-      ".config/Slack/logs"
-      ".config/Code/CachedData"
-      ".container-diff"
-      ".npm/_cacache"
-      "*/node_modules"
-      "*/_build"
-      "*/.tox"
-      "*/venv"
-      "*/.venv"
-    ];
-    basicBorgJob = name: {
-      encryption.mode = "none";
-      environment.BORG_RSH =
-        "ssh -o 'StrictHostKeyChecking=no' -i /home/heph/.ssh/sekai_ed";
-      environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
-      extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
-      repo = "ssh://zima//data/backup/${name}";
-      compression = "zstd,1";
-      startAt = "hourly";
-      persistentTimer = true;
-      user = "heph";
+  services.borgbackup.jobs =
+    let
+      common-excludes = [
+        ".cache"
+        "*/cache2" # firefox
+        "*/Cache"
+        ".mozilla"
+        "*/.cargo"
+        ".compose-cache"
+        ".npm"
+        ".local/share"
+        ".ollama"
+        "*/.terraform.d"
+        ".rustup"
+        ".config/Slack/logs"
+        ".config/Code/CachedData"
+        ".container-diff"
+        ".npm/_cacache"
+        "*/node_modules"
+        "*/_build"
+        "*/.tox"
+        "*/venv"
+        "*/.venv"
+      ];
+      basicBorgJob = name: {
+        encryption.mode = "none";
+        environment.BORG_RSH = "ssh -o 'StrictHostKeyChecking=no' -i /home/heph/.ssh/sekai_ed";
+        environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
+        extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
+        repo = "ssh://zima//data/backup/${name}";
+        compression = "zstd,1";
+        startAt = "hourly";
+        persistentTimer = true;
+        user = "heph";
+      };
+    in
+    {
+      home-heph = basicBorgJob "freya/home-heph" // rec {
+        paths = "/home/heph";
+        exclude = map (x: paths + "/" + x) (
+          common-excludes
+          ++ [
+            "Downloads"
+            "Videos"
+            ".models"
+          ]
+        );
+      };
     };
-  in {
-    home-heph = basicBorgJob "freya/home-heph" // rec {
-      paths = "/home/heph";
-      exclude = map (x: paths + "/" + x)
-        (common-excludes ++ [ "Downloads" "Videos" ".models" ]);
-    };
-  };
 
   services.samba = {
     enable = false;
@@ -116,7 +130,9 @@ in {
     openFirewall = true;
   };
 
-  programs.steam = { enable = true; };
+  programs.steam = {
+    enable = true;
+  };
 
   services.transmission = {
     enable = false;
@@ -128,7 +144,9 @@ in {
     settings.downloadDirPermissions = "0770";
   };
 
-  services.fstrim = { enable = true; };
+  services.fstrim = {
+    enable = true;
+  };
   nixpkgs.config.allowUnfree = true;
 
   #  services.xremap = {
@@ -150,7 +168,10 @@ in {
     };
 
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       auto-optimise-store = true;
     };
   };
@@ -158,16 +179,22 @@ in {
   hardware.cpu.amd.updateMicrocode = true;
   networking.hostId = "d81f3ea4";
   nix.settings.trusted-substituters = [ "https://ai.cachix.org" ];
-  nix.settings.trusted-public-keys =
-    [ "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc=" ];
+  nix.settings.trusted-public-keys = [
+    "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="
+  ];
 
   boot.extraModprobeConfig = ''
     blacklist nouveau
     options nouveau modeset=0
   '';
 
-  boot.kernelModules =
-    [ "kvm-${platform}" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio" ];
+  boot.kernelModules = [
+    "kvm-${platform}"
+    "vfio_virqfd"
+    "vfio_pci"
+    "vfio_iommu_type1"
+    "vfio"
+  ];
 
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.enable = true;
@@ -190,12 +217,20 @@ in {
 
   ## yubikey
   services.pcscd.enable = true;
-  services.udev.packages = [ pkgs.libfido2 pkgs.yubikey-personalization ];
+  services.udev.extraRules = ''
+    SUBSYSTEM=="usb", ATTR{idVendor}=="87ad", ATTR{idProduct}=="70db", MODE="0666"
+  '';
+  services.udev.packages = [
+    pkgs.libfido2
+    pkgs.yubikey-personalization
+  ];
   security.pam.services = {
     login.u2fAuth = true;
     sudo.u2fAuth = true;
   };
-  programs = { yubikey-touch-detector.enable = true; };
+  programs = {
+    yubikey-touch-detector.enable = true;
+  };
   hardware.gpgSmartcards.enable = true;
   services.yubikey-agent.enable = true;
 
@@ -218,6 +253,8 @@ in {
   };
 
   hardware.enableAllFirmware = true;
+  hardware.steam-hardware.enable = true;
+  hardware.xpadneo.enable = true;
   hardware.graphics.enable = true;
   hardware.bluetooth.enable = true;
 
@@ -268,7 +305,9 @@ in {
   services.ollama = {
     enable = false;
     host = "0.0.0.0";
-    environmentVariables = { OLLAMA_CONTEXT_LENGTH = "32768"; };
+    environmentVariables = {
+      OLLAMA_CONTEXT_LENGTH = "32768";
+    };
     acceleration = "cuda";
     openFirewall = true;
   };
@@ -277,18 +316,20 @@ in {
     enable = false; # currently broken
   };
 
-  # programs.spicetify =
-  #   let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
-  #   in {
-  #     enable = true;
-  #     enabledExtensions = with spicePkgs.extensions; [
-  #       adblock
-  #       hidePodcasts
-  #       shuffle # shuffle+ (special characters are sanitized out of extension names)
-  #     ];
-  #     theme = spicePkgs.themes.catppuccin;
-  #     colorScheme = "mocha";
-  #   };
+  programs.spicetify =
+    let
+      spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+    in
+    {
+      enable = true;
+      enabledExtensions = with spicePkgs.extensions; [
+        adblock
+        hidePodcasts
+        shuffle # shuffle+ (special characters are sanitized out of extension names)
+      ];
+      theme = spicePkgs.themes.catppuccin;
+      colorScheme = "mocha";
+    };
 
   programs.streamdeck-ui = {
     enable = true;
@@ -318,7 +359,11 @@ in {
     tls.enable = false;
   };
 
-  virtualisation = { docker = { enable = true; }; };
+  virtualisation = {
+    docker = {
+      enable = true;
+    };
+  };
 
   users.users.root = {
     openssh = {
@@ -335,7 +380,9 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
+    inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
     vim
+    hidapi
     wget
     quickemu
     python3
@@ -387,8 +434,15 @@ in {
   };
 
   services.openssh.enable = true;
-  networking.firewall.allowedTCPPorts = [ 22 24800 57621 ];
-  networking.firewall.allowedUDPPorts = [ 24800 5353 ];
+  networking.firewall.allowedTCPPorts = [
+    22
+    24800
+    57621
+  ];
+  networking.firewall.allowedUDPPorts = [
+    24800
+    5353
+  ];
   networking.firewall.enable = true;
   networking.firewall = {
     extraCommands = ''

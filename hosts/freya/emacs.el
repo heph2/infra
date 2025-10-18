@@ -60,18 +60,18 @@
 
 (require 'bind-key)
 
-(load-theme 'solarized-dark t)
+; (load-theme 'solarized-dark t)
 
-; (use-package eat)
+ (use-package eat)
 
-(use-package elfeed
-  :bind ("C-x w" . elfeed)
-  :config
-  (setq elfeed-feeds
-        '(("http://nullprogram.com/feed/" emacs)
-	  ("http://localhost:9000/?url=gemini://drewdevault.com" gemini)
-          ("https://planet.emacslife.com/atom.xml" emacs))))
-  ;; (setq elfeed-curl-program '/run/current-system/sw/bin/curl'))
+ (use-package elfeed
+   :bind ("C-x w" . elfeed)
+   :config
+   (setq elfeed-feeds
+         '(("http://nullprogram.com/feed/" emacs)
+ 	  ("http://localhost:9000/?url=gemini://drewdevault.com" gemini)
+           ("https://planet.emacslife.com/atom.xml" emacs))))
+ ;; (setq elfeed-curl-program '/run/current-system/sw/bin/curl'))
 
 (setenv "TERM" "xterm256-color") ;; needed by eat on MacOS
 
@@ -154,14 +154,14 @@
   :config
   (vertico-mode))
 
-(use-package orderless
-  :custom
-  (completion-styles '(orderless))      ; Use orderless
-  (completion-category-defaults nil))
-;  (completion-category-overrides '((eglot (styles . (orderless flex))))))
-;;  (completion-category-overrides
-;; '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
-;;                   orderless)))))
+;  (use-package orderless
+;    :custom
+;    (completion-styles '(orderless))      ; Use orderless
+;    (completion-category-defaults nil))
+;   (completion-category-overrides '((eglot (styles . (orderless flex))))))
+;  (completion-category-overrides
+; '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
+;                   orderless)))))
 
 (use-package corfu
   :custom
@@ -178,15 +178,15 @@
   (global-corfu-mode))
 
 
-;; (use-package yasnippet
-;; ;;  :diminish yas-minor-mode
-;;   :hook (prog-mode . yas-minor-mode)
-;;   :config
-;;   (yas-reload-all))
+; (use-package yasnippet
+; ;;  :diminish yas-minor-mode
+;   :hook (prog-mode . yas-minor-mode)
+;   :config
+;   (yas-reload-all))
 
-;; (use-package yasnippet-snippets
-;;   :defer t
-;;   :after yasnippet)
+; (use-package yasnippet-snippets
+;   :defer t
+;   :after yasnippet)
 
 (use-package consult
   :init (require 'bind-key)
@@ -203,8 +203,6 @@
 
 (use-package minions)
 
-(use-package aider)
-
 (use-package envrc
   :init
   (envrc-global-mode))
@@ -212,7 +210,7 @@
 (use-package direnv
   :config (direnv-mode))
 
-;(use-package kubernetes)
+(use-package kubernetes)
 (use-package jsonnet-mode)
 (use-package terraform-mode)
 (use-package json-mode)
@@ -329,15 +327,6 @@
   :ensure nil
   :hook
   (prog-mode . smerge-mode))
-
-(use-package gptel
-  :config
-  (setq
-   gptel-model 'qwen2.5-coder:latest
-   gptel-backend (gptel-make-ollama "Ollama"
-                   :host "192.168.1.18:11434"
-                   :stream t
-                   :models '("qwen2.5-coder:32b"))))
 
 (use-package vterm)
 (use-package kubel
