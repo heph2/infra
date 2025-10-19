@@ -1,10 +1,12 @@
-{ pkgs, inputs, ... }: {
+{ pkgs, inputs, ... }:
+{
   flake.nixosConfigurations.freya = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
     specialArgs = { inherit inputs; };
     modules = [
       { nixpkgs.overlays = [ inputs.emacs-overlay.overlay ]; }
       ./default.nix
+      inputs.agenix.nixosModules.default
       inputs.spicetify-nix.nixosModules.default
       inputs.home-manager.nixosModules.home-manager
       {
@@ -15,9 +17,12 @@
       }
       { nixpkgs.config.allowUnfree = true; }
       ../../modules/common/default.nix
-      ({ modulesPath, ... }: {
-        imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
-      })
+      (
+        { modulesPath, ... }:
+        {
+          imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+        }
+      )
     ];
   };
 }
