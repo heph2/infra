@@ -28,6 +28,14 @@ in
   # };
   #
   #
+  age.identityPaths = [ "/home/heph/.ssh/sekai_ed" ];
+  age.secrets.wg = {
+    file = ../../secrets/wg-key-freya.age;
+    mode = "640";
+    owner = "systemd-network";
+    group = "systemd-network";
+  };
+
   nixpkgs.config.permittedInsecurePackages = [
     "libsoup-2.74.3"
   ];
@@ -149,7 +157,30 @@ in
   };
   nixpkgs.config.allowUnfree = true;
 
-  #  services.xremap = {
+  networking.wireguard.interfaces = {
+    wg0 = {
+      ips = [
+        "10.1.1.6/32"
+        "2a0f:85c1:c4d:1234::6/128"
+      ];
+      listenPort = 51820;
+      privateKeyFile = config.age.secrets.wg.path;
+
+      peers = [
+        {
+          publicKey = "VaCUhE4J7m4uP+3aKPf0PBeRCnS4Wy1rFX0aZ0imYgU=";
+          allowedIPs = [
+            "2000::/3"
+            "10.1.1.0/24"
+            "1.1.1.1/32"
+          ];
+          endpoint = "193.57.159.213:51820";
+          persistentKeepalive = 25;
+        }
+      ];
+    };
+  };
+  # services.xremap = {
   #    withX11 = false;
   #    serviceMode = "system";
   #    debug = false;
@@ -438,6 +469,7 @@ in
     22
     24800
     57621
+    8000
   ];
   networking.firewall.allowedUDPPorts = [
     24800
