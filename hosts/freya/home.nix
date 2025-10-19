@@ -119,6 +119,12 @@ in
         user = "vellutata";
         identityFile = "/home/heph/.ssh/asn_id";
       };
+      pasta = {
+        port = 22;
+        hostname = "103.230.140.116";
+        user = "pasta";
+        identityFile = "/home/heph/.ssh/asn_id";
+      };
       hermes = {
         port = 22;
         hostname = "135.181.85.238";
