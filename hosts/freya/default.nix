@@ -208,6 +208,7 @@ in
   };
 
   hardware.cpu.amd.updateMicrocode = true;
+  hardware.graphics.enable32Bit = true;
   networking.hostId = "d81f3ea4";
   nix.settings.trusted-substituters = [ "https://ai.cachix.org" ];
   nix.settings.trusted-public-keys = [
@@ -225,6 +226,13 @@ in
     "vfio_pci"
     "vfio_iommu_type1"
     "vfio"
+    "amdgpu"
+  ];
+  boot.kernelParams = [
+    "radeon.si_support=0"
+    "amdgpu.si_support=1"
+    "radeon.cik_support=0"
+    "amdgpu.cik_support=1"
   ];
 
   boot.loader.efi.canTouchEfiVariables = true;
@@ -287,6 +295,14 @@ in
   hardware.steam-hardware.enable = true;
   hardware.xpadneo.enable = true;
   hardware.graphics.enable = true;
+  hardware.graphics.extraPackages = with pkgs; [
+    amdvlk
+  ];
+  # For 32 bit applications
+  hardware.graphics.extraPackages32 = with pkgs; [
+    driversi686Linux.amdvlk
+  ];
+
   hardware.bluetooth.enable = true;
 
   networking.hostName = "freya"; # Define your hostname.
@@ -410,9 +426,25 @@ in
     mandoc.enable = true;
   };
 
+  nixpkgs.overlays = [
+    (self: super: {
+      lutris = super.lutris.override {
+        extraLibraries =
+          pkgs: with pkgs; [
+            libadwaita
+            gtk4
+          ];
+      };
+    })
+  ];
+
   environment.systemPackages = with pkgs; [
     inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
     vim
+    lutris
+    protonup-qt
+    wineWowPackages.stable
+    winetricks
     hidapi
     wget
     quickemu
