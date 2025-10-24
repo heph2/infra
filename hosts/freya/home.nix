@@ -52,6 +52,8 @@ in
       ispell
       transmission_4-qt
       libreoffice
+      bottles
+      lazygit
       kdePackages.okular
       ranger
       gnumake
@@ -151,7 +153,7 @@ in
       };
       sauron = {
         port = 22;
-        hostname = "192.168.1.153";
+        hostname = "192.168.0.25";
         user = "root";
         identityFile = "/home/heph/.ssh/sekai_ed";
       };
