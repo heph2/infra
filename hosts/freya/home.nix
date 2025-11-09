@@ -46,6 +46,10 @@ in
       #     [ pkgs.python3Packages.requests pkgs.python3Packages.beautifulsoup4 ];
       # } (builtins.readFile ../../pkgs/jack.py))
       mpv
+      easyeffects
+      high-tide
+      winbox
+      deltachat-desktop
       bambu-studio
       nix-output-monitor
       brave
