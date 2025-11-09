@@ -179,6 +179,25 @@ in
         }
       ];
     };
+    # wg1 = {
+    #   ips = [
+    #     "10.2.1.2/32"
+    #     "2a0f:85c1:c4d:5678::2/128"
+    #   ];
+    #   listenPort = 51820;
+    #   privateKeyFile = config.age.secrets.wg.path;
+
+    #   peers = [
+    #     {
+    #       publicKey = "";
+    #       allowedIPs = [
+
+    #       ];
+    #       endpoint = "";
+    #       persistentKeepalive = 25;
+    #     }
+    #   ];
+    # };
   };
   # services.xremap = {
   #    withX11 = false;
@@ -210,6 +229,35 @@ in
   hardware.cpu.amd.updateMicrocode = true;
   hardware.graphics.enable32Bit = true;
   networking.hostId = "d81f3ea4";
+  networking.dhcpcd = {
+    enable = true;
+    extraConfig = "nohook resolv.conf";
+  };
+  services.resolved.enable = false;
+  networking.resolvconf.enable = false;
+  networking.nameservers = [
+    "127.0.0.1"
+    "::1"
+  ];
+  services.dnscrypt-proxy2 = {
+    enable = true;
+    settings = {
+      ipv6_servers = true;
+      require_dnssec = true;
+
+      source.public-resolvers = {
+        urls = [
+          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
+          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
+        ];
+        cache_file = "/var/lib/dnscrypt-proxy2/public-resolvers.md";
+        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
+      };
+
+      server_names = [ "adguard-dns-doh" ];
+    };
+  };
+
   nix.settings.trusted-substituters = [ "https://ai.cachix.org" ];
   nix.settings.trusted-public-keys = [
     "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="
