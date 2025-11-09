@@ -53,6 +53,13 @@ in
   services.blueman.enable = true;
   services.zfs.autoScrub.enable = true;
 
+  services.unifi = {
+    enable = true;
+    openFirewall = true;
+    unifiPackage = pkgs.unifi;
+    mongodbPackage = pkgs.mongodb;
+  };
+
   services.borgbackup.jobs =
     let
       common-excludes = [
@@ -229,34 +236,26 @@ in
   hardware.cpu.amd.updateMicrocode = true;
   hardware.graphics.enable32Bit = true;
   networking.hostId = "d81f3ea4";
+
+  # DHCP and DNS
   networking.dhcpcd = {
     enable = true;
     extraConfig = "nohook resolv.conf";
   };
-  services.resolved.enable = false;
-  networking.resolvconf.enable = false;
-  networking.nameservers = [
-    "127.0.0.1"
-    "::1"
-  ];
-  services.dnscrypt-proxy2 = {
+  services.resolved = {
     enable = true;
-    settings = {
-      ipv6_servers = true;
-      require_dnssec = true;
-
-      source.public-resolvers = {
-        urls = [
-          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
-          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
-        ];
-        cache_file = "/var/lib/dnscrypt-proxy2/public-resolvers.md";
-        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
-      };
-
-      server_names = [ "adguard-dns-doh" ];
-    };
+    dnssec = "true";
+    domains = [ "~." ];
+    fallbackDns = [
+      "1.1.1.1#one.one.one.one"
+      "1.0.0.1#one.one.one.one"
+    ];
+    dnsovertls = "true";
   };
+  networking.nameservers = [
+    "1.1.1.1#one.one.one.one"
+    "1.0.0.1#one.one.one.one"
+  ];
 
   nix.settings.trusted-substituters = [ "https://ai.cachix.org" ];
   nix.settings.trusted-public-keys = [
@@ -343,13 +342,6 @@ in
   hardware.steam-hardware.enable = true;
   hardware.xpadneo.enable = true;
   hardware.graphics.enable = true;
-  hardware.graphics.extraPackages = with pkgs; [
-    amdvlk
-  ];
-  # For 32 bit applications
-  hardware.graphics.extraPackages32 = with pkgs; [
-    driversi686Linux.amdvlk
-  ];
 
   hardware.bluetooth.enable = true;
 
@@ -383,7 +375,6 @@ in
   services.emacs.enable = true;
 
   services.displayManager.ly.enable = false;
-  services.xserver.desktopManager.plasma5.enable = false;
 
   services.xserver.xkb.layout = "us";
   services.printing.enable = true;
@@ -474,22 +465,22 @@ in
     mandoc.enable = true;
   };
 
-  nixpkgs.overlays = [
-    (self: super: {
-      lutris = super.lutris.override {
-        extraLibraries =
-          pkgs: with pkgs; [
-            libadwaita
-            gtk4
-          ];
-      };
-    })
-  ];
+  # nixpkgs.overlays = [
+  #   (self: super: {
+  #     lutris = super.lutris.override {
+  #       extraLibraries =
+  #         pkgs: with pkgs; [
+  #           libadwaita
+  #           gtk4
+  #         ];
+  #     };
+  #   })
+  # ];
 
   environment.systemPackages = with pkgs; [
     inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
     vim
-    lutris
+    # lutris
     protonup-qt
     wineWowPackages.stable
     winetricks
@@ -519,7 +510,6 @@ in
     docker-compose
     podman-tui
     remmina
-    barrier
     lm_sensors
     rofi
     dive
@@ -550,6 +540,7 @@ in
     24800
     57621
     8000
+    8443 # unifi-controller
   ];
   networking.firewall.allowedUDPPorts = [
     24800
