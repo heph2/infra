@@ -558,7 +558,8 @@
         "nur": "nur",
         "simple-nixos-mailserver": "simple-nixos-mailserver",
         "sops-nix": "sops-nix",
-        "spicetify-nix": "spicetify-nix"
+        "spicetify-nix": "spicetify-nix",
+        "stable-nixpkgs": "stable-nixpkgs"
       }
     },
     "simple-nixos-mailserver": {
@@ -621,6 +622,22 @@
         "owner": "Gerg-L",
         "ref": "master",
         "repo": "spicetify-nix",
+        "type": "github"
+      }
+    },
+    "stable-nixpkgs": {
+      "locked": {
+        "lastModified": 1763049705,
+        "narHash": "sha256-A5LS0AJZ1yDPTa2fHxufZN++n8MCmtgrJDtxFxrH4S8=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "3acb677ea67d4c6218f33de0db0955f116b7588c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "release-25.05",
+        "repo": "nixpkgs",
         "type": "github"
       }
     },

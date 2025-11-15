@@ -2,6 +2,7 @@
   description = "Infrastructure flake";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    stable-nixpkgs.url = "github:nixos/nixpkgs/release-25.05";
     simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/master";
     home-manager = {
       url = "github:nix-community/home-manager";
