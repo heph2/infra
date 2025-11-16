@@ -46,6 +46,9 @@ in
       #     [ pkgs.python3Packages.requests pkgs.python3Packages.beautifulsoup4 ];
       # } (builtins.readFile ../../pkgs/jack.py))
       mpv
+      fuse-overlayfs
+      dwarfs
+      psmisc
       nmap
       easyeffects
       high-tide
