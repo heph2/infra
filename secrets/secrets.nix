@@ -11,7 +11,7 @@ in
     freya
     heph
   ];
-  "foo.age".publicKeys = [
+  "imap-mbauce-mail.age".publicKeys = [
     heph
     freya
   ];
