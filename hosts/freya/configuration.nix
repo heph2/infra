@@ -23,6 +23,8 @@
         home-manager.useUserPackages = true;
         home-manager.users.heph = import ./home.nix;
         home-manager.backupFileExtension = "backup";
+        home-manager.extraSpecialArgs = { agenix = inputs.agenix; };
+
       }
       { nixpkgs.config.allowUnfree = true; }
       ../../modules/common/default.nix
