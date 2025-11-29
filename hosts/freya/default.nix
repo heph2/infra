@@ -1,17 +1,24 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 let
   user = "heph";
   platform = "amd";
-  vfioIds = [ "10de:2204" "10de:1aef" ];
-in {
+  vfioIds = [
+    "10de:2204"
+    "10de:1aef"
+  ];
+in
+{
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./disk-config.nix
-    "${
-      builtins.fetchTarball
-      "https://github.com/nix-community/disko/archive/master.tar.gz"
-    }/module.nix"
+    "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
   ];
 
   # specialisation."VFIO".configuration = {
@@ -51,48 +58,55 @@ in {
     mongodbPackage = pkgs.mongodb;
   };
 
-  services.borgbackup.jobs = let
-    common-excludes = [
-      ".cache"
-      "*/cache2" # firefox
-      "*/Cache"
-      ".mozilla"
-      "*/.cargo"
-      ".compose-cache"
-      ".npm"
-      ".local/share"
-      ".ollama"
-      "*/.terraform.d"
-      ".rustup"
-      ".config/Slack/logs"
-      ".config/Code/CachedData"
-      ".container-diff"
-      ".npm/_cacache"
-      "*/node_modules"
-      "*/_build"
-      "*/.tox"
-      "*/venv"
-      "*/.venv"
-    ];
-    basicBorgJob = name: {
-      encryption.mode = "none";
-      environment.BORG_RSH =
-        "ssh -o 'StrictHostKeyChecking=no' -i /home/heph/.ssh/sekai_ed";
-      environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
-      extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
-      repo = "ssh://zima//data/backup/${name}";
-      compression = "zstd,1";
-      startAt = "hourly";
-      persistentTimer = true;
-      user = "heph";
+  services.borgbackup.jobs =
+    let
+      common-excludes = [
+        ".cache"
+        "*/cache2" # firefox
+        "*/Cache"
+        ".mozilla"
+        "*/.cargo"
+        ".compose-cache"
+        ".npm"
+        ".local/share"
+        ".ollama"
+        "*/.terraform.d"
+        ".rustup"
+        ".config/Slack/logs"
+        ".config/Code/CachedData"
+        ".container-diff"
+        ".npm/_cacache"
+        "*/node_modules"
+        "*/_build"
+        "*/.tox"
+        "*/venv"
+        "*/.venv"
+      ];
+      basicBorgJob = name: {
+        encryption.mode = "none";
+        environment.BORG_RSH = "ssh -o 'StrictHostKeyChecking=no' -i /home/heph/.ssh/sekai_ed";
+        environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
+        extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
+        repo = "ssh://zima//data/backup/${name}";
+        compression = "zstd,1";
+        startAt = "hourly";
+        persistentTimer = true;
+        user = "heph";
+      };
+    in
+    {
+      home-heph = basicBorgJob "freya/home-heph" // rec {
+        paths = "/home/heph";
+        exclude = map (x: paths + "/" + x) (
+          common-excludes
+          ++ [
+            "Downloads"
+            "Videos"
+            ".models"
+          ]
+        );
+      };
     };
-  in {
-    home-heph = basicBorgJob "freya/home-heph" // rec {
-      paths = "/home/heph";
-      exclude = map (x: paths + "/" + x)
-        (common-excludes ++ [ "Downloads" "Videos" ".models" ]);
-    };
-  };
 
   services.samba = {
     enable = false;
@@ -129,7 +143,9 @@ in {
     openFirewall = true;
   };
 
-  programs.steam = { enable = true; };
+  programs.steam = {
+    enable = true;
+  };
 
   services.transmission = {
     enable = false;
@@ -141,21 +157,32 @@ in {
     settings.downloadDirPermissions = "0770";
   };
 
-  services.fstrim = { enable = true; };
+  services.fstrim = {
+    enable = true;
+  };
   nixpkgs.config.allowUnfree = true;
 
   networking.wireguard.interfaces = {
     wg0 = {
-      ips = [ "10.1.1.6/32" "2a0f:85c1:c4d:1234::6/128" ];
+      ips = [
+        "10.1.1.6/32"
+        "2a0f:85c1:c4d:1234::6/128"
+      ];
       listenPort = 51820;
       privateKeyFile = config.age.secrets.wg.path;
 
-      peers = [{
-        publicKey = "VaCUhE4J7m4uP+3aKPf0PBeRCnS4Wy1rFX0aZ0imYgU=";
-        allowedIPs = [ "2000::/3" "10.1.1.0/24" "1.1.1.1/32" ];
-        endpoint = "193.57.159.213:51820";
-        persistentKeepalive = 25;
-      }];
+      peers = [
+        {
+          publicKey = "VaCUhE4J7m4uP+3aKPf0PBeRCnS4Wy1rFX0aZ0imYgU=";
+          allowedIPs = [
+            "2000::/3"
+            "10.1.1.0/24"
+            "1.1.1.1/32"
+          ];
+          endpoint = "193.57.159.213:51820";
+          persistentKeepalive = 25;
+        }
+      ];
     };
     # wg1 = {
     #   ips = [
@@ -196,7 +223,10 @@ in {
     };
 
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       auto-optimise-store = true;
     };
   };
@@ -214,15 +244,21 @@ in {
     enable = true;
     dnssec = "true";
     domains = [ "~." ];
-    fallbackDns = [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
+    fallbackDns = [
+      "1.1.1.1#one.one.one.one"
+      "1.0.0.1#one.one.one.one"
+    ];
     dnsovertls = "true";
   };
-  networking.nameservers =
-    [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
+  networking.nameservers = [
+    "1.1.1.1#one.one.one.one"
+    "1.0.0.1#one.one.one.one"
+  ];
 
   nix.settings.trusted-substituters = [ "https://ai.cachix.org" ];
-  nix.settings.trusted-public-keys =
-    [ "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc=" ];
+  nix.settings.trusted-public-keys = [
+    "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="
+  ];
 
   boot.extraModprobeConfig = ''
     blacklist nouveau
@@ -268,12 +304,17 @@ in {
   services.udev.extraRules = ''
     SUBSYSTEM=="usb", ATTR{idVendor}=="87ad", ATTR{idProduct}=="70db", MODE="0666"
   '';
-  services.udev.packages = [ pkgs.libfido2 pkgs.yubikey-personalization ];
+  services.udev.packages = [
+    pkgs.libfido2
+    pkgs.yubikey-personalization
+  ];
   security.pam.services = {
     login.u2fAuth = true;
     sudo.u2fAuth = true;
   };
-  programs = { yubikey-touch-detector.enable = true; };
+  programs = {
+    yubikey-touch-detector.enable = true;
+  };
   hardware.gpgSmartcards.enable = true;
   services.yubikey-agent.enable = true;
 
@@ -348,7 +389,9 @@ in {
   services.ollama = {
     enable = false;
     host = "0.0.0.0";
-    environmentVariables = { OLLAMA_CONTEXT_LENGTH = "32768"; };
+    environmentVariables = {
+      OLLAMA_CONTEXT_LENGTH = "32768";
+    };
     acceleration = "cuda";
     openFirewall = true;
   };
@@ -357,19 +400,20 @@ in {
     enable = false; # currently broken
   };
 
-  programs.spicetify = let
-    spicePkgs =
-      inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-  in {
-    enable = true;
-    enabledExtensions = with spicePkgs.extensions; [
-      adblock
-      hidePodcasts
-      shuffle # shuffle+ (special characters are sanitized out of extension names)
-    ];
-    theme = spicePkgs.themes.catppuccin;
-    colorScheme = "mocha";
-  };
+  programs.spicetify =
+    let
+      spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+    in
+    {
+      enable = true;
+      enabledExtensions = with spicePkgs.extensions; [
+        adblock
+        hidePodcasts
+        shuffle # shuffle+ (special characters are sanitized out of extension names)
+      ];
+      theme = spicePkgs.themes.catppuccin;
+      colorScheme = "mocha";
+    };
 
   programs.streamdeck-ui = {
     enable = true;
@@ -399,7 +443,11 @@ in {
     tls.enable = false;
   };
 
-  virtualisation = { docker = { enable = true; }; };
+  virtualisation = {
+    docker = {
+      enable = true;
+    };
+  };
 
   users.users.root = {
     openssh = {
@@ -417,10 +465,13 @@ in {
 
   nixpkgs.overlays = [
     (self: super: {
-      lutris =
-        inputs.stable-nixpkgs.legacyPackages.${super.system}.lutris.override {
-          extraLibraries = pkgs: with pkgs; [ libadwaita gtk4 ];
-        };
+      lutris = inputs.stable-nixpkgs.legacyPackages.${super.system}.lutris.override {
+        extraLibraries =
+          pkgs: with pkgs; [
+            libadwaita
+            gtk4
+          ];
+      };
     })
     (self: super: {
       heroic = super.heroic.override { extraPkgs = pkgs: [ pkgs.gamescope ]; };
@@ -432,6 +483,7 @@ in {
 
   environment.systemPackages = with pkgs; [
     inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
+    inputs.nix-ai-tools.packages.${pkgs.system}.codex
     vim
     heroic
     stable.lutris
@@ -496,7 +548,10 @@ in {
     8000
     8443 # unifi-controller
   ];
-  networking.firewall.allowedUDPPorts = [ 24800 5353 ];
+  networking.firewall.allowedUDPPorts = [
+    24800
+    5353
+  ];
   networking.firewall.enable = true;
   networking.firewall = {
     extraCommands = ''

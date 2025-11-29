@@ -4,7 +4,8 @@ let
   hostname = "zima";
   localDomain = hostname + ".hephnet.lan";
 
-in {
+in
+{
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -13,8 +14,12 @@ in {
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.initrd.availableKernelModules =
-    [ "ahci" "xhci_pci" "sd_mod" "sdhci_pci" ];
+  boot.initrd.availableKernelModules = [
+    "ahci"
+    "xhci_pci"
+    "sd_mod"
+    "sdhci_pci"
+  ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
@@ -30,17 +35,22 @@ in {
   services.btrfs.autoScrub = {
     enable = true;
     interval = "monthly";
-    fileSystems = [ "/" "/data" ];
+    fileSystems = [
+      "/"
+      "/data"
+    ];
   };
 
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_16;
     ensureDatabases = [ "atuin" ];
-    ensureUsers = [{
-      name = "atuin";
-      ensureDBOwnership = true;
-    }];
+    ensureUsers = [
+      {
+        name = "atuin";
+        ensureDBOwnership = true;
+      }
+    ];
   };
 
   services.atuin = {
@@ -72,7 +82,10 @@ in {
     };
 
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       auto-optimise-store = true;
     };
   };
@@ -88,7 +101,9 @@ in {
       };
     };
     virtualHosts."aurora.${localDomain}" = {
-      locations."/" = { proxyPass = "http://192.168.1.30:3000"; };
+      locations."/" = {
+        proxyPass = "http://192.168.1.30:3000";
+      };
     };
     virtualHosts."torrent.${localDomain}" = {
       locations."/" = {
@@ -102,7 +117,9 @@ in {
       };
     };
     virtualHosts."rss.${localDomain}" = {
-      locations."/" = { proxyPass = "http://127.0.0.1:8080"; };
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:8080";
+      };
     };
   };
 
@@ -138,20 +155,20 @@ in {
     };
   };
 
-  services.transmission = {
-    enable = true;
-    settings = {
-      download-dir = "/data/torrent/downloads";
-      incomplete-dir-enabled = false;
-      rpc-bind-address = "127.0.0.1";
-      downloadDirPermissions = "770";
-      rpc-whitelist = "192.168.1.* 127.0.0.1";
-      rpc-whitelist-enabled = false;
-      rpc-host-whitelist-enabled = false;
-    };
-    openRPCPort = true;
-    openFirewall = true;
-  };
+  # services.transmission = {
+  #   enable = true;
+  #   settings = {
+  #     download-dir = "/data/torrent/downloads";
+  #     incomplete-dir-enabled = false;
+  #     rpc-bind-address = "127.0.0.1";
+  #     downloadDirPermissions = "770";
+  #     rpc-whitelist = "192.168.1.* 127.0.0.1";
+  #     rpc-whitelist-enabled = false;
+  #     rpc-host-whitelist-enabled = false;
+  #   };
+  #   openRPCPort = true;
+  #   openFirewall = true;
+  # };
 
   networking.firewall = {
     extraCommands = ''

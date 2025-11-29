@@ -5,14 +5,17 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ # Include the results of the hardware scan.
+  imports = [
+    # Include the results of the hardware scan.
     ./hardware-configuration.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  services.tailscale = { enable = true; };
+  services.tailscale = {
+    enable = true;
+  };
 
   networking.hostName = "tyr"; # Define your hostname.
   time.timeZone = "Europe/Rome";
@@ -21,7 +24,10 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK heph@fenrir"
   ];
 
-  environment.systemPackages = with pkgs; [ vim wget ];
+  environment.systemPackages = with pkgs; [
+    vim
+    wget
+  ];
 
   services.openssh.enable = true;
   networking.firewall.allowedTCPPorts = [
@@ -38,14 +44,20 @@
   ];
   networking.wireguard.interfaces = {
     wg0 = {
-      ips = [ "10.1.1.5/32" "2a0f:85c1:c4d:1234::5/128" ];
+      ips = [
+        "10.1.1.5/32"
+        "2a0f:85c1:c4d:1234::5/128"
+      ];
       listenPort = 51820;
       privateKeyFile = "/root/vellutata.wg0.priv";
 
       peers = [
         {
           publicKey = "JE3KvXkupkYkM3eJ2mSmSeBCAZvHBqv7k4XZ/WSUc1w=";
-          allowedIPs = [ "0.0.0.0/0" "::/0" ];
+          allowedIPs = [
+            "0.0.0.0/0"
+            "::/0"
+          ];
           endpoint = "193.57.159.213:51820";
           persistentKeepalive = 25;
         }
@@ -60,7 +72,5 @@
   };
 
   networking.firewall.enable = true;
-  system.stateVersion = "22.11"; # Did you read the comment?
 
 }
-
