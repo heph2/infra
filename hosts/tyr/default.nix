@@ -24,6 +24,13 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK heph@fenrir"
   ];
 
+  services.unifi = {
+    enable = true;
+    openFirewall = true;
+    unifiPackage = pkgs.unifi;
+    mongodbPackage = pkgs.mongodb;
+  };
+
   environment.systemPackages = with pkgs; [
     vim
     wget
@@ -32,6 +39,7 @@
   services.openssh.enable = true;
   networking.firewall.allowedTCPPorts = [
     22
+    8443
     6443 # k3s: required so that pods can reach the API server (running on port 6443 by default)
     6444
     9000
