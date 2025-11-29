@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   services.fail2ban = {
     enable = true;
@@ -26,6 +31,7 @@
 
   users.users.root.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK heph@fenrir"
+    "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIM2sRl50sDPAoWbFXglFFsWzgC1Ejo02iL+WRWGOBdiJAAAAC3NzaDp5dWJpa2V5 heph@freya"
   ];
 
   services.netdata = {
