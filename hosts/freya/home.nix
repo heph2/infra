@@ -66,6 +66,7 @@ in
       easyeffects
       high-tide
       winbox
+      rpcs3
       deltachat-desktop
       bambu-studio
       nix-output-monitor
@@ -141,6 +142,18 @@ in
         port = 22;
         hostname = "193.57.159.213";
         user = "vellutata";
+        identityFile = "/home/heph/.ssh/asn_id";
+      };
+      "vellutata.senza.cloud" = {
+        port = 22;
+        hostname = "vellutata.senza.cloud";
+        user = "vellutata";
+        identityFile = "/home/heph/.ssh/asn_id";
+      };
+      "pasta.senza.cloud" = {
+        port = 22;
+        hostname = "pasta.senza.cloud";
+        user = "pasta";
         identityFile = "/home/heph/.ssh/asn_id";
       };
       pasta = {

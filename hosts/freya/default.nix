@@ -52,10 +52,17 @@ in
   services.zfs.autoScrub.enable = true;
 
   services.unifi = {
-    enable = true;
+    enable = false;
     openFirewall = true;
     unifiPackage = pkgs.unifi;
     mongodbPackage = pkgs.mongodb;
+  };
+
+  services.hardware.openrgb.enable = true;
+
+  services.trcc-gif = {
+    enable = true;
+    binDirectory = "/var/lib/trcc-gif/frames";
   };
 
   services.borgbackup.jobs =
@@ -272,6 +279,7 @@ in
     "vfio_iommu_type1"
     "vfio"
     "amdgpu"
+    "usbmon"
   ];
   boot.kernelParams = [
     "radeon.si_support=0"
@@ -283,6 +291,10 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.enable = true;
 
+  programs.wireshark = {
+    enable = true;
+    usbmon.enable = true;
+  };
   ## Nvidia
 
   # hardware.nvidia = {
@@ -303,6 +315,7 @@ in
   services.pcscd.enable = true;
   services.udev.extraRules = ''
     SUBSYSTEM=="usb", ATTR{idVendor}=="87ad", ATTR{idProduct}=="70db", MODE="0666"
+    SUBSYSTEM=="usbmon", GROUP="wireshark", MODE="0640"
   '';
   services.udev.packages = [
     pkgs.libfido2
@@ -323,7 +336,10 @@ in
   ## Blacklist Nouveau drivers
   boot.blacklistedKernelModules = [ "nouveau" ];
 
-  systemd.tmpfiles.rules = [ "f /dev/shm/looking-glass 0660 ${user} kvm -" ];
+  systemd.tmpfiles.rules = [
+    "f /dev/shm/looking-glass 0660 ${user} kvm -"
+    "d /var/lib/trcc-gif/frames 0755 root root -"
+  ];
 
   fonts = {
     enableDefaultPackages = true;
@@ -425,6 +441,7 @@ in
     shell = pkgs.zsh;
     extraGroups = [
       "wheel"
+      "wireshark"
       "qemu-libvirtd"
       "libvirtd"
       "disk"
@@ -485,6 +502,7 @@ in
     inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
     inputs.nix-ai-tools.packages.${pkgs.system}.codex
     vim
+    wireshark
     heroic
     stable.lutris
     protonup-qt
@@ -504,6 +522,7 @@ in
     fd
     smartmontools
     nvme-cli
+    nh
     nixfmt-classic
     inetutils
     openssl
