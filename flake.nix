@@ -32,6 +32,9 @@
     };
     agenix.url = "github:ryantm/agenix";
     nix-ai-tools.url = "github:numtide/nix-ai-tools";
+    trcc_gif = {
+      url = "git+https://codeberg.org/heph/trcc_gif";
+    };
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay/db47b2483942771a725cf10e7cd3b1ec562750b7";
       inputs.nixpkgs.follows = "nixpkgs";
