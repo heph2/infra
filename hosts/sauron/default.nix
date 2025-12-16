@@ -15,6 +15,7 @@ in
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./disk-config.nix
+    ./pocked-id.nix
     "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
   ];
 
