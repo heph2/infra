@@ -134,7 +134,7 @@ in
     matchBlocks = {
       zima = {
         port = 22;
-        hostname = "192.168.0.24";
+        hostname = "192.168.0.105";
         user = "root";
         identityFile = "/home/heph/.ssh/sekai_ed";
       };
@@ -170,7 +170,7 @@ in
       };
       tyr = {
         port = 22;
-        hostname = "192.168.0.23";
+        hostname = "192.168.0.104";
         user = "root";
         identityFile = "/home/heph/.ssh/sekai_ed";
       };
@@ -188,7 +188,7 @@ in
       };
       sauron = {
         port = 22;
-        hostname = "192.168.0.25";
+        hostname = "192.168.0.106";
         user = "root";
         identityFile = "/home/heph/.ssh/sekai_ed";
       };
