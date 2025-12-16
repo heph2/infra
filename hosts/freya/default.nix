@@ -238,6 +238,7 @@ in
     };
   };
 
+  hardware.rtl-sdr.enable = true;
   hardware.cpu.amd.updateMicrocode = true;
   hardware.graphics.enable32Bit = true;
   networking.hostId = "d81f3ea4";
