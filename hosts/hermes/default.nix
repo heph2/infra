@@ -1,9 +1,11 @@
-{ config, ... }: {
+{ config, ... }:
+{
   imports = [
     ./hardware-configuration.nix
     ./networking.nix # generated at runtime by nixos-infect
     ./mail.nix
     ./kanban.nix
+    ./caddy.nix
   ];
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
@@ -12,7 +14,12 @@
   sops.secrets."murmur/password" = { };
   networking = {
     hostName = "hermes";
-    firewall.allowedTCPPorts = [ 80 25 143 465 ];
+    firewall.allowedTCPPorts = [
+      80
+      25
+      143
+      465
+    ];
   };
 
   services.murmur = {
