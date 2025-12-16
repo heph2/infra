@@ -17,7 +17,7 @@ let
     + (builtins.concatStringsSep "\n\n" (
       map (v: ''
         ${v.host} {
-          encoze zstd gzip
+          encode zstd gzip
           reverse_proxy ${v.upstream}
           ${v.extra or ""}
         }
