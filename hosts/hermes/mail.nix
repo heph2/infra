@@ -1,5 +1,12 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   mailserver = {
+    stateVersion = 3;
     enable = true;
     borgbackup = {
       enable = true;
@@ -68,8 +75,8 @@
   };
 
   services.postfix = {
-    extraConfig = ''
-      inet_protocols = ipv4
-    '';
+    # extraConfig = ''
+    #   inet_protocols = ipv4
+    # '';
   };
 }
