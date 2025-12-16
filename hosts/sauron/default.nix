@@ -1,17 +1,21 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   hostname = "sauron";
   localDomain = hostname + ".hephnet.lan";
 
-in {
-  imports = [ # Include the results of the hardware scan.
+in
+{
+  imports = [
+    # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./disk-config.nix
-    "${
-      builtins.fetchTarball
-      "https://github.com/nix-community/disko/archive/master.tar.gz"
-    }/module.nix"
+    "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -19,6 +23,21 @@ in {
   boot.zfs.extraPools = [ "data" ];
 
   networking.hostName = hostname; # Define your hostname.
+
+  # IPV6 Configuration
+  networking.interfaces.enp1s0 = {
+    ipv6.addresses = [
+      {
+        address = "2a07:7e81:85f5::beef";
+        prefixLength = 64;
+      }
+    ];
+  };
+  networking.defaultGateway6 = {
+    address = "fe80::6f4:1cff:fe18:162";
+    interface = "enp1s0";
+  };
+
   boot.loader.grub.enable = true; # Enables wireless support via wpa_suppli
   boot.loader.grub.efiInstallAsRemovable = true; # Easiest to use and most
   boot.loader.grub.device = "nodev";
@@ -37,7 +56,7 @@ in {
     dataDir = "/media";
   };
   services.transmission = {
-    enable = true;
+    enable = false;
     settings = {
       download-dir = "/media/torrent/downloads";
       incomplete-dir-enabled = false;
@@ -77,11 +96,22 @@ in {
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK"
   ];
 
-  environment.systemPackages = with pkgs; [ vim mg wget borgbackup ];
+  environment.systemPackages = with pkgs; [
+    vim
+    mg
+    wget
+    borgbackup
+  ];
 
   services.openssh.enable = true;
 
-  networking.firewall.allowedTCPPorts = [ 22 80 443 8096 9091 ];
+  networking.firewall.allowedTCPPorts = [
+    22
+    80
+    443
+    8096
+    9091
+  ];
   networking.firewall.enable = true;
 
 }
