@@ -7,7 +7,7 @@
       APP_URL = "https://auth.pochi.casa";
       TRUST_PROXY = true;
       ANALYTICS_DISABLED = true;
-      HOST = "127.0.0.1";
+      HOST = "::";
       PORT = 1411;
     };
     environmentFile = "/run/secrets/pocket-id.env";
