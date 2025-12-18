@@ -102,6 +102,7 @@ in
     mg
     wget
     borgbackup
+    git
   ];
 
   services.openssh.enable = true;
