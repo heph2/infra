@@ -23,7 +23,7 @@
   };
 
   services.murmur = {
-    enable = true;
+    enable = false;
     welcometext = "Welcome back stranger!";
     openFirewall = true;
     password = "$MURMURD_PASSWORD";

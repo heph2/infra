@@ -9,7 +9,7 @@
     stateVersion = 3;
     enable = true;
     borgbackup = {
-      enable = true;
+      enable = false;
       repoLocation = "ssh://root@100.116.32.35//data/backup/hermes";
     };
     fqdn = "mail.mbauce.com";
