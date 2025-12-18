@@ -22,6 +22,13 @@
     ];
   };
 
+  environment.systemPackages = with pkgs; [
+    helix
+    mg
+    vim
+    git
+  ];
+
   services.murmur = {
     enable = false;
     welcometext = "Welcome back stranger!";
