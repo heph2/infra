@@ -10,6 +10,6 @@
       HOST = "::";
       PORT = 1411;
     };
-    environmentFile = "/run/secrets/pocket-id.env";
+    environmentFile = "/tmp/pocket.env";
   };
 }
