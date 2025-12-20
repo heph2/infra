@@ -198,6 +198,7 @@ in
       6444
       2380
       2379
+      5006 # actual
     ];
     allowedUDPPorts = [ 8472 ];
   };
