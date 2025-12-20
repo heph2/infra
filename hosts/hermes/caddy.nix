@@ -5,6 +5,10 @@ let
     {
       host = "auth.pochi.casa";
       upstream = "sauron.pochi.casa:1411";
+    },
+    {
+      host = "budget.pochi.casa";
+      upstream = "zima.pochi.casa:5000";
     }
   ];
 
