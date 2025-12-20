@@ -1,6 +1,7 @@
 let
   heph = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO5082w5a8Dljon2Qs9N3eGd5+Tg52zzawlZGeHw8D12";
   freya = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK";
+  zima = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKmSgm97MHi+1dwh79BpyePwiXAcD2R+ceUKbBn6pVRv";
   users = [
     freya
     heph
@@ -18,5 +19,6 @@ in
   "actual-oidc-client-secret.age".publicKeys = [
     heph
     freya
+    zima
   ];
 }
