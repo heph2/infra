@@ -27,6 +27,20 @@ in
   virtualisation.docker.enable = true;
   virtualisation.docker.storageDriver = "btrfs";
 
+  # IPV6 Configuration
+  networking.interfaces.enp3s0 = {
+    ipv6.addresses = [
+      {
+        address = "2a07:7e81:85f5::cafe";
+        prefixLength = 64;
+      }
+    ];
+  };
+  networking.defaultGateway6 = {
+    address = "fe80::6f4:1cff:fe18:162";
+    interface = "enp3s0";
+  };
+
   programs = {
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
