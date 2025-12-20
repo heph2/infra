@@ -1,16 +1,32 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 
 {
-  age.identityPaths = [ "/home/heph/.ssh/sekai_ed" ];
+  users.groups.actual = { };
+  users.users.actual = {
+    isSystemUser = true;
+    group = "actual";
+    home = "/var/lib/actual";
+    createHome = true;
+  };
+
+  # Override the unit: DynamicUser must be disabled
+  systemd.services.actual.serviceConfig = {
+    DynamicUser = lib.mkForce false;
+    User = lib.mkForce "actual";
+    Group = lib.mkForce "actual";
+  };
+
+  age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
   age.secrets.actual-oidc-client-secret = {
     file = ../../secrets/actual-oidc-client-secret.age;
     owner = "actual";
     group = "actual";
-    mode = "0400";
+    mode = "0440";
   };
 
   services.actual = {
