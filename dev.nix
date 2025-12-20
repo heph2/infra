@@ -18,6 +18,7 @@
             age
             ragenix
             nixos-rebuild
+            nixos-rebuild-ng
           ];
           shellHook = ''
             export SOPS_AGE_KEY_FILE=$(pwd)/secrets/age-privkey.txt
