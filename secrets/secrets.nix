@@ -15,4 +15,8 @@ in
     heph
     freya
   ];
+  "actual-oidc-client-secret.age".publicKeys = [
+    heph
+    freya
+  ];
 }
