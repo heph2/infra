@@ -1,13 +1,13 @@
 {
   config,
   pkgs,
-  inputs,
   ...
 }:
 
 {
-  inputs.age.secrets.actual-oidc-client-secret = {
-    file = ../secrets/actual-oidc-client-secret.age;
+  age.identityPaths = [ "/home/heph/.ssh/sekai_ed" ];
+  age.secrets.actual-oidc-client-secret = {
+    file = ../../secrets/actual-oidc-client-secret.age;
     owner = "actual";
     group = "actual";
     mode = "0400";
