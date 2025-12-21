@@ -58,6 +58,9 @@ in
       #     [ pkgs.python3Packages.requests pkgs.python3Packages.beautifulsoup4 ];
       # } (builtins.readFile ../../pkgs/jack.py))
       mpv
+      w3m
+      sdrpp
+      gqrx
       fuse-overlayfs
       dwarfs
       mangohud
@@ -476,6 +479,11 @@ in
         copy-to = "Sent";
         check-mail-cmd = "mbsync personal";
         check-mail = "1m";
+      };
+    };
+    extraConfig = {
+      filters = {
+        "text/html" = "w3m -T text/html";
       };
     };
   };
