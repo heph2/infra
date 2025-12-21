@@ -43,6 +43,10 @@ in
     xset s off -dpms
   '';
 
+  environment.variables = {
+    EDITOR = "hx";
+  };
+
   systemd.targets.sleep.enable = false;
   systemd.targets.suspend.enable = false;
   systemd.targets.hibernate.enable = false;
