@@ -94,6 +94,7 @@ in
       xscreensaver
       reaper
       nautilus
+      gamemode
       delta
       cheese
       playerctl
