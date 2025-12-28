@@ -8,7 +8,14 @@
 let
   hostname = "sauron";
   localDomain = hostname + ".hephnet.lan";
+  pochiDomain = "pochi.casa";
 
+  mediaGroup = "media";
+  dataRoot = "/media";
+  torrentsDir = "${dataRoot}/torrent";
+  mediaDir = "${dataRoot}/jelly";
+
+  usenetBase = "${dataRoot}/usenet";
 in
 {
   imports = [
@@ -16,6 +23,8 @@ in
     ./hardware-configuration.nix
     ./disk-config.nix
     ./pocked-id.nix
+    ./caddy.nix
+    ./paperless.nix
     "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
   ];
 
@@ -71,26 +80,59 @@ in
     openFirewall = true;
   };
 
-  services.nginx = {
+  users.groups.${mediaGroup} = { };
+
+  services.qbittorrent = {
     enable = true;
-    recommendedProxySettings = true;
-    virtualHosts."jelly.${localDomain}" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:8096";
-        proxyWebsockets = true;
+    group = mediaGroup;
+    profileDir = "/var/lib/qbittorrent";
+    webuiPort = 8088;
+    serverConfig = {
+      Preferences = {
+        "Downloads\\SavePath" = "${torrentsDir}/download";
+        "Downloads\\TempPath" = "${torrentsDir}/.incomplete";
+        "Downloads\\TempPathEnabled" = true;
       };
     };
-    virtualHosts."torrent.${localDomain}" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:9091";
-        extraConfig = ''
-          proxy_pass_header  X-Transmission-Session-Id;
-          proxy_set_header   X-Forwarded-Host $host;
-          proxy_set_header   X-Forwarded-Server $host;
-          proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-        '';
-      };
-    };
+  };
+
+  systemd.tmpfiles.rules = [
+    "d /media 0755 root root - -"
+    "d ${usenetBase} 2775 root media - -"
+    "d ${usenetBase}/incomplete 2775 sabnzbd media - -"
+    "d ${usenetBase}/complete 2775 sabnzbd media - -"
+
+    # Jellyfin TV library (Sonarr writes, Jellyfin reads)
+    "d /media/jelly 2775 root media - -"
+    "d /media/jelly/shows 2775 jellyfin media - -"
+  ];
+
+  services.sabnzbd = {
+    enable = true;
+    openFirewall = false;
+    group = mediaGroup;
+  };
+
+  services.prowlarr = {
+    enable = true;
+    openFirewall = false;
+  };
+
+  services.sonarr = {
+    enable = true;
+    openFirewall = false;
+    group = mediaGroup;
+  };
+
+  services.radarr = {
+    enable = true;
+    openFirewall = false;
+    group = mediaGroup;
+  };
+
+  services.jellyseerr = {
+    enable = true;
+    openFirewall = false;
   };
 
   users.users.root.openssh.authorizedKeys.keys = [
