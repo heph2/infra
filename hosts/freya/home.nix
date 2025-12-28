@@ -66,6 +66,7 @@ in
       mangohud
       psmisc
       nmap
+      shadps4
       easyeffects
       high-tide
       winbox
