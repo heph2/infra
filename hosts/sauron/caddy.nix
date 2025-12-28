@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 let
   vhosts = [
@@ -18,6 +18,14 @@ let
       host = "usenet.pochi.casa";
       upstream = "localhost:8080";
     }
+    {
+      host = "paperless.pochi.casa";
+      upstream = "localhost:28981";
+    }
+    {
+      host = "jelly.pochi.casa";
+      upstream = "localhost:8096";
+    }
   ];
 
   caddyFile = pkgs.writeText "Caddyfile" (
@@ -32,6 +40,7 @@ let
           encode zstd gzip
           tls {
             dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+            resolvers 1.1.1.1 8.8.8.8
           }
           reverse_proxy ${v.upstream}
           ${v.extra or ""}
@@ -43,6 +52,10 @@ in
 {
   services.caddy.enable = true;
   services.caddy.configFile = caddyFile;
+  services.caddy.package = pkgs.caddy.withPlugins {
+    plugins = [ "github.com/caddy-dns/cloudflare@v0.2.2" ];
+    hash = "sha256-4qUWhrv3/8BtNCi48kk4ZvbMckh/cGRL7k+MFvXKbTw=";
+  };
   networking.firewall.allowedTCPPorts = [
     80
     443
@@ -50,9 +63,11 @@ in
   age.secrets.cloudflare = {
     file = ../../secrets/cloudflare_api_token.age;
     mode = "640";
+    owner = "caddy";
+    group = "caddy";
   };
-  
-  systemd.services.caddy.environment = {
-    CLOUDFLARE_API_TOKEN = config.age.secrets.cloudflare.path
-  };
+
+  systemd.services.caddy.serviceConfig.EnvironmentFile = [
+    config.age.secrets.cloudflare.path
+  ];
 }
