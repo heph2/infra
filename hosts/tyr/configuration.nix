@@ -4,7 +4,7 @@
     system = "x86_64-linux";
     modules = [
       ./default.nix
-      # inputs.sops-nix.nixosModules.sops
+      inputs.agenix.nixosModules.default
       {
         nixpkgs.config.allowUnfree = true;
       }
