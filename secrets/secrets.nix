@@ -3,6 +3,7 @@ let
   freya = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK";
   zima = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKmSgm97MHi+1dwh79BpyePwiXAcD2R+ceUKbBn6pVRv";
   sauron = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKECQ6GB+aeG76Sx8Ht4JJH0JmRrMNsf/uoA42eDZFK0";
+  tyr = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINvI0NxnjLWyG+oxLInkBvaKWqV6BWeTPLH5YeaCDYLG";
   users = [
     freya
     heph
@@ -27,11 +28,19 @@ in
     freya
     zima
     sauron
+    tyr
   ];
   "paperless-oidc-client-secret.age".publicKeys = [
     heph
     freya
     zima
     sauron
+  ];
+  "homebox-oidc-client-secret.age".publicKeys = [
+    heph
+    freya
+    zima
+    sauron
+    tyr
   ];
 }
