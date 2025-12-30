@@ -8,6 +8,7 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./homebox.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -15,6 +16,20 @@
   boot.loader.efi.canTouchEfiVariables = true;
   services.tailscale = {
     enable = true;
+  };
+
+  # IPV6 Configuration
+  networking.interfaces.enp0s31f6 = {
+    ipv6.addresses = [
+      {
+        address = "2a07:7e81:85f5::babe";
+        prefixLength = 64;
+      }
+    ];
+  };
+  networking.defaultGateway6 = {
+    address = "fe80::6f4:1cff:fe18:162";
+    interface = "enp0s31f6";
   };
 
   networking.hostName = "tyr"; # Define your hostname.
