@@ -105,6 +105,7 @@ in
     # Jellyfin TV library (Sonarr writes, Jellyfin reads)
     "d /media/jelly 2775 root media - -"
     "d /media/jelly/shows 2775 jellyfin media - -"
+    "d /media/jelly/movies 2775 jellyfin media - -"
   ];
 
   services.sabnzbd = {

@@ -15,6 +15,10 @@ let
       upstream = "localhost:8989";
     }
     {
+      host = "radarr.pochi.casa";
+      upstream = "localhost:7878";
+    }
+    {
       host = "usenet.pochi.casa";
       upstream = "localhost:8080";
     }
