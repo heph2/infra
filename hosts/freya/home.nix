@@ -63,6 +63,7 @@ in
       gqrx
       fuse-overlayfs
       dwarfs
+      vesktop
       mangohud
       psmisc
       nmap
