@@ -4,7 +4,7 @@
       config = ./emacs.el;
       defaultInitFile = true;
       # package = pkgs.emacs-macport;
-      package = pkgs.emacs-git;
+      package = pkgs.emacs;
       alwaysEnsure = true;
       extraEmacsPackages = epkgs: [
         epkgs.vterm
@@ -86,7 +86,6 @@
     terraform
     caddy
     bun
-    nest-cli
     openscad-unstable
     openscad-lsp
     kubernetes-helm
