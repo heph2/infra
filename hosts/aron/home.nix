@@ -134,6 +134,11 @@ with lib; {
         s = "switch";
         st = "status";
       };
+      ignores = [
+        "AGENTS.md"
+        "CLAUDE.md"
+        ".claude"
+      ];
       extraConfig = {
         pull.ff = "only";
         core.pager = "delta";
