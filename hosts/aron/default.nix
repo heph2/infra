@@ -38,21 +38,25 @@
   };
   system.primaryUser = "marco";
 
+  services.postgresql = {
+    enable = true;
+  };
+
   users.users.marco.home = "/Users/marco";
   programs.zsh.enable = true;
   programs.nix-index.enable = true;
-  programs.spicetify =
-    let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
-    in {
-      enable = true;
-      enabledExtensions = with spicePkgs.extensions; [
-        adblock
-        hidePodcasts
-        shuffle
-      ];
-      theme = spicePkgs.themes.catppuccin;
-      colorScheme = "mocha";
-    };
+  # programs.spicetify =
+  #   let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+  #   in {
+  #     enable = true;
+  #     enabledExtensions = with spicePkgs.extensions; [
+  #       adblock
+  #       hidePodcasts
+  #       shuffle
+  #     ];
+  #     theme = spicePkgs.themes.catppuccin;
+  #     colorScheme = "mocha";
+  #   };
 
   services.dnsmasq = {
     enable = true;
@@ -69,6 +73,8 @@
   # Issue: https://github.com/nix-community/home-manager/issues/1341
   environment.systemPackages = with pkgs; [
     inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
+    inputs.nix-ai-tools.packages.${pkgs.system}.codex
+    inputs.nix-ai-tools.packages.${pkgs.system}.opencode
     cachix
     granted
     nixfmt-classic
