@@ -101,6 +101,8 @@ in
     "d ${usenetBase} 2775 root media - -"
     "d ${usenetBase}/incomplete 2775 sabnzbd media - -"
     "d ${usenetBase}/complete 2775 sabnzbd media - -"
+    # Recursively fix permissions on completed downloads so Sonarr/Radarr can access them
+    "Z ${usenetBase}/complete 2775 sabnzbd media - -"
 
     # Jellyfin TV library (Sonarr writes, Jellyfin reads)
     "d /media/jelly 2775 root media - -"

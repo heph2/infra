@@ -30,6 +30,10 @@ let
       host = "jelly.pochi.casa";
       upstream = "localhost:8096";
     }
+    {
+      host = "jellyseerr.pochi.casa";
+      upstream = "localhost:5055";
+    }
   ];
 
   caddyFile = pkgs.writeText "Caddyfile" (
