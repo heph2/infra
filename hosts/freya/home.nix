@@ -33,20 +33,20 @@ in
   home.packages =
     with pkgs;
     [
-      (pkgs.emacsWithPackagesFromUsePackage {
-        config = ./init.el;
-        defaultInitFile = true;
-        package = pkgs.emacs;
-        alwaysEnsure = true;
-        extraEmacsPackages = epkgs: [
-          epkgs.vterm
-          epkgs.transient
-          epkgs.notmuch
-          epkgs.mu4e
-          epkgs.pdf-tools
-          epkgs.treesit-grammars.with-all-grammars
-        ];
-      })
+      # (pkgs.emacsWithPackagesFromUsePackage {
+      #   config = ./init.el;
+      #   defaultInitFile = true;
+      #   package = pkgs.emacs;
+      #   alwaysEnsure = true;
+      #   extraEmacsPackages = epkgs: [
+      #     epkgs.vterm
+      #     epkgs.transient
+      #     epkgs.notmuch
+      #     epkgs.mu4e
+      #     epkgs.pdf-tools
+      #     epkgs.treesit-grammars.with-all-grammars
+      #   ];
+      # })
       # (pkgs.callPackage ../../pkgs/amused.nix { })
       # (pkgs.writers.writePython3Bin "totp" {
 
@@ -57,6 +57,7 @@ in
       #   libraries =
       #     [ pkgs.python3Packages.requests pkgs.python3Packages.beautifulsoup4 ];
       # } (builtins.readFile ../../pkgs/jack.py))
+      (emacsPackagesFor emacs).treesit-grammars.with-all-grammars
       mpv
       w3m
       sdrpp
@@ -390,7 +391,7 @@ in
   services.blueman-applet.enable = true;
   services.flameshot.enable = true;
   services.unclutter.enable = true;
-
+  services.emacs.enable = true;
   programs.k9s.enable = true;
 
   # systemd.user.services.mpris-proxy = {
