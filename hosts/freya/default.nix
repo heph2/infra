@@ -36,7 +36,10 @@ in
     group = "systemd-network";
   };
 
-  nixpkgs.config.permittedInsecurePackages = [ "libsoup-2.74.3" ];
+  nixpkgs.config.permittedInsecurePackages = [
+    "libsoup-2.74.3"
+    "openssl-1.1.1w"
+  ];
   environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
 
   environment.extraInit = ''
