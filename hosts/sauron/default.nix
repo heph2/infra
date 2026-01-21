@@ -116,6 +116,9 @@ in
     group = mediaGroup;
   };
 
+  # Set proper umask for sabnzbd so files are readable by media group
+  systemd.services.sabnzbd.serviceConfig.UMask = "0002";
+
   services.prowlarr = {
     enable = true;
     openFirewall = false;
