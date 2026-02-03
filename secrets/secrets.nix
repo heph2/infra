@@ -43,4 +43,9 @@ in
     sauron
     tyr
   ];
+  "vikunja-oidc-client-secret.age".publicKeys = [
+    heph
+    freya
+    tyr
+  ];
 }
