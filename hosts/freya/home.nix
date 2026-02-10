@@ -32,12 +32,13 @@ in
 
   programs.emacs = {
     enable = true;
-    extraPackages = epkgs: with epkgs; ([
-      tree-sitter-langs
-      (treesit-grammars.with-grammars (p: [
-        p.tree-sitter-nix
-      ]))
-    ]);
+    extraPackages =
+      epkgs: with epkgs; ([
+        tree-sitter-langs
+        (treesit-grammars.with-grammars (p: [
+          p.tree-sitter-nix
+        ]))
+      ]);
   };
 
   home.packages =
@@ -48,6 +49,7 @@ in
       sdrpp
       gqrx
       blender
+      nixos-rebuild-ng
       fuse-overlayfs
       dwarfs
       vesktop
