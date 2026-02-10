@@ -12,16 +12,10 @@ in
 {
   services.vikunja = {
     enable = true;
-    package = vikunja-unstable;
     frontendHostname = domain;
     frontendScheme = "https";
     environmentFiles = [ config.age.secrets.vikunja_oidc_secret.path ];
     settings = {
-      service = {
-        publicurl = "https://${domain}";
-        enableregistration = false;
-        frontendurl = "https://${domain}/";
-      };
       auth = {
         local = {
           enabled = false;
