@@ -410,20 +410,6 @@ in
     pulse.enable = true;
   };
 
-  services.ollama = {
-    enable = false;
-    host = "0.0.0.0";
-    environmentVariables = {
-      OLLAMA_CONTEXT_LENGTH = "32768";
-    };
-    acceleration = "cuda";
-    openFirewall = true;
-  };
-
-  services.open-webui = {
-    enable = false; # currently broken
-  };
-
   programs.spicetify =
     let
       spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
