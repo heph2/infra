@@ -30,38 +30,24 @@ in
     };
   };
 
+  programs.emacs = {
+    enable = true;
+    extraPackages = epkgs: with epkgs; ([
+      tree-sitter-langs
+      (treesit-grammars.with-grammars (p: [
+        p.tree-sitter-nix
+      ]))
+    ]);
+  };
+
   home.packages =
     with pkgs;
     [
-      # (pkgs.emacsWithPackagesFromUsePackage {
-      #   config = ./init.el;
-      #   defaultInitFile = true;
-      #   package = pkgs.emacs;
-      #   alwaysEnsure = true;
-      #   extraEmacsPackages = epkgs: [
-      #     epkgs.vterm
-      #     epkgs.transient
-      #     epkgs.notmuch
-      #     epkgs.mu4e
-      #     epkgs.pdf-tools
-      #     epkgs.treesit-grammars.with-all-grammars
-      #   ];
-      # })
-      # (pkgs.callPackage ../../pkgs/amused.nix { })
-      # (pkgs.writers.writePython3Bin "totp" {
-
-      # } (builtins.readFile ../../pkgs/totp.py))
-      # (pkgs.writers.writeBashBin "m4b2mp3" { }
-      #   (builtins.readFile ../../pkgs/m4b2mp3.sh))
-      # (pkgs.writers.writePython3Bin "jack" {
-      #   libraries =
-      #     [ pkgs.python3Packages.requests pkgs.python3Packages.beautifulsoup4 ];
-      # } (builtins.readFile ../../pkgs/jack.py))
-      (emacsPackagesFor emacs).treesit-grammars.with-all-grammars
       mpv
       w3m
       sdrpp
       gqrx
+      blender
       fuse-overlayfs
       dwarfs
       vesktop
@@ -116,6 +102,7 @@ in
       devenv
       anki
       gh
+      faugus-launcher
       chromium
       age
       age-plugin-yubikey
@@ -131,10 +118,6 @@ in
       xmobar
       yeganesh
     ]);
-
-  # programs.lutris = {
-  #   enable = true;
-  # };
 
   programs.ssh = {
     enable = true;
