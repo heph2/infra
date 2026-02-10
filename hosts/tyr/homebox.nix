@@ -7,6 +7,7 @@
 let
   domain = "homebox.pochi.casa";
   issuer = "https://auth.pochi.casa";
+  vikunja = "vikunja.pochi.casa";
 in
 {
   services.homebox = {
@@ -38,6 +39,14 @@ in
         resolvers 1.1.1.1 8.8.8.8
       }
       reverse_proxy 127.0.0.1:7745
+    '';
+    virtualHosts."${vikunja}".extraConfig = ''
+      encode zstd gzip
+      tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        resolvers 1.1.1.1 8.8.8.8
+      }
+      reverse_proxy 127.0.0.1:3456
     '';
   };
 
