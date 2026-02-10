@@ -26,48 +26,39 @@ in {
         openid = {
           enabled = true;
           redirecturl = "https://${domain}/auth/openid/";
-          # Client secret will be added via environment variable
+          # Client secret will be substituted by activation script
           providers = [{
             name = "Pocket-ID";
             authurl = issuer;
             logouturl = "${issuer}/application/o/vikunja/end-session/";
             clientid = "436a474a-15aa-444a-8ba1-e7dce352eb9d";
-            clientsecret = "placeholder-will-be-replaced";
+            clientsecret = "PLACEHOLDER_WILL_BE_REPLACED";
             scope = "openid profile email";
           }];
         };
       };
     };
-    # Add environment file for the secret
-    environmentFiles = [ config.age.secrets.vikunja_oidc_secret.path ];
   };
 
-  # Override the generated config file to substitute the secret
-  # We use a systemd tmpfiles rule to create a modified version
+  # Use activation script to substitute the secret in /etc/vikunja/config.yaml
+  # This runs during system activation with root permissions
+  system.activationScripts.vikunja-secret = lib.mkAfter ''
+    # Read the secret from the local file
+    if [ -f /var/lib/vikunja/oidc-secret.env ]; then
+      SECRET=$(grep -oP '(?<=^VIKUNJA_AUTH_OPENID_PROVIDERS_0_CLIENTSECRET=).*' /var/lib/vikunja/oidc-secret.env)
+      if [ -n "$SECRET" ]; then
+        ${pkgs.gnused}/bin/sed -i "s/PLACEHOLDER_WILL_BE_REPLACED/$SECRET/g" /etc/vikunja/config.yaml
+        echo "Vikunja: Client secret substituted successfully"
+      else
+        echo "Vikunja: Warning - could not read secret from /var/lib/vikunja/oidc-secret.env"
+      fi
+    else
+      echo "Vikunja: Warning - secret file not found at /var/lib/vikunja/oidc-secret.env"
+    fi
+  '';
+
+  # Ensure the secret file exists with correct permissions
   systemd.tmpfiles.rules = [ "d /var/lib/vikunja 0750 vikunja vikunja - -" ];
-
-  # Override the systemd service to substitute the secret before starting
-  systemd.services.vikunja = {
-    # Override the ExecStart to use a wrapper script
-    serviceConfig = {
-      ExecStart = lib.mkForce (pkgs.writeShellScript "vikunja-wrapper" ''
-        set -e
-
-        # The secret is loaded via EnvironmentFile into VIKUNJA_AUTH_OPENID_PROVIDERS_0_CLIENTSECRET
-        if [ -z "$VIKUNJA_AUTH_OPENID_PROVIDERS_0_CLIENTSECRET" ]; then
-          echo "ERROR: VIKUNJA_AUTH_OPENID_PROVIDERS_0_CLIENTSECRET environment variable not set" >&2
-          exit 1
-        fi
-
-        # Copy the config file and substitute the secret
-        sed "s/placeholder-will-be-replaced/$VIKUNJA_AUTH_OPENID_PROVIDERS_0_CLIENTSECRET/g" /etc/vikunja/config.yaml > /var/lib/vikunja/config.yaml
-        chmod 640 /var/lib/vikunja/config.yaml
-
-        # Start vikunja with the modified config
-        exec ${pkgs.vikunja}/bin/vikunja
-      '');
-    };
-  };
 
   age.secrets.vikunja_oidc_secret = {
     file = ../../secrets/vikunja-oidc-client-secret.age;
