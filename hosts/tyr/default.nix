@@ -41,7 +41,7 @@
   ];
 
   services.unifi = {
-    enable = true;
+    enable = false;
     openFirewall = true;
     unifiPackage = pkgs.unifi;
     mongodbPackage = pkgs.mongodb;
