@@ -368,6 +368,9 @@ in
   hardware.bluetooth.enable = true;
 
   networking.hostName = "freya"; # Define your hostname.
+  networking.extraHosts = ''
+    0.0.0.0 login.microsoftonline.com
+  '';
   time.timeZone = "Europe/Rome";
 
   # Enable the X11 windowing system.
@@ -537,6 +540,9 @@ in
     bspwm
     btrfs-assistant
     thunderbird
+    xorg.libXxf86vm
+    glib
+    openjdk21
   ];
 
   virtualisation = {
