@@ -3,6 +3,24 @@
   pkgs,
   ...
 }:
+let
+  # Cobblemon mod and dependencies
+  cobblemon = pkgs.fetchurl {
+    url = "https://cdn.modrinth.com/data/MdwFAVRL/versions/s64m1opn/Cobblemon-fabric-1.7.1%2B1.21.1.jar";
+    sha256 = "sha256-+tv31oPyc+k8ZzymGV08HYqslpN6eoFRJMQ0qSH+cbE=";
+    name = "cobblemon.jar";
+  };
+  fabricApi = pkgs.fetchurl {
+    url = "https://cdn.modrinth.com/data/P7dR8mSH/versions/3wZtvzew/fabric-api-0.116.8%2B1.21.1.jar";
+    sha256 = "sha256-eLrjGef9xTHpStPYhfLzVhP8EmZFocu0noRWuQg1SRs=";
+    name = "fabric-api.jar";
+  };
+  kotlin = pkgs.fetchurl {
+    url = "https://cdn.modrinth.com/data/Ha28R6CL/versions/ViT4gucI/fabric-language-kotlin-1.13.9%2Bkotlin.2.3.10.jar";
+    sha256 = "sha256-/s1ebdaudoFLqSE2tBeRLBmxnsdupFHO3kcs0pzez5E=";
+    name = "fabric-language-kotlin.jar";
+  };
+in
 {
   services.minecraft-servers = {
     enable = true;
@@ -13,21 +31,27 @@
 
     servers.fabric = {
       enable = true;
-      package = pkgs.fabricServers.fabric-1_21_4;
+      package = pkgs.fabricServers.fabric-1_21_1;
 
       serverProperties = {
         server-port = 25565;
         difficulty = "normal";
         gamemode = "survival";
         max-players = 10;
-        motd = "Sauron Minecraft Server";
+        motd = "Cobblemon Server";
         white-list = false;
         enable-command-block = true;
         spawn-protection = 0;
         online-mode = false;
       };
 
-      jvmOpts = "-Xmx4G -Xms2G";
+      jvmOpts = "-Xmx4G -Xms3G";
+
+      symlinks = {
+        "mods/cobblemon.jar" = cobblemon;
+        "mods/fabric-api.jar" = fabricApi;
+        "mods/fabric-language-kotlin.jar" = kotlin;
+      };
     };
 
     # Factory in the Sky 4 - NeoForge modpack
