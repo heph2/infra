@@ -536,6 +536,7 @@ in
     sxhkd
     bspwm
     btrfs-assistant
+    thunderbird
   ];
 
   virtualisation = {
