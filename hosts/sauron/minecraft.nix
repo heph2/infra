@@ -6,8 +6,8 @@
 let
   # Cobblemon mod and dependencies
   cobblemon = pkgs.fetchurl {
-    url = "https://cdn.modrinth.com/data/MdwFAVRL/versions/s64m1opn/Cobblemon-fabric-1.7.1%2B1.21.1.jar";
-    sha256 = "sha256-+tv31oPyc+k8ZzymGV08HYqslpN6eoFRJMQ0qSH+cbE=";
+    url = "https://cdn.modrinth.com/data/MdwFAVRL/versions/kF7CvxTo/Cobblemon-fabric-1.7.3%2B1.21.1.jar";
+    sha256 = "sha256-98JZVRdrrcRErWIR/FVlFP7b26d2In8QX+iZ+IGddOM=";
     name = "cobblemon.jar";
   };
   fabricApi = pkgs.fetchurl {
