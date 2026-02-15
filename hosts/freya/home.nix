@@ -55,6 +55,7 @@ in
       fuse-overlayfs
       dwarfs
       vesktop
+      prismlauncher
       mangohud
       psmisc
       nmap

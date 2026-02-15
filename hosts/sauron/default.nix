@@ -25,6 +25,7 @@ in
     ./pocked-id.nix
     ./caddy.nix
     ./paperless.nix
+    ./minecraft.nix
     "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
   ];
 

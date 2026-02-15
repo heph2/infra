@@ -1,6 +1,13 @@
 { config, pkgs, ... }:
 
 {
+  age.secrets.pocket-id-encryption-key = {
+    file = ../../secrets/pocket-id-encryption-key.age;
+    mode = "400";
+    owner = "pocket-id";
+    group = "pocket-id";
+  };
+
   services.pocket-id = {
     enable = true;
     settings = {
@@ -10,6 +17,6 @@
       HOST = "::";
       PORT = 1411;
     };
-    environmentFile = "/tmp/pocket.env";
+    environmentFile = config.age.secrets.pocket-id-encryption-key.path;
   };
 }

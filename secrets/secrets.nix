@@ -48,4 +48,9 @@ in
     freya
     tyr
   ];
+  "pocket-id-encryption-key.age".publicKeys = [
+    heph
+    freya
+    sauron
+  ];
 }

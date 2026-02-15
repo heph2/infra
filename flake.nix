@@ -43,6 +43,10 @@
       url = "github:nix-community/emacs-overlay/db47b2483942771a725cf10e7cd3b1ec562750b7";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-minecraft = {
+      url = "github:Infinidoge/nix-minecraft";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     inputs@{ flake-parts, ... }:

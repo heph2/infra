@@ -5,6 +5,8 @@
     modules = [
       ./default.nix
       inputs.agenix.nixosModules.default
+      inputs.nix-minecraft.nixosModules.minecraft-servers
+      { nixpkgs.overlays = [ inputs.nix-minecraft.overlay ]; }
       { nixpkgs.config.allowUnfree = true; }
       ../../modules/common/default.nix
       (
