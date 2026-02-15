@@ -3,6 +3,7 @@
   pkgs,
   lib,
   agenix,
+  stardew-modding,
   ...
 }:
 
@@ -12,6 +13,7 @@ in
 {
   imports = [
     agenix.homeManagerModules.default
+    stardew-modding.homeManagerModules.default
     #    ../../modules/graphical/firefox/default.nix
   ];
 
@@ -30,16 +32,17 @@ in
     };
   };
 
-  programs.emacs = {
-    enable = true;
-    extraPackages =
-      epkgs: with epkgs; ([
-        tree-sitter-langs
-        (treesit-grammars.with-grammars (p: [
-          p.tree-sitter-nix
-        ]))
-      ]);
-  };
+  programs.stardew-modding.enable = true;
+  # programs.emacs = {
+  #   enable = true;
+  #   extraPackages =
+  #     epkgs: with epkgs; ([
+  #       tree-sitter-langs
+  #       (treesit-grammars.with-grammars (p: [
+  #         p.tree-sitter-nix
+  #       ]))
+  #     ]);
+  # };
 
   home.packages =
     with pkgs;
@@ -49,7 +52,6 @@ in
       sdrpp
       gqrx
       blender
-      nixos-rebuild-ng
       fuse-overlayfs
       dwarfs
       vesktop
