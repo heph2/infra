@@ -3,7 +3,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     stable-nixpkgs.url = "github:nixos/nixpkgs/release-25.05";
-    simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/master";
+    simple-nixos-mailserver.url =
+      "gitlab:simple-nixos-mailserver/nixos-mailserver/master";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,9 +17,7 @@
       url = "github:Distracted-E421/stardew-modding-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    avf = {
-      url = "github:nix-community/nixos-avf";
-    };
+    avf = { url = "github:nix-community/nixos-avf"; };
     nur.url = "github:nix-community/NUR";
     flake-parts.url = "github:hercules-ci/flake-parts";
     sops-nix.url = "github:Mic92/sops-nix";
@@ -36,20 +35,22 @@
     };
     agenix.url = "github:ryantm/agenix";
     nix-ai-tools.url = "github:numtide/nix-ai-tools";
-    trcc_gif = {
-      url = "git+https://codeberg.org/heph/trcc_gif";
-    };
+    trcc_gif = { url = "git+https://codeberg.org/heph/trcc_gif"; };
     emacs-overlay = {
-      url = "github:nix-community/emacs-overlay/db47b2483942771a725cf10e7cd3b1ec562750b7";
+      url =
+        "github:nix-community/emacs-overlay/db47b2483942771a725cf10e7cd3b1ec562750b7";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-minecraft = {
       url = "github:Infinidoge/nix-minecraft";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    bo3-server = {
+      url = "github:heph2/BlackOps3ServerInstaller";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs =
-    inputs@{ flake-parts, ... }:
+  outputs = inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         #./hosts/fafnir/default.nix ## Router

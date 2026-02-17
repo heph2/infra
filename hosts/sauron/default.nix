@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ config, lib, pkgs, ... }:
 
 let
   hostname = "sauron";
@@ -16,8 +11,7 @@ let
   mediaDir = "${dataRoot}/jelly";
 
   usenetBase = "${dataRoot}/usenet";
-in
-{
+in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -26,7 +20,12 @@ in
     ./caddy.nix
     ./paperless.nix
     ./minecraft.nix
-    "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
+    "${
+      builtins.fetchTarball {
+        url = "https://github.com/nix-community/disko/archive/master.tar.gz";
+        sha256 = "0q8i0frvdvnfla5wlv0x409dafmp56pciv338x6waggmll7isa6g";
+      }
+    }/module.nix"
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -37,12 +36,10 @@ in
 
   # IPV6 Configuration
   networking.interfaces.enp1s0 = {
-    ipv6.addresses = [
-      {
-        address = "2a07:7e81:85f5::beef";
-        prefixLength = 64;
-      }
-    ];
+    ipv6.addresses = [{
+      address = "2a07:7e81:85f5::beef";
+      prefixLength = 64;
+    }];
   };
   networking.defaultGateway6 = {
     address = "fe80::6f4:1cff:fe18:162";
@@ -146,24 +143,42 @@ in
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK"
   ];
 
-  environment.systemPackages = with pkgs; [
-    vim
-    mg
-    wget
-    borgbackup
-    git
-  ];
+  environment.systemPackages = with pkgs; [ vim mg wget borgbackup git ];
 
   services.openssh.enable = true;
 
-  networking.firewall.allowedTCPPorts = [
-    22
-    80
-    443
-    1411
-    8096
-    9091
-  ];
+  networking.firewall.allowedTCPPorts = [ 22 80 443 1411 8096 9091 27017 ];
+  networking.firewall.allowedUDPPorts = [ 27017 ];
   networking.firewall.enable = true;
+
+  # Black Ops 3 Dedicated Server
+  services.bo3-server = {
+    enable = true;
+    steamUser = "olympiczeus";
+    client = "boiii";
+    port = 27017;
+    serverName = "^5Sauron ^7Black Ops 3 Server";
+    description = "NixOS powered BO3 server";
+    maxClients = 18;
+    openFirewall = true;
+    mapRotation = [
+      {
+        gametype = "tdm";
+        map = "mp_biodome";
+      }
+      {
+        gametype = "dom";
+        map = "mp_sector";
+      }
+      {
+        gametype = "tdm";
+        map = "mp_spire";
+      }
+      {
+        gametype = "dom";
+        map = "mp_apartments";
+      }
+    ];
+  };
 
 }
