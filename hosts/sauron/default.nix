@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   hostname = "sauron";
@@ -11,7 +16,8 @@ let
   mediaDir = "${dataRoot}/jelly";
 
   usenetBase = "${dataRoot}/usenet";
-in {
+in
+{
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -23,7 +29,7 @@ in {
     "${
       builtins.fetchTarball {
         url = "https://github.com/nix-community/disko/archive/master.tar.gz";
-        sha256 = "0q8i0frvdvnfla5wlv0x409dafmp56pciv338x6waggmll7isa6g";
+        sha256 = "14nq552mbbmdd3is3zy4ml56dlzh3m768iimhr17wmxgrfqgczan";
       }
     }/module.nix"
   ];
@@ -36,10 +42,12 @@ in {
 
   # IPV6 Configuration
   networking.interfaces.enp1s0 = {
-    ipv6.addresses = [{
-      address = "2a07:7e81:85f5::beef";
-      prefixLength = 64;
-    }];
+    ipv6.addresses = [
+      {
+        address = "2a07:7e81:85f5::beef";
+        prefixLength = 64;
+      }
+    ];
   };
   networking.defaultGateway6 = {
     address = "fe80::6f4:1cff:fe18:162";
@@ -143,11 +151,25 @@ in {
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK"
   ];
 
-  environment.systemPackages = with pkgs; [ vim mg wget borgbackup git ];
+  environment.systemPackages = with pkgs; [
+    vim
+    mg
+    wget
+    borgbackup
+    git
+  ];
 
   services.openssh.enable = true;
 
-  networking.firewall.allowedTCPPorts = [ 22 80 443 1411 8096 9091 27017 ];
+  networking.firewall.allowedTCPPorts = [
+    22
+    80
+    443
+    1411
+    8096
+    9091
+    27017
+  ];
   networking.firewall.allowedUDPPorts = [ 27017 ];
   networking.firewall.enable = true;
 
@@ -157,28 +179,39 @@ in {
     steamUser = "olympiczeus";
     client = "boiii";
     port = 27017;
-    serverName = "^5Sauron ^7Black Ops 3 Server";
-    description = "NixOS powered BO3 server";
-    maxClients = 18;
-    openFirewall = true;
+    gameMode = "zm";
+    serverName = "^5Sauron ^7Zombies";
+    description = "NixOS powered BO3 Zombies server";
+    maxClients = 4;
+    modId = "1638465081"; # Kermit Mod
+    openFirewall = false;
     mapRotation = [
-      {
-        gametype = "tdm";
-        map = "mp_biodome";
-      }
-      {
-        gametype = "dom";
-        map = "mp_sector";
-      }
-      {
-        gametype = "tdm";
-        map = "mp_spire";
-      }
-      {
-        gametype = "dom";
-        map = "mp_apartments";
-      }
+      { gametype = "zclassic"; map = "zm_tomb"; }       # Origins
+      { gametype = "zclassic"; map = "zm_factory"; }    # The Giant
+      { gametype = "zclassic"; map = "zm_theater"; }    # Kino der Toten
+      { gametype = "zclassic"; map = "zm_cosmodrome"; } # Ascension
+      { gametype = "zclassic"; map = "zm_temple"; }     # Shangri-La
+      { gametype = "zclassic"; map = "zm_moon"; }       # Moon
+      { gametype = "zclassic"; map = "zm_castle"; }     # Der Eisendrache
     ];
+    # mapRotation = [
+    #   {
+    #     gametype = "tdm";
+    #     map = "mp_biodome";
+    #   }
+    #   {
+    #     gametype = "dom";
+    #     map = "mp_sector";
+    #   }
+    #   {
+    #     gametype = "tdm";
+    #     map = "mp_spire";
+    #   }
+    #   {
+    #     gametype = "dom";
+    #     map = "mp_apartments";
+    #   }
+    # ];
   };
 
 }
