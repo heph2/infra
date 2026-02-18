@@ -82,11 +82,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1771345689,
-        "narHash": "sha256-i3LHRQXLLzLbVWyLGC1Am2o8Xcpe119ryKf1lJBM9Mc=",
+        "lastModified": 1771348071,
+        "narHash": "sha256-OZMDnhpt5TtnoWLvP8OJCQn3Gw7L4l++pqb5ND+6Qfk=",
         "owner": "heph2",
         "repo": "BlackOps3ServerInstaller",
-        "rev": "8a6eb4a449e2f783fbd4a9cca7dd0fe0a43d0eb6",
+        "rev": "5b6cb0f61d72fc637b38e4d145833a751d4dcf8e",
         "type": "github"
       },
       "original": {

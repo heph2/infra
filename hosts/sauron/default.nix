@@ -183,9 +183,11 @@ in
     serverName = "^5Sauron ^7Zombies";
     description = "NixOS powered BO3 Zombies server";
     maxClients = 4;
+    rconPassword = "banana";
     modId = "1638465081"; # Kermit Mod
     openFirewall = false;
     mapRotation = [
+      { gametype = "zclassic"; map = "zm_prison"; }     # Mob of the Dead (custom)
       { gametype = "zclassic"; map = "zm_tomb"; }       # Origins
       { gametype = "zclassic"; map = "zm_factory"; }    # The Giant
       { gametype = "zclassic"; map = "zm_theater"; }    # Kino der Toten
