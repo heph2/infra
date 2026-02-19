@@ -55,9 +55,8 @@ in
     };
 
     # Factory in the Sky 4 - NeoForge modpack
-    # FIXME: Enable once network issues with libraries.minecraft.net are resolved
     servers.fits4 = {
-      enable = false;
+      enable = true;
       package = pkgs.neoforgeServers.neoforge-1_21_1;
 
       serverProperties = {
