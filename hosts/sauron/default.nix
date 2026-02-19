@@ -174,6 +174,22 @@ in
   networking.firewall.enable = true;
 
   # Black Ops 3 Dedicated Server
+  # Available Zombies Maps:
+  #   zm_zod        - Shadows of Evil
+  #   zm_factory    - The Giant
+  #   cp_doa_bo3    - Dead Ops Arcade 2
+  #   zm_castle     - Der Eisendrache
+  #   zm_island     - Zetsubou No Shima
+  #   zm_stalingrad - Gorod Krovi
+  #   zm_genesis    - Revelations
+  #   zm_prototype  - Nacht der Untoten
+  #   zm_asylum     - Verruckt
+  #   zm_sumpf      - Shi No Numa
+  #   zm_theater    - Kino der Toten
+  #   zm_temple     - Shangri-La
+  #   zm_cosmodrome - Ascension
+  #   zm_moon       - Moon
+  #   zm_tomb       - Origins
   services.bo3-server = {
     enable = true;
     steamUser = "olympiczeus";
