@@ -56,7 +56,7 @@ in
 
     # Factory in the Sky 4 - NeoForge modpack
     servers.fits4 = {
-      enable = true;
+      enable = false;
       package = pkgs.neoforgeServers.neoforge-1_21_1;
 
       serverProperties = {
