@@ -28,6 +28,7 @@
         home-manager.extraSpecialArgs = {
           agenix = inputs.agenix;
           stardew-modding = inputs.stardew-modding;
+          firefox-addons = inputs.firefox-addons;
         };
 
       }
