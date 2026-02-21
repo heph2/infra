@@ -4,6 +4,7 @@
   lib,
   agenix,
   stardew-modding,
+  firefox-addons,
   ...
 }:
 
@@ -47,6 +48,7 @@ in
   home.packages =
     with pkgs;
     [
+      wootility
       mpv
       w3m
       sdrpp
@@ -381,6 +383,80 @@ in
   services.unclutter.enable = true;
   services.emacs.enable = true;
   programs.k9s.enable = true;
+
+  programs.firefox = {
+    enable = true;
+    policies = {
+      DisableTelemetry = true;
+      DisableFirefoxStudies = true;
+      DisablePocket = true;
+      DisableFirefoxAccounts = false;
+      NoDefaultBookmarks = true;
+      OfferToSaveLogins = false;
+      OfferToSaveLoginsDefault = false;
+      PasswordManagerEnabled = false;
+      FirefoxHome = {
+        Search = true;
+        Pocket = false;
+        Snippets = false;
+        TopSites = false;
+        Highlights = false;
+      };
+      UserMessaging = {
+        ExtensionRecommendations = false;
+        SkipOnboarding = true;
+      };
+    };
+    profiles.default = {
+      id = 0;
+      name = "heph";
+      isDefault = true;
+      extensions.packages = with firefox-addons.packages.${pkgs.system}; [
+        ublock-origin
+        bitwarden
+        user-agent-string-switcher
+        multi-account-containers
+        kagi-search
+      ];
+      settings = {
+        # Vertical tabs (native Firefox 131+)
+        "sidebar.verticalTabs" = true;
+        "sidebar.revamp" = true;
+
+        # Privacy
+        "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+        "browser.newtabpage.activity-stream.showSponsored" = false;
+        "browser.urlbar.suggest.quicksuggest.sponsored" = false;
+        "browser.urlbar.suggest.quicksuggest.nonsponsored" = false;
+        "browser.search.suggest.enabled" = false;
+        "browser.search.suggest.enabled.private" = false;
+        "browser.urlbar.suggest.searches" = false;
+        "datareporting.healthreport.uploadEnabled" = false;
+        "toolkit.telemetry.enabled" = false;
+        "app.shield.optoutstudies.enabled" = false;
+
+        # Performance / Hardware acceleration
+        "media.ffmpeg.vaapi.enabled" = true;
+        "media.rdd-vpx.enabled" = true;
+        "gfx.webrender.all" = true;
+        "layers.acceleration.force-enabled" = true;
+
+        # UI / UX
+        "browser.tabs.drawInTitlebar" = true;
+        "browser.shell.checkDefaultBrowser" = false;
+        "general.smoothScroll" = true;
+        "browser.sessionstore.resume_from_crash" = true;
+        "browser.tabs.tabmanager.enabled" = false;
+
+        # Use XDG portals for file picker
+        "widget.use-xdg-desktop-portal.file-picker" = 1;
+        "widget.use-xdg-desktop-portal.mime-handler" = 1;
+
+        # Enable custom CSS
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+      };
+    };
+  };
 
   # systemd.user.services.mpris-proxy = {
   #   description = "Mpris proxy";
