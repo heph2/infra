@@ -330,6 +330,7 @@ in
   services.udev.packages = [
     pkgs.libfido2
     pkgs.yubikey-personalization
+    pkgs.wooting-udev-rules
   ];
   security.pam.services = {
     login.u2fAuth = true;
@@ -511,7 +512,6 @@ in
     quickemu
     python3
     aider-chat
-    firefox
     man-pages
     man-pages-posix
     ffmpeg
