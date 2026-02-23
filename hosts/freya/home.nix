@@ -51,6 +51,8 @@ in
       wootility
       mpv
       w3m
+      kdePackages.okular
+      obsidian
       sdrpp
       gqrx
       blender
