@@ -56,6 +56,8 @@ in
       sdrpp
       gqrx
       blender
+      openscad
+      openscad-lsp
       fuse-overlayfs
       dwarfs
       vesktop
