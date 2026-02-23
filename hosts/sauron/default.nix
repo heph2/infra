@@ -205,6 +205,7 @@ in
     openFirewall = false;
     mapRotation = [
       # { gametype = "zclassic"; map = "zm_prison"; }     # Mob of the Dead (custom)
+      { gametype = "zclassic"; map = "zm_town"; }       # Town Reimagined (custom)
       { gametype = "zclassic"; map = "zm_tomb"; }       # Origins
       { gametype = "zclassic"; map = "zm_factory"; }    # The Giant
       { gametype = "zclassic"; map = "zm_theater"; }    # Kino der Toten
