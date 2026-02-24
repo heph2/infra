@@ -80,10 +80,14 @@
     certs.${config.mailserver.fqdn} = {
       dnsProvider = "cloudflare";
       environmentFile = config.age.secrets.cloudflare.path;
+      reloadServices = [
+        "dovecot2"
+        "postfix"
+      ];
     };
   };
 
-  systemd.services."acme-mail.mbauce.com".serviceConfig.Environment = [
+  systemd.services."acme-mail.mbauce.com".serviceConfig.EnvironmentFile = [
     config.age.secrets.cloudflare.path
   ];
 
