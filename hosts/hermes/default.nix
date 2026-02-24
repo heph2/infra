@@ -24,6 +24,7 @@
 
   environment.systemPackages = with pkgs; [
     helix
+    openssl
     mg
     vim
     git
