@@ -72,6 +72,7 @@
   security.acme = {
     acceptTerms = true;
     defaults.email = "catch@mrkeebs.eu";
+    certs.${config.mailserver.fqdn} = { };
   };
 
   services.postfix = {
