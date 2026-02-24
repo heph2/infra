@@ -4,6 +4,7 @@ let
   zima = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKmSgm97MHi+1dwh79BpyePwiXAcD2R+ceUKbBn6pVRv";
   sauron = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKECQ6GB+aeG76Sx8Ht4JJH0JmRrMNsf/uoA42eDZFK0";
   tyr = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINvI0NxnjLWyG+oxLInkBvaKWqV6BWeTPLH5YeaCDYLG";
+  hermes = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJODYFqjgPr4z6UmG0k/jx7LJ/WcJaysVmc8FgQyuJSS";
   users = [
     freya
     heph
@@ -29,6 +30,7 @@ in
     zima
     sauron
     tyr
+    hermes
   ];
   "paperless-oidc-client-secret.age".publicKeys = [
     heph
