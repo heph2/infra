@@ -5,6 +5,10 @@
   ...
 }:
 {
+  age.secrets.cloudflare = {
+    file = ../../secrets/cloudflare_api_token.age;
+    mode = "640";
+  };
   mailserver = {
     stateVersion = 3;
     enable = true;
@@ -67,13 +71,21 @@
         '';
       };
     };
-    certificateScheme = "acme-nginx";
+    x509.useACMEHost = config.mailserver.fqdn;
+    # certificateScheme = "acme";
   };
   security.acme = {
     acceptTerms = true;
     defaults.email = "catch@mrkeebs.eu";
-    certs.${config.mailserver.fqdn} = { };
+    certs.${config.mailserver.fqdn} = {
+      dnsProvider = "cloudflare";
+      environmentFile = config.age.secrets.cloudflare.path;
+    };
   };
+
+  systemd.services."acme-mail.mbauce.com".serviceConfig.Environment = [
+    config.age.secrets.cloudflare.path
+  ];
 
   services.postfix = {
     # extraConfig = ''
