@@ -57,7 +57,7 @@
           #    fileinto :create "GitLab";
           #    stop;
           #}
-          if header :matches "list-id" "nexa@server-naxa.polito.it" {
+          if header :matches "list-id" "nexa@server-nexa.polito.it" {
               fileinto :create "Nexa";
               stop;
           }
