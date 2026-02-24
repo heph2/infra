@@ -29,7 +29,7 @@ in
     "${
       builtins.fetchTarball {
         url = "https://github.com/nix-community/disko/archive/master.tar.gz";
-        sha256 = "14nq552mbbmdd3is3zy4ml56dlzh3m768iimhr17wmxgrfqgczan";
+        sha256 = "sha256:0pcsgasbn9wzvmk731333zsxadpvndg7wmbvvi6s7f703am9syhs";
       }
     }/module.nix"
   ];
@@ -199,20 +199,44 @@ in
     serverName = "^5Sauron ^7Zombies";
     description = "NixOS powered BO3 Zombies server";
     maxClients = 4;
-    lobbyMinPlayers = 2;
+    lobbyMinPlayers = 1;
     rconPassword = "banana";
     modId = "1638465081"; # Kermit Mod
     openFirewall = false;
     mapRotation = [
       # { gametype = "zclassic"; map = "zm_prison"; }     # Mob of the Dead (custom)
-      { gametype = "zclassic"; map = "zm_town"; }       # Town Reimagined (custom)
-      { gametype = "zclassic"; map = "zm_tomb"; }       # Origins
-      { gametype = "zclassic"; map = "zm_factory"; }    # The Giant
-      { gametype = "zclassic"; map = "zm_theater"; }    # Kino der Toten
-      { gametype = "zclassic"; map = "zm_cosmodrome"; } # Ascension
-      { gametype = "zclassic"; map = "zm_temple"; }     # Shangri-La
-      { gametype = "zclassic"; map = "zm_moon"; }       # Moon
-      { gametype = "zclassic"; map = "zm_castle"; }     # Der Eisendrache
+      {
+        gametype = "zclassic";
+        map = "zm_town";
+      } # Town Reimagined (custom)
+      {
+        gametype = "zclassic";
+        map = "zm_tomb";
+      } # Origins
+      {
+        gametype = "zclassic";
+        map = "zm_factory";
+      } # The Giant
+      {
+        gametype = "zclassic";
+        map = "zm_theater";
+      } # Kino der Toten
+      {
+        gametype = "zclassic";
+        map = "zm_cosmodrome";
+      } # Ascension
+      {
+        gametype = "zclassic";
+        map = "zm_temple";
+      } # Shangri-La
+      {
+        gametype = "zclassic";
+        map = "zm_moon";
+      } # Moon
+      {
+        gametype = "zclassic";
+        map = "zm_castle";
+      } # Der Eisendrache
     ];
     # mapRotation = [
     #   {
