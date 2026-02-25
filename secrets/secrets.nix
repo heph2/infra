@@ -55,4 +55,9 @@ in
     freya
     sauron
   ];
+  "netdata_token.age".publicKeys = [
+    sauron
+    zima
+    tyr
+  ];
 }
