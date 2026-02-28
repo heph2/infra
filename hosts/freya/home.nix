@@ -52,10 +52,12 @@ in
       mpv
       w3m
       kdePackages.okular
+      xournalpp
       obsidian
       sdrpp
       gqrx
       blender
+      vivaldi
       openscad
       openscad-lsp
       fuse-overlayfs
@@ -72,6 +74,7 @@ in
       rpcs3
       deltachat-desktop
       bambu-studio
+      orca-slicer
       nix-output-monitor
       brave
       speedtest-cli
