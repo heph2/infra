@@ -151,6 +151,16 @@ in
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK"
   ];
 
+  age.secrets.netdata_token = {
+    file = ../../secrets/netdata_token.age;
+    mode = "640";
+  };
+  services.netdata = {
+    enable = true;
+    package = pkgs.netdata.override { withCloudUi = true; };
+    claimTokenFile = config.age.secrets.netdata_token.path;
+  };
+
   environment.systemPackages = with pkgs; [
     vim
     mg
@@ -169,6 +179,7 @@ in
     8096
     9091
     27017
+    19999
   ];
   networking.firewall.allowedUDPPorts = [ 27017 ];
   networking.firewall.enable = true;
@@ -201,7 +212,8 @@ in
     maxClients = 4;
     lobbyMinPlayers = 1;
     rconPassword = "banana";
-    modId = "1638465081"; # Kermit Mod
+    # modId = "1638465081"; # Kermit Mod
+    modId = "2661297173"; # Gubblegums enanched
     openFirewall = false;
     mapRotation = [
       # { gametype = "zclassic"; map = "zm_prison"; }     # Mob of the Dead (custom)
