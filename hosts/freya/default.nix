@@ -36,6 +36,16 @@ in
     group = "systemd-network";
   };
 
+  hardware.opentabletdriver.enable = false;
+  services.libinput.enable = true;
+  services.xserver.wacom.enable = true;
+
+  services.udev.extraHwdb = ''
+    evdev:input:b0003v056Ap033C*
+      ID_INPUT_TABLET_PAD=1
+      ID_INPUT_TABLET=0
+  '';
+
   nixpkgs.config.permittedInsecurePackages = [
     "libsoup-2.74.3"
     "openssl-1.1.1w"
@@ -72,6 +82,7 @@ in
   services.trcc-gif = {
     enable = true;
     binDirectory = "/var/lib/trcc-gif/frames";
+    # binDirectory = "/var/lib/trcc-gif/pochi-frames";
   };
 
   services.borgbackup.jobs =
@@ -288,6 +299,7 @@ in
     "vfio_pci"
     "vfio_iommu_type1"
     "vfio"
+    "wacom"
     "amdgpu"
     "usbmon"
   ];
@@ -500,6 +512,8 @@ in
     inputs.nix-ai-tools.packages.${pkgs.system}.codex
     inputs.nix-ai-tools.packages.${pkgs.system}.opencode
     steamcmd
+    libinput
+    libwacom
     vim
     wireshark
     heroic
