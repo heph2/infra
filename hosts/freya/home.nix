@@ -126,6 +126,7 @@ in
       yubikey-agent
       libu2f-host
       pam_u2f
+      rclone
     ]
     ++ (with haskellPackages; [
       ghcid
