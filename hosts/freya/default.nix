@@ -114,7 +114,7 @@ in
         environment.BORG_RSH = "ssh -o 'StrictHostKeyChecking=no' -i /home/heph/.ssh/sekai_ed";
         environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
         extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
-        repo = "ssh://zima//data/backup/${name}";
+        repo = "ssh://sauron//data/backup/${name}";
         compression = "zstd,1";
         startAt = "hourly";
         persistentTimer = true;
@@ -130,9 +130,22 @@ in
             "Downloads"
             "Videos"
             ".models"
+            "Games"
           ]
         );
       };
+
+      # code-icloud = {
+      #   encryption.mode = "repokey";
+      #   environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
+      #   extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
+      #   repo = "rclone://iclouddrive:/backup/freya/code";
+      #   compression = "zstd,1";
+      #   startAt = "daily";
+      #   persistentTimer = true;
+      #   user = "heph";
+      #   paths = [ "/home/heph/code" ];
+      # };
     };
 
   services.samba = {
