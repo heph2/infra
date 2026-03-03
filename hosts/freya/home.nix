@@ -34,22 +34,23 @@ in
   };
 
   programs.stardew-modding.enable = true;
-  # programs.emacs = {
-  #   enable = true;
-  #   extraPackages =
-  #     epkgs: with epkgs; ([
-  #       tree-sitter-langs
-  #       (treesit-grammars.with-grammars (p: [
-  #         p.tree-sitter-nix
-  #       ]))
-  #     ]);
-  # };
+  programs.emacs = {
+    enable = true;
+    package = pkgs.emacs;
+    extraPackages = epkgs: [
+      epkgs.nix-mode
+      epkgs.nixfmt
+      (epkgs.treesit-grammars.with-all-grammars)
+    ];
+    extraConfig = builtins.readFile "/home/heph/.emacs.d/init.el";
+  };
 
   home.packages =
     with pkgs;
     [
       wootility
       mpv
+      aporetic
       w3m
       kdePackages.okular
       xournalpp
