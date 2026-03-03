@@ -422,7 +422,10 @@ in
 
   # services.xserver = { windowManager.i3.enable = true; };
 
-  services.emacs.enable = true;
+  # services.emacs = {
+  #   enable = true;
+  #   package = pkgs.myEmacs;
+  # };
 
   services.displayManager.ly.enable = false;
 
@@ -572,6 +575,15 @@ in
     glib
     openjdk21
     obsidian
+    (aspellWithDicts (
+      dicts: with dicts; [
+        en
+        en-computers
+        en-science
+        es
+        it
+      ]
+    ))
   ];
 
   virtualisation = {
