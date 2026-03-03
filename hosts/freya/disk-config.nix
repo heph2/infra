@@ -61,9 +61,7 @@
           "root/swap" = {
             type = "zfs_volume";
             size = "10M";
-            content = {
-              type = "swap";
-            };
+            content = { type = "swap"; };
             options = {
               volblocksize = "4096";
               compression = "zle";
