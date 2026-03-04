@@ -34,40 +34,69 @@ let
       host = "jellyseerr.pochi.casa";
       upstream = "localhost:5055";
     }
+    {
+      host = "ups.pochi.casa";
+      type = "nut";
+    }
   ];
 
-  caddyFile = pkgs.writeText "Caddyfile" (
-    ''
-      {
-        email infra@mbauce.com
-      }
-    ''
-    + (builtins.concatStringsSep "\n\n" (
-      map (v: ''
-        ${v.host} {
-          encode zstd gzip
-          tls {
-            dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-            resolvers 1.1.1.1 8.8.8.8
-          }
-          reverse_proxy ${v.upstream}
-          ${v.extra or ""}
+  caddyFile = pkgs.writeText "Caddyfile" (''
+    {
+      email infra@mbauce.com
+    }
+  '' + (builtins.concatStringsSep "\n\n" (map (v:
+    if (v.type or "proxy") == "nut" then ''
+      ${v.host} {
+        encode zstd gzip
+
+        tls {
+          dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+          resolvers 1.1.1.1 8.8.8.8
         }
-      '') vhosts
-    ))
-  );
-in
-{
+
+        root * ${pkgs.nut}/cgi-bin
+
+        @cgi path *.cgi
+
+        reverse_proxy @cgi unix//run/fcgiwrap.socket {
+          transport fastcgi {
+            env SCRIPT_FILENAME ${pkgs.nut}/cgi-bin{path}
+          }
+        }
+
+        file_server
+      }
+    '' else ''
+      ${v.host} {
+        encode zstd gzip
+
+        tls {
+          dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+          resolvers 1.1.1.1 8.8.8.8
+        }
+
+        reverse_proxy ${v.upstream}
+
+        ${v.extra or ""}
+      }
+    '') vhosts)));
+in {
   services.caddy.enable = true;
+  services.fcgiwrap.instances = {
+    caddy = {
+      socket.type = "unix";
+      socket.address = "/run/fcgiwrap.socket";
+      socket.user = "caddy";
+      socket.group = "caddy";
+      socket.mode = "0660";
+    };
+  };
   services.caddy.configFile = caddyFile;
   services.caddy.package = pkgs.caddy.withPlugins {
     plugins = [ "github.com/caddy-dns/cloudflare@v0.2.2" ];
     hash = "sha256-dnhEjopeA0UiI+XVYHYpsjcEI6Y1Hacbi28hVKYQURg=";
   };
-  networking.firewall.allowedTCPPorts = [
-    80
-    443
-  ];
+  networking.firewall.allowedTCPPorts = [ 80 443 ];
   age.secrets.cloudflare = {
     file = ../../secrets/cloudflare_api_token.age;
     mode = "640";
@@ -75,7 +104,6 @@ in
     group = "caddy";
   };
 
-  systemd.services.caddy.serviceConfig.EnvironmentFile = [
-    config.age.secrets.cloudflare.path
-  ];
+  systemd.services.caddy.serviceConfig.EnvironmentFile =
+    [ config.age.secrets.cloudflare.path ];
 }
