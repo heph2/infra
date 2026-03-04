@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ config, lib, pkgs, ... }:
 
 let
   hostname = "sauron";
@@ -16,8 +11,7 @@ let
   mediaDir = "${dataRoot}/jelly";
 
   usenetBase = "${dataRoot}/usenet";
-in
-{
+in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -29,7 +23,7 @@ in
     "${
       builtins.fetchTarball {
         url = "https://github.com/nix-community/disko/archive/master.tar.gz";
-        sha256 = "sha256:0pcsgasbn9wzvmk731333zsxadpvndg7wmbvvi6s7f703am9syhs";
+        sha256 = "sha256:1xd50g83y81ia29xr5a97s0f28xi2vybdbj02fscc56l8kip79lx";
       }
     }/module.nix"
   ];
@@ -42,12 +36,10 @@ in
 
   # IPV6 Configuration
   networking.interfaces.enp1s0 = {
-    ipv6.addresses = [
-      {
-        address = "2a07:7e81:85f5::beef";
-        prefixLength = 64;
-      }
-    ];
+    ipv6.addresses = [{
+      address = "2a07:7e81:85f5::beef";
+      prefixLength = 64;
+    }];
   };
   networking.defaultGateway6 = {
     address = "fe80::6f4:1cff:fe18:162";
@@ -161,26 +153,12 @@ in
     claimTokenFile = config.age.secrets.netdata_token.path;
   };
 
-  environment.systemPackages = with pkgs; [
-    vim
-    mg
-    wget
-    borgbackup
-    git
-  ];
+  environment.systemPackages = with pkgs; [ vim mg wget borgbackup git ];
 
   services.openssh.enable = true;
 
-  networking.firewall.allowedTCPPorts = [
-    22
-    80
-    443
-    1411
-    8096
-    9091
-    27017
-    19999
-  ];
+  networking.firewall.allowedTCPPorts =
+    [ 22 80 443 1411 8096 9091 27017 19999 ];
   networking.firewall.allowedUDPPorts = [ 27017 ];
   networking.firewall.enable = true;
 
@@ -270,4 +248,73 @@ in
     # ];
   };
 
+  age.secrets.ups_password = {
+    file = ../../secrets/ups-admin.age;
+    mode = "640";
+  };
+
+  power.ups = {
+    enable = true;
+    mode = "standalone";
+    ups."UPS-1" = {
+      description = "Eaton ECO 650 5E";
+      driver = "usbhid-ups";
+      port = "auto";
+    };
+    users."nut-admin" = {
+      passwordFile = config.age.secrets.ups_password.path;
+      upsmon = "primary";
+    };
+    upsmon.monitor."UPS-1" = {
+      system = "UPS-1@localhost";
+      powerValue = 1;
+      user = "nut-admin";
+      passwordFile = config.age.secrets.ups_password.path;
+      type = "primary";
+    };
+    upsmon.settings = {
+      # This configuration file declares how upsmon is to handle
+      # NOTIFY events.
+
+      # POWERDOWNFLAG and SHUTDOWNCMD is provided by NixOS default
+      # values
+
+      # values provided by ConfigExamples 3.0 book
+      NOTIFYMSG = [
+        [ "ONLINE" ''"UPS %s: On line power."'' ]
+        [ "ONBATT" ''"UPS %s: On battery."'' ]
+        [ "LOWBATT" ''"UPS %s: Battery is low."'' ]
+        [ "REPLBATT" ''"UPS %s: Battery needs to be replaced."'' ]
+        [ "FSD" ''"UPS %s: Forced shutdown in progress."'' ]
+        [ "SHUTDOWN" ''"Auto logout and shutdown proceeding."'' ]
+        [ "COMMOK" ''"UPS %s: Communications (re-)established."'' ]
+        [ "COMMBAD" ''"UPS %s: Communications lost."'' ]
+        [ "NOCOMM" ''"UPS %s: Not available."'' ]
+        [ "NOPARENT" ''"upsmon parent dead, shutdown impossible."'' ]
+      ];
+      NOTIFYFLAG = [
+        [ "ONLINE" "SYSLOG+WALL" ]
+        [ "ONBATT" "SYSLOG+WALL" ]
+        [ "LOWBATT" "SYSLOG+WALL" ]
+        [ "REPLBATT" "SYSLOG+WALL" ]
+        [ "FSD" "SYSLOG+WALL" ]
+        [ "SHUTDOWN" "SYSLOG+WALL" ]
+        [ "COMMOK" "SYSLOG+WALL" ]
+        [ "COMMBAD" "SYSLOG+WALL" ]
+        [ "NOCOMM" "SYSLOG+WALL" ]
+        [ "NOPARENT" "SYSLOG+WALL" ]
+      ];
+      # every RBWARNTIME seconds, upsmon will generate a replace
+      # battery NOTIFY event
+      RBWARNTIME = 216000;
+      # every NOCOMMWARNTIME seconds, upsmon will generate a UPS
+      # unreachable NOTIFY event
+      NOCOMMWARNTIME = 300;
+      # after sending SHUTDOWN NOTIFY event to warn users, upsmon
+      # waits FINALDELAY seconds long before executing SHUTDOWNCMD
+      # Some UPS's don't give much warning for low battery and will
+      # require a value of 0 here for aq safe shutdown.
+      FINALDELAY = 0;
+    };
+  };
 }
