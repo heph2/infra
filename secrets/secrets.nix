@@ -60,4 +60,7 @@ in
     zima
     tyr
   ];
+  "ups-admin.age".publicKeys = [
+    sauron
+  ];
 }
