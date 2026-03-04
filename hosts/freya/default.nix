@@ -379,6 +379,7 @@ in
 
   fonts = {
     enableDefaultPackages = true;
+    enableDefaultFonts = true;
     packages = with pkgs; [
       nerd-fonts.hack
       fantasque-sans-mono
