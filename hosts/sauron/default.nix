@@ -252,7 +252,7 @@ in {
     file = ../../secrets/ups-admin.age;
     mode = "640";
   };
-
+  
   power.ups = {
     enable = true;
     mode = "standalone";

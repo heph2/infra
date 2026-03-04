@@ -34,10 +34,6 @@ let
       host = "jellyseerr.pochi.casa";
       upstream = "localhost:5055";
     }
-    {
-      host = "ups.pochi.casa";
-      type = "nut";
-    }
   ];
 
   caddyFile = pkgs.writeText "Caddyfile" (''
@@ -56,12 +52,18 @@ let
 
         root * ${pkgs.nut}/cgi-bin
 
+        rewrite / /upsstats.cgi
+
         @cgi path *.cgi
 
-        reverse_proxy @cgi unix//run/fcgiwrap.socket {
-          transport fastcgi {
-            env SCRIPT_FILENAME ${pkgs.nut}/cgi-bin{path}
-          }
+        handle @cgi {
+          reverse_proxy unix//run/fcgiwrap.socket {
+            transport fastcgi {
+	      root ${pkgs.nut}/cgi-bin
+              split .cgi
+              env NUT_CONFPATH /etc/nut
+            }
+	  }
         }
 
         file_server
@@ -88,9 +90,10 @@ in {
       socket.address = "/run/fcgiwrap.socket";
       socket.user = "caddy";
       socket.group = "caddy";
-      socket.mode = "0660";
+      socket.mode = "0666";
     };
   };
+
   services.caddy.configFile = caddyFile;
   services.caddy.package = pkgs.caddy.withPlugins {
     plugins = [ "github.com/caddy-dns/cloudflare@v0.2.2" ];
