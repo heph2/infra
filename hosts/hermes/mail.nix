@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }: {
   age.secrets.cloudflare = {
-    file = ../../secrets/cloudflare_api_token.age;
+    file = ../../secrets/acme-api-token-cloudflare.age;
     mode = "640";
   };
   mailserver = {
