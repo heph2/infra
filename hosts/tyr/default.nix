@@ -88,6 +88,41 @@
       ];
     };
   };
+
+  services.prometheus.exporters.node = {
+    enable = true;
+    port = 9000;
+    enabledCollectors = [
+      "ethtool"
+      "softirqs"
+      "systemd"
+      "tcpstat"
+      "wifi"
+    ];
+  };
+  services.prometheus = {
+    enable = true;
+    globalConfig.scrape_interval = "10s"; # "1m"
+    scrapeConfigs = [
+      {
+        job_name = "node";
+        static_configs = [
+          {
+            targets = [ "localhost:${toString config.services.prometheus.exporters.node.port}" ];
+          }
+        ];
+      }
+      {
+        job_name = "dovecot";
+        static_configs = [
+          {
+            targets = [ "hermes:${toString config.services.prometheus.exporters.dovecot.port}" ];
+          }
+        ];
+      }
+    ];
+  };
+
   services.k3s = {
     enable = true;
     role = "server";
