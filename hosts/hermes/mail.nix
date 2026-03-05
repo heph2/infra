@@ -1,10 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-{
+{ config, lib, pkgs, ... }: {
   age.secrets.cloudflare = {
     file = ../../secrets/cloudflare_api_token.age;
     mode = "640";
@@ -13,17 +7,13 @@
     stateVersion = 3;
     enable = true;
     borgbackup = {
-      enable = false;
-      repoLocation = "ssh://root@100.116.32.35//data/backup/hermes";
+      enable = true;
+      repoLocation = "ssh://root@100.126.120.86//data/backup/hermes";
+      cmdPreexec = ''export BORG_RSH="ssh -o StrictHostKeyChecking=no"'';
     };
     fqdn = "mail.mbauce.com";
     domains = [ "mbauce.com" ];
     loginAccounts = {
-      "test@mbauce.com" = {
-        # nix-shell -p mkpasswd --run 'mkpasswd -sm bcrypt' > /hashed/password/file/location
-        hashedPasswordFile = "/var/lib/mail-accounts/test/pssw";
-        aliases = [ "info@mbauce.com" ];
-      };
       "me@mbauce.com" = {
         hashedPasswordFile = "/var/lib/mail-accounts/me/pssw";
         aliases = [
@@ -80,20 +70,27 @@
     certs.${config.mailserver.fqdn} = {
       dnsProvider = "cloudflare";
       environmentFile = config.age.secrets.cloudflare.path;
-      reloadServices = [
-        "dovecot2"
-        "postfix"
-      ];
+      reloadServices = [ "dovecot2" "postfix" ];
     };
   };
 
-  systemd.services."acme-mail.mbauce.com".serviceConfig.EnvironmentFile = [
-    config.age.secrets.cloudflare.path
-  ];
+  systemd.services."acme-mail.mbauce.com".serviceConfig.EnvironmentFile =
+    [ config.age.secrets.cloudflare.path ];
 
-  services.postfix = {
-    # extraConfig = ''
-    #   inet_protocols = ipv4
-    # '';
+  services.postfix = { };
+
+  services.prometheus.exporters = {
+    rspamd = {
+      enable = true;
+      port = 7980;
+    };
+    dovecot = {
+      enable = true;
+      port = 9160;
+    };
+    postfix = {
+      enable = true;
+      port = 9117;
+    };
   };
 }
