@@ -1,5 +1,4 @@
-{ config, pkgs, ... }:
-{
+{ config, pkgs, ... }: {
   imports = [
     ./hardware-configuration.nix
     ./networking.nix # generated at runtime by nixos-infect
@@ -14,17 +13,20 @@
   sops.secrets."murmur/password" = { };
   networking = {
     hostName = "hermes";
-    firewall.allowedTCPPorts = [
-      80
-      25
-      143
-      465
-    ];
+    firewall.allowedTCPPorts = [ 80 25 143 465 7980 9160 9117 ];
+    firewall.extraCommands = ''
+      iptables -A INPUT -s 192.253.248.30 -j DROP
+      iptables -A OUTPUT -d 192.253.248.30 -j DROP
+      iptables -A INPUT -s 80.94.95.216 -j DROP
+      iptables -A OUTPUT -d 80.94.95.216 -j DROP
+    '';
   };
 
   environment.systemPackages = with pkgs; [
     helix
     openssl
+    openssh
+    ncdu
     mg
     vim
     git
