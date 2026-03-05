@@ -65,6 +65,7 @@ in
   ];
   "grafana-oidc-client-secret.age".publicKeys = [
     heph
+    zima
     freya
     tyr
     sauron
