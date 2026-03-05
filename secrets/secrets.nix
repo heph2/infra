@@ -32,6 +32,10 @@ in
     tyr
     hermes
   ];
+  "acme-api-token-cloudflare.age".publicKeys = [
+    hermes
+    freya
+  ];
   "paperless-oidc-client-secret.age".publicKeys = [
     heph
     freya
