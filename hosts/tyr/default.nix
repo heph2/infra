@@ -80,6 +80,7 @@
     port = 9000;
     enabledCollectors = [ "ethtool" "softirqs" "systemd" "tcpstat" "wifi" ];
   };
+
   services.prometheus = {
     enable = true;
     globalConfig.scrape_interval = "10s"; # "1m"
