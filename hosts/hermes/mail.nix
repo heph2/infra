@@ -77,20 +77,46 @@
   systemd.services."acme-mail.mbauce.com".serviceConfig.EnvironmentFile =
     [ config.age.secrets.cloudflare.path ];
 
-  services.postfix = { };
+  services.dovecot2 = {
+    mailPlugins.globally.enable = [ "old_stats" ];
+    extraConfig = ''
+    service old-stats {
+      unix_listener old-stats {
+        user = dovecot-exporter
+        group = dovecot-exporter
+        mode = 0660
+      }
+      fifo_listener old-stats-mail {
+        mode = 0660
+        user = dovecot2
+        group = dovecot2
+      }
+      fifo_listener old-stats-user {
+        mode = 0660
+        user = dovecot2
+        group = dovecot2
+      }
+    }
+    plugin {
+      old_stats_refresh = 30 secs
+      old_stats_track_cmds = yes
+    }
+    '';
+  };
 
   services.prometheus.exporters = {
     rspamd = {
       enable = true;
-      port = 7980;
+      # port = 7980;
     };
     dovecot = {
       enable = true;
-      port = 9160;
+      # port = 9160;
+      socketPath = "/var/run/dovecot2/old-stats";
     };
     postfix = {
       enable = true;
-      port = 9117;
+      # port = 9117;
     };
   };
 }
