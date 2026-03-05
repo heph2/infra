@@ -63,4 +63,10 @@ in
   "ups-admin.age".publicKeys = [
     sauron
   ];
+  "grafana-oidc-client-secret.age".publicKeys = [
+    heph
+    freya
+    tyr
+    sauron
+  ];
 }
