@@ -29,7 +29,6 @@ in
 
   age.secrets.vikunja_oidc_secret = {
     file = ../../secrets/vikunja-oidc-client-secret.age;
-    path = "/run/agenix/vikunja-oidc.env";
   };
 
   services.caddy.virtualHosts."${domain}".extraConfig = ''
