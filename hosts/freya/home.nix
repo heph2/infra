@@ -54,6 +54,7 @@ in
       w3m
       kdePackages.okular
       xournalpp
+      python313Packages.python-lsp-server
       obsidian
       sdrpp
       gqrx
