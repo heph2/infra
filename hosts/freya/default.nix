@@ -12,6 +12,7 @@ let
     "10de:2204"
     "10de:1aef"
   ];
+  home = "/home/${user}";
 in
 {
   imports = [
@@ -69,15 +70,6 @@ in
   security.polkit.enable = true;
   services.blueman.enable = true;
   services.zfs.autoScrub.enable = true;
-
-  services.unifi = {
-    enable = false;
-    openFirewall = true;
-    unifiPackage = pkgs.unifi;
-    mongodbPackage = pkgs.mongodb;
-  };
-
-  services.hardware.openrgb.enable = true;
 
   services.trcc-gif = {
     enable = true;
@@ -195,6 +187,37 @@ in
     settings.download-dir = "/home/heph/Videos";
     settings.incomplete-dir = "/home/heph/Videos/.incomplete";
     settings.downloadDirPermissions = "0770";
+  };
+
+  services.syncthing = {
+    enable = true;
+    openDefaultPorts = true;
+    settings.gui = {
+      user = "freya";
+      password = "mypassword";
+    };
+    devices = {
+      "aron" = { id = ""; };
+      "timballo" = { id = ""; };
+    };
+    folders = {
+      "Age" = {
+	path = "${home}/.age";
+	devices = [ "aron" "timballo" ];
+      };
+      "Emacs" = {
+	path = "${home}/.emacs.d";
+	devices = [ "aron" "timballo" ];
+      };
+      "Gnupg" = {
+	path = "${home}/.gnupg";
+	devices = [ "aron" "timballo" ];
+      };
+      "Ledger" = {
+	path = "${home}/Documents/finance";
+	devices = [ "aron" "timballo" ];
+      };
+    };
   };
 
   services.fstrim = {
