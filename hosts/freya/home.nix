@@ -40,6 +40,7 @@ in
     extraPackages = epkgs: [
       epkgs.nix-mode
       epkgs.nixfmt
+      epkgs.vterm
       (epkgs.treesit-grammars.with-all-grammars)
     ];
     extraConfig = builtins.readFile "/home/heph/.emacs.d/init.el";
@@ -53,11 +54,13 @@ in
       aporetic
       w3m
       kdePackages.okular
+      hledger
       xournalpp
       python313Packages.python-lsp-server
       obsidian
       sdrpp
       gqrx
+      vscodium
       blender
       vivaldi
       openscad
@@ -189,9 +192,9 @@ in
       };
       remarkable = {
         port = 22;
-        hostname = "192.168.1.24";
+        hostname = "10.11.99.1";
         user = "root";
-        identityFile = "/home/heph/.ssh/id_rsa_remarkable";
+        identityFile = "/home/heph/.ssh/test-id_rsa";
       };
       sauron = {
         port = 22;
