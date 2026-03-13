@@ -111,6 +111,7 @@ with lib; {
     };
     zellij.enable = true;
     yazi.enable = true;
+    yazi.shellWrapperName = "y";
     atuin = {
       enable = true;
       enableZshIntegration = true;
@@ -128,29 +129,27 @@ with lib; {
     };
     git = {
       enable = true;
-      aliases = {
-        gp = "add -p";
-        co = "checkout";
-        s = "switch";
-        st = "status";
-      };
-      ignores = [
-        "AGENTS.md"
-        "CLAUDE.md"
-        ".claude"
-      ];
-      extraConfig = {
-        pull.ff = "only";
-        core.pager = "delta";
-        interactive.diffFilter = "delta --color-only";
+      settings = {
+        alias = {
+          gp = "add -p";
+          co = "checkout";
+          s = "switch";
+          st = "status";
+        };
+        core = { pager = "delta"; };
+        pull = { ff = "only"; };
+        interactive = { diffFilter = "delta --color-only"; };
         delta = {
           navigate = true;
           light = false;
           side-by-side = true;
         };
+        user = {
+          email = "srht@mrkeebs.eu";
+          name = "heph";
+        };
       };
-      userEmail = "srht@mrkeebs.eu";
-      userName = "heph";
+      ignores = [ "AGENTS.md" "CLAUDE.md" ".claude" ];
     };
     # spicetify =
     #   let
@@ -166,5 +165,9 @@ with lib; {
     #     theme = spicePkgs.themes.catppuccin;
     #     colorScheme = "mocha";
     #   };
+  };
+
+  services.syncthing = {
+    enable = true;
   };
 }
