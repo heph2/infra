@@ -202,6 +202,11 @@ in
         user = "root";
         identityFile = "/home/heph/.ssh/sekai_ed";
       };
+      # Tailscale SSH
+      pixie = {
+	hostname = "pixie";
+	user = "root";
+      };
     };
   };
 
