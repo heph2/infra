@@ -68,6 +68,11 @@
   services.synapse-bt = { enable = false; }; # Current using Barrier
   services.tailscale = { enable = false; }; # This doesn't ship with Tray
 
+  services.syncthing = {
+    enable = true;
+    openDefaultPorts = true;
+  };
+
   # Apps
   # `home-manager` currently has issues adding them to `~/Applications`
   # Issue: https://github.com/nix-community/home-manager/issues/1341
