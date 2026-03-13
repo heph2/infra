@@ -20,7 +20,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    mg vim htop ncdu
+    mg vim htop ncdu helix
   ];
 
   system.stateVersion = "25.11"; # Did you read the comment?
