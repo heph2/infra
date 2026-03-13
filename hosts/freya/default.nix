@@ -197,25 +197,41 @@ in
       password = "mypassword";
     };
     devices = {
-      "aron" = { id = ""; };
-      "timballo" = { id = ""; };
+      "aron" = {
+        id = "AJ5RD3I-H6AKBMI-J7MP7LC-METYTUB-YEQNZTQ-FJUUTPA-REJTL7O-BKPH5QD";
+      };
+      "timballo" = {
+        id = "";
+      };
     };
     folders = {
       "Age" = {
-	path = "${home}/.age";
-	devices = [ "aron" "timballo" ];
+        path = "${home}/.age";
+        devices = [
+          "aron"
+          "timballo"
+        ];
       };
       "Emacs" = {
-	path = "${home}/.emacs.d";
-	devices = [ "aron" "timballo" ];
+        path = "${home}/.emacs.d";
+        devices = [
+          "aron"
+          "timballo"
+        ];
       };
       "Gnupg" = {
-	path = "${home}/.gnupg";
-	devices = [ "aron" "timballo" ];
+        path = "${home}/.gnupg";
+        devices = [
+          "aron"
+          "timballo"
+        ];
       };
       "Ledger" = {
-	path = "${home}/Documents/finance";
-	devices = [ "aron" "timballo" ];
+        path = "${home}/Documents/finance";
+        devices = [
+          "aron"
+          "timballo"
+        ];
       };
     };
   };
