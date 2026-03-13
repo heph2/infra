@@ -37,6 +37,8 @@ in
     group = "systemd-network";
   };
 
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   hardware.opentabletdriver.enable = false;
   services.libinput.enable = true;
   services.xserver.wacom.enable = true;
