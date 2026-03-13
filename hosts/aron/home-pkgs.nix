@@ -1,21 +1,21 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
-    (pkgs.emacsWithPackagesFromUsePackage {
-      config = ./emacs.el;
-      defaultInitFile = true;
-      # package = pkgs.emacs-macport;
-      package = pkgs.emacs;
-      alwaysEnsure = true;
-      extraEmacsPackages = epkgs: [
-        epkgs.vterm
-        epkgs.transient
-        epkgs.notmuch
-        epkgs.mu4e
-        epkgs.pdf-tools
-        epkgs.treesit-grammars.with-all-grammars
-      ];
-    })
-    (pkgs.callPackage ../../pkgs/mblaze-tui.nix { })
+  #   (pkgs.emacsWithPackagesFromUsePackage {
+  #     config = ./emacs.el;
+  #     defaultInitFile = true;
+  #     # package = pkgs.emacs-macport;
+  #     package = pkgs.emacs;
+  #     alwaysEnsure = true;
+  #     extraEmacsPackages = epkgs: [
+  #       epkgs.vterm
+  #       epkgs.transient
+  #       epkgs.notmuch
+  #       epkgs.mu4e
+  #       epkgs.pdf-tools
+  #       epkgs.treesit-grammars.with-all-grammars
+  #     ];
+  #   })
+    # (pkgs.callPackage ../../pkgs/mblaze-tui.nix { })
     # (pkgs.callPackage ../../pkgs/amused.nix { })
     (pkgs.writers.writePython3Bin "jack" {
       flakeIgnore = [
@@ -48,7 +48,7 @@
     ncdu
     llama-cpp
     nixos-rebuild
-    zls
+    # zls
     zig
     poppler
     ffmpegthumbnailer
@@ -91,7 +91,7 @@
     kubernetes-helm
     helix
     kubeseal
-    packer
+    # packer
     qemu
     kustomize
     k9s
