@@ -32,15 +32,11 @@
   nix.linux-builder = {
     enable = true;
     ephemeral = true;
-    systems = [
-      "aarch64-linux"
-    ];
+    systems = [ "aarch64-linux" ];
   };
   system.primaryUser = "marco";
 
-  services.postgresql = {
-    enable = true;
-  };
+  services.postgresql = { enable = true; };
 
   users.users.marco.home = "/Users/marco";
   programs.zsh.enable = true;
@@ -68,21 +64,16 @@
   services.synapse-bt = { enable = false; }; # Current using Barrier
   services.tailscale = { enable = false; }; # This doesn't ship with Tray
 
-  services.syncthing = {
-    enable = true;
-    openDefaultPorts = true;
-  };
-
   # Apps
   # `home-manager` currently has issues adding them to `~/Applications`
   # Issue: https://github.com/nix-community/home-manager/issues/1341
   environment.systemPackages = with pkgs; [
-    inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
-    inputs.nix-ai-tools.packages.${pkgs.system}.codex
-    inputs.nix-ai-tools.packages.${pkgs.system}.opencode
+    # inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
+    # inputs.nix-ai-tools.packages.${pkgs.system}.codex
+    # inputs.nix-ai-tools.packages.${pkgs.system}.opencode
     cachix
     granted
-    nixfmt-classic
+    nixfmt
     pass
     gnupg
     pinentry_mac
@@ -102,7 +93,7 @@
   environment.variables = { };
 
   # Fonts
-  fonts.packages = with pkgs; [ recursive nerd-fonts.droid-sans-mono ];
+  # fonts.packages = with pkgs; [ recursive nerd-fonts.droid-sans-mono ];
 
   # Keyboard
   system.keyboard.enableKeyMapping = true;
