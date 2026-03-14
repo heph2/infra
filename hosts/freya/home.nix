@@ -51,6 +51,7 @@ in
     [
       wootility
       mpv
+      thunar
       aporetic
       w3m
       kdePackages.okular
