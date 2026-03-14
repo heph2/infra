@@ -169,5 +169,6 @@ with lib; {
 
   services.syncthing = {
     enable = true;
+    "OTX4W3P-DXHDIF4-DLDOJ7W-KQQPFFH-NA6XVFA-6J7BQ7B-QWAB7JV-JIMZYA7" # freya id
   };
 }
