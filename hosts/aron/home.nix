@@ -1,5 +1,9 @@
 { config, pkgs, lib, inputs, ... }:
-with lib; {
+with lib;
+let
+  home = "/Users/marco";
+in
+{
   imports = [
     #./fish.nix
     ./home-pkgs.nix
@@ -9,7 +13,7 @@ with lib; {
   home.sessionVariables = {
     EDITOR = "hx";
     LIMA_HOME = "$HOME/env/colima";
-    LEDGER_FILE = "~/env/finance/2024.journal";
+    LEDGER_FILE = "~/env/finance/2026.journal";
     GRANTED_ALIAS_CONFIGURED = "true";
   };
   accounts.email = {
@@ -169,6 +173,16 @@ with lib; {
 
   services.syncthing = {
     enable = true;
-    "OTX4W3P-DXHDIF4-DLDOJ7W-KQQPFFH-NA6XVFA-6J7BQ7B-QWAB7JV-JIMZYA7" # freya id
+    settings = {
+      devices = {
+        "freya" = { id = "7JOHCPW-KSI55U3-LA357ZI-R7DH2OT-OMRP7Y6-UZ3WVMX-BTU4XB2-5Q27XQ2"; };
+      };
+      folders = {
+        "Ledger" = {
+          path = "${home}/env/finance";
+          devices = [ "freya" ];
+        };
+      };
+    };
   };
 }

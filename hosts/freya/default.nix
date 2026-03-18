@@ -194,6 +194,7 @@ in
   services.syncthing = {
     enable = true;
     openDefaultPorts = true;
+    user = "heph";
     settings.gui = {
       user = "freya";
       password = "mypassword";

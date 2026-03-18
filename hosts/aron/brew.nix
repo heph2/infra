@@ -35,7 +35,6 @@
       "mattermost"
       "balenaetcher"
       "cyberduck"
-      "syncthing-app"
       "zotero"
       "vmware-fusion"
       "gimp"
