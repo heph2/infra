@@ -195,6 +195,7 @@ in
     enable = true;
     openDefaultPorts = true;
     user = "heph";
+    configDir = "${home}/.config/syncthing";
     settings.gui = {
       user = "freya";
       password = "mypassword";
@@ -202,6 +203,9 @@ in
     devices = {
       "aron" = {
         id = "AJ5RD3I-H6AKBMI-J7MP7LC-METYTUB-YEQNZTQ-FJUUTPA-REJTL7O-BKPH5QD";
+      };
+      "zarel" = {
+        id = "TQR3SDR-KFWUNRW-MLVQFCG-TJN2O72-I36HOMF-JHWHONU-IGDPFDA-3Z3ARAW";
       };
       "timballo" = {
         id = "";
