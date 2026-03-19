@@ -61,6 +61,7 @@ in
       obsidian
       sdrpp
       gqrx
+      forge-mtg
       vscodium
       blender
       vivaldi
@@ -205,8 +206,8 @@ in
       };
       # Tailscale SSH
       pixie = {
-	hostname = "pixie";
-	user = "root";
+        hostname = "pixie";
+        user = "root";
       };
     };
   };
