@@ -56,6 +56,8 @@ in
       w3m
       kdePackages.okular
       hledger
+      jujutsu
+      lazygit
       xournalpp
       python313Packages.python-lsp-server
       obsidian
