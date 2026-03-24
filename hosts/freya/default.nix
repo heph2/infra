@@ -248,19 +248,19 @@ in
   };
   nixpkgs.config.allowUnfree = true;
 
-  networking.interfaces.eno1 = {
-    ipv6.addresses = [
-      {
-        address = "2a07:7e81:85f5::dead";
-        prefixLength = 64;
-      }
-    ];
-  };
+  # networking.interfaces.eno1 = {
+  #   ipv6.addresses = [
+  #     {
+  #       address = "2a07:7e81:85f5::dead";
+  #       prefixLength = 64;
+  #     }
+  #   ];
+  # };
 
-  networking.defaultGateway6 = {
-    address = "fe80::6f4:1cff:fe18:162";
-    interface = "eno1";
-  };
+  # networking.defaultGateway6 = {
+  #   address = "fe80::6f4:1cff:fe18:162";
+  #   interface = "eno1";
+  # };
 
   networking.wireguard.interfaces = {
     wg0 = {
