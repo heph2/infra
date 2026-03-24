@@ -77,16 +77,11 @@ in
     database.uri = "postgresql://atuin:atuin@localhost:5432/atuin";
   };
 
-  services.beanstalkd = {
-    enable = true;
-    listen.address = "0.0.0.0";
-  };
-
   services.k3s = {
     enable = true;
     role = "agent";
     token = "uasdfnl8yho";
-    serverAddr = "https://192.168.1.122:6443";
+    serverAddr = "https://192.168.0.104:6443";
   };
 
   nix = {
