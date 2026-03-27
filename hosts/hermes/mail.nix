@@ -1,4 +1,10 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   age.secrets.cloudflare = {
     file = ../../secrets/acme-api-token-cloudflare.age;
     mode = "640";
@@ -39,6 +45,7 @@
           "discord@mbauce.com" # # Discord
           "kagi-2@mbauce.com"
           "lang@mbauce.com" # # Languages, Anki
+          "anime@mbauce.com"
         ];
         sieveScript = ''
           require ["fileinto", "mailbox"];
@@ -70,37 +77,41 @@
     certs.${config.mailserver.fqdn} = {
       dnsProvider = "cloudflare";
       environmentFile = config.age.secrets.cloudflare.path;
-      reloadServices = [ "dovecot2" "postfix" ];
+      reloadServices = [
+        "dovecot2"
+        "postfix"
+      ];
     };
   };
 
-  systemd.services."acme-mail.mbauce.com".serviceConfig.EnvironmentFile =
-    [ config.age.secrets.cloudflare.path ];
+  systemd.services."acme-mail.mbauce.com".serviceConfig.EnvironmentFile = [
+    config.age.secrets.cloudflare.path
+  ];
 
   services.dovecot2 = {
     mailPlugins.globally.enable = [ "old_stats" ];
     extraConfig = ''
-    service old-stats {
-      unix_listener old-stats {
-        user = dovecot-exporter
-        group = dovecot-exporter
-        mode = 0660
+      service old-stats {
+        unix_listener old-stats {
+          user = dovecot-exporter
+          group = dovecot-exporter
+          mode = 0660
+        }
+        fifo_listener old-stats-mail {
+          mode = 0660
+          user = dovecot2
+          group = dovecot2
+        }
+        fifo_listener old-stats-user {
+          mode = 0660
+          user = dovecot2
+          group = dovecot2
+        }
       }
-      fifo_listener old-stats-mail {
-        mode = 0660
-        user = dovecot2
-        group = dovecot2
+      plugin {
+        old_stats_refresh = 30 secs
+        old_stats_track_cmds = yes
       }
-      fifo_listener old-stats-user {
-        mode = 0660
-        user = dovecot2
-        group = dovecot2
-      }
-    }
-    plugin {
-      old_stats_refresh = 30 secs
-      old_stats_track_cmds = yes
-    }
     '';
   };
 
