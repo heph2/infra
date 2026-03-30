@@ -74,4 +74,12 @@ in
     tyr
     sauron
   ];
+  "shortcut-api-token.age".publicKeys = [
+    heph
+    freya
+  ];
+  "github-token.age".publicKeys = [
+    heph
+    freya
+  ];
 }
