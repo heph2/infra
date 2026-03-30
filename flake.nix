@@ -14,6 +14,10 @@
       url = "github:lnl7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    paneru = {
+      url = "github:karinushka/paneru";
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
     stardew-modding = {
       url = "github:Distracted-E421/stardew-modding-nix";
       inputs.nixpkgs.follows = "nixpkgs";
