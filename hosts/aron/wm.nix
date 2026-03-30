@@ -1,4 +1,11 @@
-{ config, pkgs, ... }: {
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
+{
+
   services.aerospace = {
     package = pkgs.aerospace;
     enable = false;
@@ -20,8 +27,7 @@
         "alt-j" = "focus --boundaries-action wrap-around-the-workspace left";
         "alt-k" = "focus --boundaries-action wrap-around-the-workspace down";
         "alt-l" = "focus --boundaries-action wrap-around-the-workspace up";
-        "alt-semicolon" =
-          "focus --boundaries-action wrap-around-the-workspace right";
+        "alt-semicolon" = "focus --boundaries-action wrap-around-the-workspace right";
 
         "alt-shift-j" = "move left";
         "alt-shift-k" = "move down";

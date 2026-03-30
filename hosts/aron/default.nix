@@ -11,6 +11,7 @@
 
   nix.distributedBuilds = true;
   nixpkgs.config.allowBroken = true;
+  nix.enable = false; # determinate-system installer
   ids.uids.nixbld = 350;
   nix.settings = {
     trusted-users = [ "marco" "root" ];
@@ -27,16 +28,17 @@
       "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
     ];
   };
-  nix.optimise.automatic = true;
+  nix.optimise.automatic = false;
 
   nix.linux-builder = {
-    enable = true;
+    enable = false;
     ephemeral = true;
     systems = [ "aarch64-linux" ];
   };
   system.primaryUser = "marco";
 
   services.postgresql = { enable = true; };
+  services.emacs = { enable = true; };
 
   users.users.marco.home = "/Users/marco";
   programs.zsh.enable = true;
