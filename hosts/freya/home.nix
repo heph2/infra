@@ -65,6 +65,7 @@ in
       gqrx
       forge-mtg
       vscodium
+      nodejs
       blender
       vivaldi
       gelly
@@ -537,7 +538,7 @@ in
         co = "checkout";
         s = "switch";
         st = "status";
-	month-exp = " hledger balance expenses --period thismonth -f ~/Documents/finance/2026.journal";
+        month-exp = " hledger balance expenses --period thismonth -f ~/Documents/finance/2026.journal";
       };
       extraConfig = {
         pull.ff = "only";
