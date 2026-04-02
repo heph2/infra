@@ -82,4 +82,9 @@ in
     heph
     freya
   ];
+  "hermes-agent-auth.age".publicKeys = [
+    heph
+    freya
+    hermes
+  ];
 }
