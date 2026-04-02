@@ -42,6 +42,10 @@
     };
     agenix.url = "github:ryantm/agenix";
     nix-ai-tools.url = "github:numtide/nix-ai-tools";
+    hermes-agent = {
+      url = "github:NousResearch/hermes-agent";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     trcc_gif = {
       url = "git+https://codeberg.org/heph/trcc_gif";
     };
