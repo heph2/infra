@@ -87,4 +87,14 @@ in
     freya
     hermes
   ];
+  "hermes-agent-telegram.age".publicKeys = [
+    heph
+    freya
+    hermes
+  ];
+  "hermes-agent-z-ai.age".publicKeys = [
+    heph
+    freya
+    hermes
+  ];
 }
