@@ -5,6 +5,7 @@
     ./mail.nix
     ./kanban.nix
     ./caddy.nix
+    ./hermes-agent.nix
   ];
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
