@@ -46,6 +46,8 @@ in
     extraConfig = builtins.readFile "/home/heph/.emacs.d/init.el";
   };
 
+  programs.kitty.enable = true;
+
   home.packages =
     with pkgs;
     [
