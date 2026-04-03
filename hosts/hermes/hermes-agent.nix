@@ -14,6 +14,7 @@
     addToSystemPackages = true;
     settings.model.default = "glm-5.1";
     settings.model.provider = "zai";
+    settings.model.base_url = "https://api.z.ai/api/coding/paas/v4";
     environmentFiles = [
       config.age.secrets.hermes-agent-env.path
     ];
