@@ -5,7 +5,7 @@
   ...
 }:
 let
-  domain = "vault.pochi.casa";
+  domain = "pass.pochi.casa";
   issuer = "https://auth.pochi.casa";
 in
 {
@@ -23,7 +23,7 @@ in
       SSO_ENABLED = true;
       SSO_SIGNUPS_MATCH_EMAIL = true;
       SSO_ALLOW_UNKNOWN_EMAIL_VERIFICATION = true;
-      SSO_PKCE = true;
+      SSO_PKCE = false;
       SSO_SCOPES = "email profile groups offline_access";
       SSO_CLIENT_ID = "418ad0f4-ab95-4945-96fc-d22c1e1d3a4e";
       SSO_AUTHORITY = issuer;
