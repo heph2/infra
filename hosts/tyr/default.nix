@@ -11,6 +11,7 @@
     ./homebox.nix
     ./vikunja.nix
     ./grafana.nix
+    ./vaultwarden.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
