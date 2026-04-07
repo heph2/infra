@@ -22,9 +22,7 @@
       url = "github:Distracted-E421/stardew-modding-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    avf = {
-      url = "github:nix-community/nixos-avf";
-    };
+    avf = { url = "github:nix-community/nixos-avf"; };
     nur.url = "github:nix-community/NUR";
     flake-parts.url = "github:hercules-ci/flake-parts";
     sops-nix.url = "github:Mic92/sops-nix";
@@ -46,11 +44,10 @@
       url = "github:NousResearch/hermes-agent";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    trcc_gif = {
-      url = "git+https://codeberg.org/heph/trcc_gif";
-    };
+    trcc_gif = { url = "git+https://codeberg.org/heph/trcc_gif"; };
     emacs-overlay = {
-      url = "github:nix-community/emacs-overlay/db47b2483942771a725cf10e7cd3b1ec562750b7";
+      url =
+        "github:nix-community/emacs-overlay/db47b2483942771a725cf10e7cd3b1ec562750b7";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-minecraft = {
@@ -61,9 +58,20 @@
       url = "github:heph2/BlackOps3ServerInstaller";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    apple-silicon = {
+      url = "github:nix-community/nixos-apple-silicon";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs =
-    inputs@{ flake-parts, ... }:
+  outputs = inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         #./hosts/fafnir/default.nix ## Router
@@ -75,6 +83,7 @@
         ./hosts/ushi/configuration.nix # # Nixos WSL 2
         ./hosts/sauron/configuration.nix # # NAS
         ./hosts/aron/configuration.nix # # MacBook
+        ./hosts/fenrir/configuration.nix # # MacBook Air M1 (Asahi Linux)
         ./hosts/pixie/configuration.nix # # Google Pixel 6a AVF
         ./dev.nix
       ];
