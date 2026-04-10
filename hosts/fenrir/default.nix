@@ -3,15 +3,11 @@ let
   user = "heph";
   home = "/home/${user}";
 in {
-  imports = [ ./hardware-configuration.nix ];
-
-  hardware.asahi = {
-    enable = true;
-    useExperimentalGPUDriver = true;
-    experimentalGPUInstallMode = "replace";
-    peripheralBootloader = true;
-    setupUser = user;
-  };
+      
+  imports = [
+    ./hardware-configuration.nix
+    ./apple-silicon-support
+   ];
 
   hardware.bluetooth.enable = true;
   hardware.pulseaudio.enable = false;
