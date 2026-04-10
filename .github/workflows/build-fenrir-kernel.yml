@@ -1,0 +1,58 @@
+name: Build Fenrir Kernel
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "flake.nix"
+      - "flake.lock"
+      - "hosts/fenrir/**"
+      - ".github/workflows/build-fenrir-kernel.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fenrir-kernel-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 360
+    env:
+      CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            extra-substituters = https://nix-community.cachix.org https://nixos-apple-silicon.cachix.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= nixos-apple-silicon.cachix.org-1:8psDu5SA5dAD7qA0zMy5UT292TxeEPzIz8VVEr2Js20=
+
+      - name: Configure Cachix push
+        if: ${{ env.CACHIX_AUTH_TOKEN != '' }}
+        uses: cachix/cachix-action@v15
+        with:
+          name: heph2
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      - name: Show Fenrir kernel derivation
+        run: |
+          nix eval --raw .#nixosConfigurations.fenrir.config.boot.kernelPackages.kernel.drvPath
+
+      - name: Build Fenrir kernel
+        run: |
+          nix build --print-build-logs .#nixosConfigurations.fenrir.config.boot.kernelPackages.kernel
+
+      - name: Show kernel result
+        run: |
+          readlink -f result
+          nix path-info --closure-size result
