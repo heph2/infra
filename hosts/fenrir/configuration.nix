@@ -27,12 +27,12 @@
         home-manager.users.heph = import ./home.nix;
         home-manager.backupFileExtension = "backup";
         home-manager.extraSpecialArgs = {
+          inherit inputs;
           agenix = inputs.agenix;
           firefox-addons = inputs.firefox-addons;
         };
       }
       { nixpkgs.config.allowUnfree = true; }
-      ../../modules/common/default.nix
       ({ modulesPath, ... }: {
         imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
       })

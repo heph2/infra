@@ -3,14 +3,12 @@ let
   user = "heph";
   home = "/home/${user}";
 in {
-      
-  imports = [
-    ./hardware-configuration.nix
-    ./apple-silicon-support
-   ];
+
+  imports = [ ./hardware-configuration.nix ];
 
   hardware.bluetooth.enable = true;
   hardware.pulseaudio.enable = false;
+  hardware.asahi.extractPeripheralFirmware = false;
 
   services.power-profiles-daemon.enable = true;
   services.upower.enable = true;
@@ -19,7 +17,7 @@ in {
   time.timeZone = "Europe/Rome";
 
   networking.networkmanager.enable = true;
-  networking.wireless.enable = false;
+  networking.wireless.enable = lib.mkForce false;
 
   networking.dhcpcd = {
     enable = true;
@@ -131,6 +129,7 @@ in {
     openssh = {
       authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK heph@fenrir"
+        "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIM2sRl50sDPAoWbFXglFFsWzgC1Ejo02iL+WRWGOBdiJAAAAC3NzaDp5dWJpa2V5 heph@freya"
       ];
     };
   };
@@ -171,7 +170,11 @@ in {
     enableSSHSupport = true;
   };
 
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    settings = { PasswordAuthentication = false; };
+    ports = [ 22 ];
+  };
   networking.firewall.allowedTCPPorts = [ 22 ];
   networking.firewall.enable = true;
 
