@@ -156,6 +156,12 @@ in
         user = "root";
         identityFile = "/home/heph/.ssh/sekai_ed";
       };
+      fenrir = {
+        port = 22;
+        hostname = "192.168.0.182";
+        user = "root";
+        identityFile = "/home/heph/.ssh/sekai_ed";
+      };
       vellutata = {
         port = 22;
         hostname = "193.57.159.213";
