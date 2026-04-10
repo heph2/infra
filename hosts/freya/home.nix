@@ -158,7 +158,7 @@ in
       };
       fenrir = {
         port = 22;
-        hostname = "192.168.0.182";
+        hostname = "192.168.0.165";
         user = "root";
         identityFile = "/home/heph/.ssh/sekai_ed";
       };

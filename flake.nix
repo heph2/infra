@@ -58,10 +58,7 @@
       url = "github:heph2/BlackOps3ServerInstaller";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    apple-silicon = {
-      url = "github:nix-community/nixos-apple-silicon";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    apple-silicon = { url = "github:nix-community/nixos-apple-silicon"; };
     niri = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
