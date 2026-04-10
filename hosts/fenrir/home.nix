@@ -236,7 +236,6 @@ in {
   };
 
   programs.niri = {
-    enable = true;
     settings = {
       input = {
         keyboard = { xkb.layout = "us"; };
@@ -256,7 +255,7 @@ in {
           "${mod}+Return".action.spawn = [ "ghostty" ];
           "${mod}+Space".action.spawn = noctalia "launcher toggle";
           "${mod}+Shift+Q".action = close-window;
-          "${mod}+L".action.spawn = noctalia "lockScreen lock";
+          "${mod}+Shift+Escape".action.spawn = noctalia "lockScreen lock";
 
           "${mod}+H".action = focus-column-left;
           "${mod}+J".action = focus-window-down;
@@ -281,15 +280,15 @@ in {
           "${mod}+8".action = focus-workspace 8;
           "${mod}+9".action = focus-workspace 9;
 
-          "${mod}+Shift+1".action = move-window-to-workspace 1;
-          "${mod}+Shift+2".action = move-window-to-workspace 2;
-          "${mod}+Shift+3".action = move-window-to-workspace 3;
-          "${mod}+Shift+4".action = move-window-to-workspace 4;
-          "${mod}+Shift+5".action = move-window-to-workspace 5;
-          "${mod}+Shift+6".action = move-window-to-workspace 6;
-          "${mod}+Shift+7".action = move-window-to-workspace 7;
-          "${mod}+Shift+8".action = move-window-to-workspace 8;
-          "${mod}+Shift+9".action = move-window-to-workspace 9;
+          "${mod}+Shift+1".action.move-column-to-workspace = 1;
+          "${mod}+Shift+2".action.move-column-to-workspace = 2;
+          "${mod}+Shift+3".action.move-column-to-workspace = 3;
+          "${mod}+Shift+4".action.move-column-to-workspace = 4;
+          "${mod}+Shift+5".action.move-column-to-workspace = 5;
+          "${mod}+Shift+6".action.move-column-to-workspace = 6;
+          "${mod}+Shift+7".action.move-column-to-workspace = 7;
+          "${mod}+Shift+8".action.move-column-to-workspace = 8;
+          "${mod}+Shift+9".action.move-column-to-workspace = 9;
 
           "${mod}+Comma".action = consume-window-into-column;
           "${mod}+Period".action = expel-window-from-column;
