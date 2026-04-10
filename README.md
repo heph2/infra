@@ -23,6 +23,7 @@ It is structured to manage multiple machines and user configurations.
 - `Zima`: Zimaboard
 - `Sauron`: NAS
 - `Aron`: Macbook Pro
+- `Fenrir`: MacBook Air M1 (Asahi Linux)
 
 ## Usage
 
