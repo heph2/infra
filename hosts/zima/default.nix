@@ -4,23 +4,19 @@ let
   hostname = "zima";
   localDomain = hostname + ".hephnet.lan";
 
-in
-{
+in {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./actual.nix
+    ./mosquitto.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.initrd.availableKernelModules = [
-    "ahci"
-    "xhci_pci"
-    "sd_mod"
-    "sdhci_pci"
-  ];
+  boot.initrd.availableKernelModules =
+    [ "ahci" "xhci_pci" "sd_mod" "sdhci_pci" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
@@ -30,12 +26,10 @@ in
 
   # IPV6 Configuration
   networking.interfaces.enp3s0 = {
-    ipv6.addresses = [
-      {
-        address = "2a07:7e81:85f5::cafe";
-        prefixLength = 64;
-      }
-    ];
+    ipv6.addresses = [{
+      address = "2a07:7e81:85f5::cafe";
+      prefixLength = 64;
+    }];
   };
   networking.defaultGateway6 = {
     address = "fe80::6f4:1cff:fe18:162";
@@ -50,22 +44,17 @@ in
   services.btrfs.autoScrub = {
     enable = true;
     interval = "monthly";
-    fileSystems = [
-      "/"
-      "/data"
-    ];
+    fileSystems = [ "/" "/data" ];
   };
 
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_16;
     ensureDatabases = [ "atuin" ];
-    ensureUsers = [
-      {
-        name = "atuin";
-        ensureDBOwnership = true;
-      }
-    ];
+    ensureUsers = [{
+      name = "atuin";
+      ensureDBOwnership = true;
+    }];
   };
 
   services.atuin = {
@@ -92,10 +81,7 @@ in
     };
 
     settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
+      experimental-features = [ "nix-command" "flakes" ];
       auto-optimise-store = true;
     };
   };
@@ -111,9 +97,7 @@ in
       };
     };
     virtualHosts."aurora.${localDomain}" = {
-      locations."/" = {
-        proxyPass = "http://192.168.1.30:3000";
-      };
+      locations."/" = { proxyPass = "http://192.168.1.30:3000"; };
     };
     virtualHosts."torrent.${localDomain}" = {
       locations."/" = {
@@ -127,9 +111,7 @@ in
       };
     };
     virtualHosts."rss.${localDomain}" = {
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:8080";
-      };
+      locations."/" = { proxyPass = "http://127.0.0.1:8080"; };
     };
   };
 
@@ -194,6 +176,7 @@ in
       2380
       2379
       5006 # actual
+      1883 # mosquitto
     ];
     allowedUDPPorts = [ 8472 ];
   };

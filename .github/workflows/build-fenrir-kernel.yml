@@ -56,5 +56,13 @@ jobs:
       - name: Show kernel result
         run: |
           kernel_path="$(readlink -f result)"
-          echo "$kernel_path"
+          echo "Kernel path: $kernel_path"
           nix path-info --closure-size "$kernel_path"
+          echo "Full closure:"
+          nix path-info --closure-roots "$kernel_path"
+
+      - name: Verify it's in heph2 cache
+        if: ${{ env.CACHIX_AUTH_TOKEN != '' }}
+        run: |
+          kernel_path="$(readlink -f result)"
+          nix path-info --store https://heph2.cachix.org "$kernel_path" || echo "Not found in heph2 cache (will be pushed)"
