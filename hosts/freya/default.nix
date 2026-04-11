@@ -356,9 +356,15 @@ in
     "1.0.0.1#one.one.one.one"
   ];
 
-  nix.settings.trusted-substituters = [ "https://ai.cachix.org" ];
+  nix.settings.trusted-substituters = [
+    "https://ai.cachix.org"
+    "https://heph2.cachix.org"
+    "https://nixos-apple-silicon.cachix.org"
+  ];
   nix.settings.trusted-public-keys = [
     "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="
+    "heph2.cachix.org-1:aVuYQpvc6De8i9qWwP2V0ErH4VqSpOCWjv116AR1mYc="
+    "nixos-apple-silicon.cachix.org-1:8psDu5SA5dAD7qA0zMy5UT292TxeEPzIz8VVEr2Js20="
   ];
 
   boot.extraModprobeConfig = ''
