@@ -2,7 +2,7 @@
 
 {
   services.mosquitto = {
-    enable = true;
+    enable = false;
     listeners = [{
       address = "0.0.0.0";
       port = 1883;
