@@ -126,6 +126,11 @@
           ];
         }];
       }
+      {
+        job_name = "esphome";
+        scrape_interval = "5s";
+        static_configs = [{ targets = [ "192.168.0.167:80" ]; }];
+      }
     ];
   };
 
