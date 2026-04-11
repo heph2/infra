@@ -1,8 +1,15 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 let
   user = "heph";
   home = "/home/${user}";
-in {
+in
+{
 
   imports = [ ./hardware-configuration.nix ];
 
@@ -17,7 +24,7 @@ in {
   time.timeZone = "Europe/Rome";
 
   networking.networkmanager.enable = true;
-  networking.wireless.enable = lib.mkForce false;
+  networking.networkmanager.wifi.backend = "iwd";
 
   networking.dhcpcd = {
     enable = true;
@@ -27,11 +34,16 @@ in {
     enable = true;
     dnssec = "true";
     domains = [ "~." ];
-    fallbackDns = [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
+    fallbackDns = [
+      "1.1.1.1#one.one.one.one"
+      "1.0.0.1#one.one.one.one"
+    ];
     dnsovertls = "true";
   };
-  networking.nameservers =
-    [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
+  networking.nameservers = [
+    "1.1.1.1#one.one.one.one"
+    "1.0.0.1#one.one.one.one"
+  ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = false;
@@ -45,7 +57,10 @@ in {
       options = "--delete-older-than 7d";
     };
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       auto-optimise-store = true;
       extra-substituters = [
         "https://noctalia.cachix.org"
@@ -81,7 +96,9 @@ in {
 
   programs.zsh.enable = true;
 
-  environment.variables = { EDITOR = "hx"; };
+  environment.variables = {
+    EDITOR = "hx";
+  };
 
   environment.localBinInPath = true;
 
@@ -124,7 +141,13 @@ in {
   users.users.heph = {
     isNormalUser = true;
     shell = pkgs.zsh;
-    extraGroups = [ "wheel" "docker" "networkmanager" "plugdev" "dialout" ];
+    extraGroups = [
+      "wheel"
+      "docker"
+      "networkmanager"
+      "plugdev"
+      "dialout"
+    ];
   };
 
   users.users.root = {
@@ -174,7 +197,9 @@ in {
 
   services.openssh = {
     enable = true;
-    settings = { PasswordAuthentication = false; };
+    settings = {
+      PasswordAuthentication = false;
+    };
     ports = [ 22 ];
   };
   networking.firewall.allowedTCPPorts = [ 22 ];
