@@ -42,7 +42,17 @@ in
   hardware.opentabletdriver.enable = false;
   services.libinput.enable = true;
   services.xserver.wacom.enable = true;
-
+  services.avahi = {
+    enable = true;
+    openFirewall = true;
+    publish = {
+      enable = true;
+      addresses = true;
+      workstation = true;
+      userServices = true;
+    };
+  };
+  services.flatpak.enable = true;
   services.udev.extraHwdb = ''
     evdev:input:b0003v056Ap033C*
       ID_INPUT_TABLET_PAD=1
@@ -595,6 +605,7 @@ in
     # inputs.nix-ai-tools.packages.${pkgs.system}.codex
     inputs.nix-ai-tools.packages.${pkgs.system}.opencode
     steamcmd
+    uxplay
     libinput
     libwacom
     vim
@@ -632,6 +643,7 @@ in
     remmina
     lm_sensors
     rofi
+    scrcpy
     dive
     dmenu
     sxhkd
@@ -680,7 +692,7 @@ in
     24800
     5353
   ];
-  networking.firewall.enable = true;
+  networking.firewall.enable = false;
   networking.firewall = {
     extraCommands = ''
       iptables -I INPUT 1 -i docker0 -p tcp -d 172.17.0.1 -j ACCEPT
