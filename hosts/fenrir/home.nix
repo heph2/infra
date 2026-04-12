@@ -478,6 +478,7 @@ in
         user-agent-string-switcher
         multi-account-containers
         kagi-search
+        ipvfoo
       ];
       settings = {
         "sidebar.verticalTabs" = true;
