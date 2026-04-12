@@ -1,11 +1,28 @@
-{ config, pkgs, lib, agenix, firefox-addons, inputs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  agenix,
+  firefox-addons,
+  inputs,
+  ...
+}:
 
 let
-  noctalia = cmd:
-    [ "noctalia-shell" "ipc" "call" ] ++ (pkgs.lib.splitString " " cmd);
-in {
-  imports =
-    [ agenix.homeManagerModules.default inputs.noctalia.homeModules.default ];
+  noctalia =
+    cmd:
+    [
+      "noctalia-shell"
+      "ipc"
+      "call"
+    ]
+    ++ (pkgs.lib.splitString " " cmd);
+in
+{
+  imports = [
+    agenix.homeManagerModules.default
+    inputs.noctalia.homeModules.default
+  ];
 
   home.username = "heph";
   home.homeDirectory = "/home/heph";
@@ -13,7 +30,9 @@ in {
   home.enableNixpkgsReleaseCheck = false;
   programs.home-manager.enable = true;
 
-  home.sessionVariables = { EDITOR = "hx"; };
+  home.sessionVariables = {
+    EDITOR = "hx";
+  };
 
   home.packages = with pkgs; [
     mpv
@@ -124,7 +143,9 @@ in {
     shellWrapperName = "y";
   };
 
-  programs.zellij = { enable = true; };
+  programs.zellij = {
+    enable = true;
+  };
 
   programs.ghostty = {
     enable = true;
@@ -133,9 +154,12 @@ in {
       window-decoration = "none";
       font-size = 13;
       font-family = "Hack Nerd Font";
-      theme = "catppuccin-mocha";
       unfocused-split-opacity = 0.96;
-      font-feature = [ "-liga" "-dlig" "-calt" ];
+      font-feature = [
+        "-liga"
+        "-dlig"
+        "-calt"
+      ];
     };
   };
 
@@ -149,11 +173,13 @@ in {
         select = "underline";
       };
     };
-    languages.language = [{
-      name = "nix";
-      auto-format = true;
-      formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
-    }];
+    languages.language = [
+      {
+        name = "nix";
+        auto-format = true;
+        formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+      }
+    ];
     themes = {
       autumn_night_transparent = {
         "inherits" = "autumn_night";
@@ -162,7 +188,9 @@ in {
     };
   };
 
-  programs.fzf = { enable = true; };
+  programs.fzf = {
+    enable = true;
+  };
 
   programs.htop.enable = true;
   programs.zathura.enable = true;
@@ -182,10 +210,9 @@ in {
 
   programs.noctalia-shell = {
     enable = true;
-    package =
-      inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
-        calendarSupport = true;
-      };
+    package = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
+      calendarSupport = true;
+    };
     settings = {
       bar = {
         density = "compact";
@@ -198,11 +225,13 @@ in {
             }
             { id = "ActiveWindow"; }
           ];
-          center = [{
-            id = "Workspace";
-            hideUnoccupied = false;
-            labelMode = "none";
-          }];
+          center = [
+            {
+              id = "Workspace";
+              hideUnoccupied = false;
+              labelMode = "none";
+            }
+          ];
           right = [
             {
               id = "Battery";
@@ -238,24 +267,32 @@ in {
   programs.niri = {
     settings = {
       input = {
-        keyboard = { xkb.layout = "us"; };
+        keyboard = {
+          xkb.layout = "us";
+        };
         touchpad = {
           tap = true;
           natural-scroll = true;
           click-method = "clickfinger";
         };
-        mouse = { natural-scroll = true; };
+        mouse = {
+          natural-scroll = true;
+        };
       };
 
-      spawn-at-startup = [{ command = [ "noctalia-shell" ]; }];
+      spawn-at-startup = [ { command = [ "noctalia-shell" ]; } ];
 
-      binds = with config.lib.niri.actions;
-        let mod = "Super";
-        in {
+      binds =
+        with config.lib.niri.actions;
+        let
+          mod = "Super";
+        in
+        {
           "${mod}+Return".action.spawn = [ "ghostty" ];
           "${mod}+Space".action.spawn = noctalia "launcher toggle";
           "${mod}+Shift+Q".action = close-window;
           "${mod}+Shift+Escape".action.spawn = noctalia "lockScreen lock";
+          "${mod}+Question".action = show-hotkey-overlay;
 
           "${mod}+H".action = focus-column-left;
           "${mod}+J".action = focus-window-down;
@@ -303,10 +340,22 @@ in {
           "XF86AudioRaiseVolume".action.spawn = noctalia "volume increase";
           "XF86AudioLowerVolume".action.spawn = noctalia "volume decrease";
           "XF86AudioMute".action.spawn = noctalia "volume muteOutput";
-          "XF86AudioPlay".action.spawn = [ "playerctl" "play" ];
-          "XF86AudioPause".action.spawn = [ "playerctl" "pause" ];
-          "XF86AudioNext".action.spawn = [ "playerctl" "next" ];
-          "XF86AudioPrev".action.spawn = [ "playerctl" "prev" ];
+          "XF86AudioPlay".action.spawn = [
+            "playerctl"
+            "play"
+          ];
+          "XF86AudioPause".action.spawn = [
+            "playerctl"
+            "pause"
+          ];
+          "XF86AudioNext".action.spawn = [
+            "playerctl"
+            "next"
+          ];
+          "XF86AudioPrev".action.spawn = [
+            "playerctl"
+            "prev"
+          ];
           "XF86MonBrightnessUp".action.spawn = noctalia "brightness increase";
           "XF86MonBrightnessDown".action.spawn = noctalia "brightness decrease";
         };
@@ -323,9 +372,13 @@ in {
           { proportion = 0.5; }
           { proportion = 0.666667; }
         ];
-        default-column-width = { proportion = 0.5; };
+        default-column-width = {
+          proportion = 0.5;
+        };
         center-focused-column = "never";
-        focus-ring = { enable = false; };
+        focus-ring = {
+          enable = false;
+        };
         border = {
           enable = true;
           width = 1;
@@ -359,7 +412,10 @@ in {
         { name = "zsh-users/zsh-autosuggestions"; }
         {
           name = "romkatv/powerlevel10k";
-          tags = [ "as:theme" "depth:1" ];
+          tags = [
+            "as:theme"
+            "depth:1"
+          ];
         }
       ];
     };
