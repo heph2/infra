@@ -15,7 +15,7 @@ in
 
   hardware.bluetooth.enable = true;
   hardware.pulseaudio.enable = false;
-  hardware.asahi.extractPeripheralFirmware = false;
+  hardware.asahi.extractPeripheralFirmware = true;
 
   services.power-profiles-daemon.enable = true;
   services.upower.enable = true;
@@ -25,6 +25,11 @@ in
 
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.backend = "iwd";
+  networking.wireless.iwd = {
+    enable = true;
+    settings.General.AddressRandomization = "disabled";
+    settings.General.EnableNetworkConfiguration = true;
+  };
 
   networking.dhcpcd = {
     enable = true;
