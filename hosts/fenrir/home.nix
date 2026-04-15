@@ -41,6 +41,9 @@ in
     kdePackages.okular
     hledger
     jujutsu
+    arcanechat-tui
+    bind
+    feishin # Jelly music player
     lazygit
     vesktop
     brave
