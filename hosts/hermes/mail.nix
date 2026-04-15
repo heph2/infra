@@ -9,6 +9,10 @@
     file = ../../secrets/acme-api-token-cloudflare.age;
     mode = "640";
   };
+  age.secrets.mailgun-smtp = {
+    file = ../../secrets/mailgun-smtp-user.age;
+    mode = "640";
+  };
   mailserver = {
     stateVersion = 3;
     enable = true;
@@ -115,11 +119,37 @@
     '';
   };
 
-  services.prometheus.exporters = {
-    rspamd = {
-      enable = true;
-      # port = 7980;
+  services.postfix = {
+    settings.main = {
+      relayhost = [ "[smtp.eu.mailgun.org]:587" ];
+      relay_domains = [ "mbauce.com" ];
+      smtp_sasl_auth_enable = true;
+      smtp_sasl_password_maps = "texthash:/etc/postfix/sasl_passwd";
+      smtp_sasl_security_options = "noanonymous";
     };
+  };
+
+  systemd.services.mailgun-sasl-passwd = {
+    description = "Generate Postfix SASL password file for Mailgun";
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      echo '[smtp.eu.mailgun.org]:587 postmaster@mailgun.mbauce.com:'$(cat ${config.age.secrets.mailgun-smtp.path}) > /etc/postfix/sasl_passwd
+      postmap /etc/postfix/sasl_passwd
+      chown root:postfix /etc/postfix/sasl_passwd
+      chmod 640 /etc/postfix/sasl_passwd
+    '';
+  };
+
+  systemd.services.postfix = {
+    requires = [ "mailgun-sasl-passwd.service" ];
+    after = [ "mailgun-sasl-passwd.service" ];
+  };
+
+  services.prometheus.exporters = {
     dovecot = {
       enable = true;
       # port = 9160;
