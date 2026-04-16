@@ -31,10 +31,30 @@ in
     settings.General.EnableNetworkConfiguration = true;
   };
 
+  networking.interfaces.wlan0 = {
+    ipv6.addresses = [
+      {
+        address = "2a07:7e81:85f5::dead";
+        prefixLength = 64;
+      }
+    ];
+  };
+
+  networking.defaultGateway6 = {
+    address = "fe80::6f4:1cff:fe18:162";
+    interface = "wlan0";
+  };
+
   networking.dhcpcd = {
     enable = true;
     extraConfig = "nohook resolv.conf";
   };
+
+  services.usbmuxd = {
+    enable = true;
+    package = pkgs.usbmuxd2;
+  };
+
   services.resolved = {
     enable = true;
     dnssec = "true";
@@ -193,6 +213,8 @@ in
     yubikey-touch-detector
     libfido2
     yubikey-personalization
+    libimobiledevice
+    ifuse
   ];
 
   programs.gnupg.agent = {
