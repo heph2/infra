@@ -1,10 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-{
+{ config, lib, pkgs, ... }: {
   age.secrets.cloudflare = {
     file = ../../secrets/acme-api-token-cloudflare.age;
     mode = "640";
@@ -81,16 +75,12 @@
     certs.${config.mailserver.fqdn} = {
       dnsProvider = "cloudflare";
       environmentFile = config.age.secrets.cloudflare.path;
-      reloadServices = [
-        "dovecot2"
-        "postfix"
-      ];
+      reloadServices = [ "dovecot2" "postfix" ];
     };
   };
 
-  systemd.services."acme-mail.mbauce.com".serviceConfig.EnvironmentFile = [
-    config.age.secrets.cloudflare.path
-  ];
+  systemd.services."acme-mail.mbauce.com".serviceConfig.EnvironmentFile =
+    [ config.age.secrets.cloudflare.path ];
 
   services.dovecot2 = {
     mailPlugins.globally.enable = [ "old_stats" ];
@@ -138,7 +128,7 @@
     };
     script = ''
       echo '[smtp.eu.mailgun.org]:587 postmaster@mailgun.mbauce.com:'$(cat ${config.age.secrets.mailgun-smtp.path}) > /etc/postfix/sasl_passwd
-      postmap /etc/postfix/sasl_passwd
+      ${pkgs.postfix}/bin/postmap /etc/postfix/sasl_passwd
       chown root:postfix /etc/postfix/sasl_passwd
       chmod 640 /etc/postfix/sasl_passwd
     '';
