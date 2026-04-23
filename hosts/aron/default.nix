@@ -70,10 +70,10 @@
   # `home-manager` currently has issues adding them to `~/Applications`
   # Issue: https://github.com/nix-community/home-manager/issues/1341
   environment.systemPackages = with pkgs; [
-    # inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
+    inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
     # inputs.nix-ai-tools.packages.${pkgs.system}.codex
     inputs.nix-ai-tools.packages.${pkgs.system}.opencode
-    inputs.nix-ai-tools.packages.${pkgs.system}.hermes-agent
+    # inputs.nix-ai-tools.packages.${pkgs.system}.hermes-agent
     cachix
     granted
     nixfmt
