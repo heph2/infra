@@ -115,10 +115,10 @@
     k6
     swaks
     ngrok
-    nodePackages.npm
-    nodePackages.pnpm
-    nodePackages.typescript
-    nodePackages.npm-check-updates
+    # nodePackages.npm
+    # nodePackages.pnpm
+    # nodePackages.typescript
+    # nodePackages.npm-check-updates
     # nodejs
     yarn
     perl
