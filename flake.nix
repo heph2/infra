@@ -67,21 +67,26 @@
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    import-tree.url = "github:vic/import-tree";
   };
-  outputs = inputs@{ flake-parts, ... }:
+  outputs = inputs@{ flake-parts, import-tree, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
+        # Dendritic modules (auto-imported)
+        (import-tree ./modules)
+
+        # Host declarations
         #./hosts/fafnir/default.nix ## Router
-        ./hosts/freya/configuration.nix # # Desktop
-        ./hosts/hermes/configuration.nix # # Hetzner VPS
-        ./hosts/tyr/configuration.nix # # Intel NUC
-        ./hosts/timballo/configuration.nix # # Laptop t480
-        ./hosts/zima/configuration.nix # # ZimaBoard
-        ./hosts/ushi/configuration.nix # # Nixos WSL 2
-        ./hosts/sauron/configuration.nix # # NAS
-        ./hosts/aron/configuration.nix # # MacBook
-        ./hosts/fenrir/configuration.nix # # MacBook Air M1 (Asahi Linux)
-        ./hosts/pixie/configuration.nix # # Google Pixel 6a AVF
+        ./hosts/freya/default.nix ## Desktop
+        ./hosts/hermes/default.nix ## Hetzner VPS
+        ./hosts/tyr/default.nix ## Intel NUC
+        ./hosts/timballo/default.nix ## Laptop t480
+        ./hosts/zima/default.nix ## ZimaBoard
+        ./hosts/ushi/default.nix ## Nixos WSL 2
+        ./hosts/sauron/default.nix ## NAS
+        ./hosts/aron/default.nix ## MacBook
+        ./hosts/fenrir/default.nix ## MacBook Air M1 (Asahi Linux)
+        ./hosts/pixie/default.nix ## Google Pixel 6a AVF
         ./dev.nix
       ];
       systems = [

@@ -1,15 +1,31 @@
-{ config, lib, pkgs, ... }: {
+{ inputs, config, ... }:
+let
+  nixos = config.flake.modules.nixos;
+in
+{
+  flake.nixosConfigurations.ushi = inputs.nixpkgs.lib.nixosSystem {
+    system = "x86_64-linux";
+    modules = [
+      nixos.allow-unfree
+      nixos.common-server
+      inputs.nixos-wsl.nixosModules.wsl
+      ({ modulesPath, ... }: {
+        imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+      })
+      {
+        wsl.enable = true;
+        wsl.defaultUser = "nixos";
 
-  wsl.enable = true;
-  wsl.defaultUser = "nixos";
+        services.openssh = {
+          enable = true;
+          ports = [ 2222 ];
+        };
 
-  services.openssh = {
-    enable = true;
-    ports = [ 2222 ];
+        users.users.root.openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJBwkxucypqmAsuY/n51EsoEDQaog4u/WOl0i69NY+GN marco@steel.local"
+        ];
+        system.stateVersion = "23.11";
+      }
+    ];
   };
-
-  users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJBwkxucypqmAsuY/n51EsoEDQaog4u/WOl0i69NY+GN marco@steel.local"
-  ];
-  system.stateVersion = "23.11";
 }

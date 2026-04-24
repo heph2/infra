@@ -1,27 +1,39 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
-# NixOS-WSL specific options are documented on the NixOS-WSL repository:
-# https://github.com/nix-community/NixOS-WSL
-
-{ config, lib, pkgs, ... }:
-
+{ inputs, config, ... }:
+let
+  nixos = config.flake.modules.nixos;
+in
 {
-  imports = [
-    # include nixos-avf modules
-  ];
+  flake.nixosConfigurations.pixie = inputs.nixpkgs.lib.nixosSystem {
+    system = "aarch64-linux";
+    modules = [
+      nixos.allow-unfree
+      ({ modulesPath, ... }: {
+        imports = [
+          (modulesPath + "/installer/scan/not-detected.nix")
+          inputs.avf.nixosModules.avf
+        ];
+      })
+      ({ pkgs, ... }: {
+        nixpkgs.overlays = [
+          (final: prev: {
+            ttyd = prev.ttyd.overrideAttrs (old: { patches = [ ]; });
+          })
+        ];
+      })
+      ({ pkgs, ... }: {
+        avf.defaultUser = "droid";
+        services.openssh.enable = true;
+        services.tailscale = {
+          enable = true;
+          extraSetFlags = [ "--ssh" ];
+        };
 
-  avf.defaultUser = "droid";
-  services.openssh.enable = true;
-  services.tailscale = {
-    enable = true;
-    extraSetFlags = [ "--ssh" ];
+        environment.systemPackages = with pkgs; [
+          mg vim htop ncdu helix
+        ];
+
+        system.stateVersion = "25.11";
+      })
+    ];
   };
-
-  environment.systemPackages = with pkgs; [
-    mg vim htop ncdu helix
-  ];
-
-  system.stateVersion = "25.11"; # Did you read the comment?
 }
