@@ -126,7 +126,7 @@
           "nix-ai-tools",
           "flake-parts"
         ],
-        "import-tree": "import-tree",
+        "import-tree": "import-tree_2",
         "nixpkgs": [
           "nix-ai-tools",
           "nixpkgs"
@@ -595,6 +595,21 @@
     },
     "import-tree": {
       "locked": {
+        "lastModified": 1773693634,
+        "narHash": "sha256-BtZ2dtkBdSUnFPPFc+n0kcMbgaTxzFNPv2iaO326Ffg=",
+        "owner": "vic",
+        "repo": "import-tree",
+        "rev": "c41e7d58045f9057880b0d85e1152d6a4430dbf1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vic",
+        "repo": "import-tree",
+        "type": "github"
+      }
+    },
+    "import-tree_2": {
+      "locked": {
         "lastModified": 1763762820,
         "narHash": "sha256-ZvYKbFib3AEwiNMLsejb/CWs/OL/srFQ8AogkebEPF0=",
         "owner": "vic",
@@ -608,7 +623,7 @@
         "type": "github"
       }
     },
-    "import-tree_2": {
+    "import-tree_3": {
       "locked": {
         "lastModified": 1773693634,
         "narHash": "sha256-BtZ2dtkBdSUnFPPFc+n0kcMbgaTxzFNPv2iaO326Ffg=",
@@ -1069,7 +1084,7 @@
     "paneru": {
       "inputs": {
         "flake-parts": "flake-parts_5",
-        "import-tree": "import-tree_2",
+        "import-tree": "import-tree_3",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_7"
       },
@@ -1187,6 +1202,7 @@
         "flake-parts": "flake-parts",
         "hermes-agent": "hermes-agent",
         "home-manager": "home-manager_2",
+        "import-tree": "import-tree",
         "niri": "niri",
         "nix-ai-tools": "nix-ai-tools",
         "nix-minecraft": "nix-minecraft",

@@ -1,706 +1,347 @@
-{
-  config,
-  lib,
-  pkgs,
-  inputs,
-  ...
-}:
+{ inputs, config, ... }:
 let
+  nixos = config.flake.modules.nixos;
+  hm = config.flake.modules.homeManager;
+
   user = "heph";
   platform = "amd";
-  vfioIds = [
-    "10de:2204"
-    "10de:1aef"
-  ];
   home = "/home/${user}";
 in
 {
-  imports = [
-    # Include the results of the hardware scan.
-    ./hardware-configuration.nix
-    ./disk-config.nix
-    "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
-  ];
+  flake.nixosConfigurations.freya = inputs.nixpkgs.lib.nixosSystem {
+    system = "x86_64-linux";
+    specialArgs = { inherit inputs; };
+    modules = [
+      # Dendritic foundation
+      nixos.allow-unfree
+      nixos.common-server
+      nixos.nix-settings
+      nixos.locale-eu
+      nixos.user-heph
+      nixos.resolved-dns
 
-  # specialisation."VFIO".configuration = {
-  #   imports = [ ./vfio.nix ];
-  #   system.nixos.tags = [ "with-vfio" ];
-  #   vfio.enable = true;
-  # };
-  #
-  #
-  age.identityPaths = [ "/home/heph/.ssh/sekai_ed" ];
-  age.secrets.wg = {
-    file = ../../secrets/wg-key-freya.age;
-    mode = "640";
-    owner = "systemd-network";
-    group = "systemd-network";
-  };
+      # Desktop
+      nixos.pipewire
+      nixos.fonts
+      nixos.polkit
+      nixos.documentation
+      nixos.cosmic
 
-  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+      # Security
+      nixos.yubikey
 
-  hardware.opentabletdriver.enable = false;
-  services.libinput.enable = true;
-  services.xserver.wacom.enable = true;
-  services.avahi = {
-    enable = true;
-    openFirewall = true;
-    publish = {
-      enable = true;
-      addresses = true;
-      workstation = true;
-      userServices = true;
-    };
-  };
-  services.flatpak.enable = true;
-  services.udev.extraHwdb = ''
-    evdev:input:b0003v056Ap033C*
-      ID_INPUT_TABLET_PAD=1
-      ID_INPUT_TABLET=0
-  '';
+      # Home-manager
+      nixos.hm-nixos-wiring
 
-  nixpkgs.config.permittedInsecurePackages = [
-    "libsoup-2.74.3"
-    "openssl-1.1.1w"
-  ];
-  environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
+      # External input modules
+      inputs.agenix.nixosModules.default
+      inputs.spicetify-nix.nixosModules.default
+      inputs.trcc_gif.nixosModules.trcc-gif
 
-  environment.extraInit = ''
-    xset s off -dpms
-  '';
-
-  environment.variables = {
-    EDITOR = "hx";
-  };
-
-  environment.localBinInPath = true;
-
-  systemd.targets.sleep.enable = false;
-  systemd.targets.suspend.enable = false;
-  systemd.targets.hibernate.enable = false;
-  systemd.targets.hybrid-sleep.enable = false;
-  security.polkit.enable = true;
-  services.blueman.enable = true;
-  services.zfs.autoScrub.enable = true;
-
-  services.trcc-gif = {
-    enable = true;
-    binDirectory = "/var/lib/trcc-gif/frames";
-    # binDirectory = "/var/lib/trcc-gif/pochi-frames";
-  };
-
-  services.borgbackup.jobs =
-    let
-      common-excludes = [
-        ".cache"
-        "*/cache2" # firefox
-        "*/Cache"
-        ".mozilla"
-        "*/.cargo"
-        ".compose-cache"
-        ".npm"
-        ".local/share"
-        ".ollama"
-        "*/.terraform.d"
-        ".rustup"
-        ".config/Slack/logs"
-        ".config/Code/CachedData"
-        ".container-diff"
-        ".npm/_cacache"
-        "*/node_modules"
-        "*/_build"
-        "*/.tox"
-        "*/venv"
-        "*/.venv"
-      ];
-      basicBorgJob = name: {
-        encryption.mode = "none";
-        environment.BORG_RSH = "ssh -o 'StrictHostKeyChecking=no' -i /home/heph/.ssh/sekai_ed";
-        environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
-        extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
-        repo = "ssh://sauron//data/backup/${name}";
-        compression = "zstd,1";
-        startAt = "hourly";
-        persistentTimer = true;
-        user = "heph";
-      };
-    in
-    {
-      home-heph = basicBorgJob "freya/home-heph" // rec {
-        paths = "/home/heph";
-        exclude = map (x: paths + "/" + x) (
-          common-excludes
-          ++ [
-            "Downloads"
-            "Videos"
-            ".models"
-            "Games"
-          ]
-        );
-      };
-
-      # code-icloud = {
-      #   encryption.mode = "repokey";
-      #   environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
-      #   extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
-      #   repo = "rclone://iclouddrive:/backup/freya/code";
-      #   compression = "zstd,1";
-      #   startAt = "daily";
-      #   persistentTimer = true;
-      #   user = "heph";
-      #   paths = [ "/home/heph/code" ];
-      # };
-    };
-
-  services.samba = {
-    enable = false;
-    openFirewall = true;
-    settings = {
-      global = {
-        "workgroup" = "WORKGROUP";
-        "server string" = "smbnix";
-        "netbios name" = "smbnix";
-        "security" = "user";
-        "hosts allow" = "192.168.1. 192.168.122. 127.0.0.1 localhost";
-        "hosts deny" = "0.0.0.0/0";
-        "guest account" = "nobody";
-        "map to guest" = "bad user";
-      };
-      "public" = {
-        "path" = "/home/heph/Public";
-        "browseable" = "yes";
-        "read only" = "no";
-        "guest ok" = "yes";
-        "create mask" = "0644";
-        "directory mask" = "0755";
-        "force user" = "username";
-        "force group" = "groupname";
-      };
-    };
-  };
-
-  services.displayManager.cosmic-greeter.enable = true;
-  services.desktopManager.cosmic.enable = true;
-
-  services.samba-wsdd = {
-    enable = false;
-    openFirewall = true;
-  };
-
-  programs.steam = {
-    enable = true;
-  };
-
-  services.transmission = {
-    enable = false;
-    user = "heph";
-    group = "users";
-    home = "/home/heph/";
-    settings.download-dir = "/home/heph/Videos";
-    settings.incomplete-dir = "/home/heph/Videos/.incomplete";
-    settings.downloadDirPermissions = "0770";
-  };
-
-  services.syncthing = {
-    enable = true;
-    openDefaultPorts = true;
-    user = "heph";
-    configDir = "${home}/.config/syncthing";
-    settings.gui = {
-      user = "freya";
-      password = "mypassword";
-    };
-    devices = {
-      "aron" = {
-        id = "AJ5RD3I-H6AKBMI-J7MP7LC-METYTUB-YEQNZTQ-FJUUTPA-REJTL7O-BKPH5QD";
-      };
-      "zarel" = {
-        id = "TQR3SDR-KFWUNRW-MLVQFCG-TJN2O72-I36HOMF-JHWHONU-IGDPFDA-3Z3ARAW";
-      };
-      "timballo" = {
-        id = "";
-      };
-    };
-    folders = {
-      "Age" = {
-        path = "${home}/.age";
-        devices = [
-          "aron"
-          "timballo"
+      # Overlays
+      {
+        nixpkgs.overlays = [
+          inputs.emacs-overlay.overlay
+          (final: prev: {
+            stable = import inputs.stable-nixpkgs {
+              system = prev.system;
+              config.allowUnfree = true;
+            };
+          })
         ];
-      };
-      "Emacs" = {
-        path = "${home}/.emacs.d";
-        devices = [
-          "aron"
-          "timballo"
+      }
+
+      # Home-manager user
+      {
+        home-manager.extraSpecialArgs = {
+          agenix = inputs.agenix;
+          stardew-modding = inputs.stardew-modding;
+          firefox-addons = inputs.firefox-addons;
+        };
+        home-manager.users.heph = import ./home.nix;
+      }
+
+      ({ modulesPath, ... }: {
+        imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+      })
+
+      # Hardware
+      ./hardware-configuration.nix
+      ./disk-config.nix
+      "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
+
+      # Host-specific config
+      ({ config, lib, pkgs, ... }: {
+        age.identityPaths = [ "/home/heph/.ssh/sekai_ed" ];
+        age.secrets.wg = {
+          file = ../../secrets/wg-key-freya.age;
+          mode = "640";
+          owner = "systemd-network";
+          group = "systemd-network";
+        };
+
+        boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
+        hardware.opentabletdriver.enable = false;
+        services.libinput.enable = true;
+        services.xserver.wacom.enable = true;
+        services.avahi = {
+          enable = true;
+          openFirewall = true;
+          publish = { enable = true; addresses = true; workstation = true; userServices = true; };
+        };
+        services.flatpak.enable = true;
+        services.udev.extraHwdb = ''
+          evdev:input:b0003v056Ap033C*
+            ID_INPUT_TABLET_PAD=1
+            ID_INPUT_TABLET=0
+        '';
+
+        nixpkgs.config.permittedInsecurePackages = [ "libsoup-2.74.3" "openssl-1.1.1w" ];
+        environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
+        environment.extraInit = "xset s off -dpms";
+
+        systemd.targets.sleep.enable = false;
+        systemd.targets.suspend.enable = false;
+        systemd.targets.hibernate.enable = false;
+        systemd.targets.hybrid-sleep.enable = false;
+        services.blueman.enable = true;
+        services.zfs.autoScrub.enable = true;
+
+        services.trcc-gif = {
+          enable = true;
+          binDirectory = "/var/lib/trcc-gif/frames";
+        };
+
+        services.borgbackup.jobs =
+          let
+            common-excludes = [
+              ".cache" "*/cache2" "*/Cache" ".mozilla" "*/.cargo"
+              ".compose-cache" ".npm" ".local/share" ".ollama"
+              "*/.terraform.d" ".rustup" ".config/Slack/logs"
+              ".config/Code/CachedData" ".container-diff"
+              ".npm/_cacache" "*/node_modules" "*/_build" "*/.tox"
+              "*/venv" "*/.venv"
+            ];
+            basicBorgJob = name: {
+              encryption.mode = "none";
+              environment.BORG_RSH = "ssh -o 'StrictHostKeyChecking=no' -i /home/heph/.ssh/sekai_ed";
+              environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
+              extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
+              repo = "ssh://sauron//data/backup/${name}";
+              compression = "zstd,1";
+              startAt = "hourly";
+              persistentTimer = true;
+              user = "heph";
+            };
+          in
+          {
+            home-heph = basicBorgJob "freya/home-heph" // rec {
+              paths = "/home/heph";
+              exclude = map (x: paths + "/" + x) (
+                common-excludes ++ [ "Downloads" "Videos" ".models" "Games" ]
+              );
+            };
+          };
+
+        services.samba = {
+          enable = false;
+          openFirewall = true;
+          settings = {
+            global = {
+              "workgroup" = "WORKGROUP"; "server string" = "smbnix"; "netbios name" = "smbnix";
+              "security" = "user"; "hosts allow" = "192.168.1. 192.168.122. 127.0.0.1 localhost";
+              "hosts deny" = "0.0.0.0/0"; "guest account" = "nobody"; "map to guest" = "bad user";
+            };
+            "public" = {
+              "path" = "/home/heph/Public"; "browseable" = "yes"; "read only" = "no";
+              "guest ok" = "yes"; "create mask" = "0644"; "directory mask" = "0755";
+              "force user" = "username"; "force group" = "groupname";
+            };
+          };
+        };
+        services.samba-wsdd = { enable = false; openFirewall = true; };
+
+        programs.steam.enable = true;
+
+        services.transmission = {
+          enable = false;
+          user = "heph"; group = "users"; home = "/home/heph/";
+          settings.download-dir = "/home/heph/Videos";
+          settings.incomplete-dir = "/home/heph/Videos/.incomplete";
+          settings.downloadDirPermissions = "0770";
+        };
+
+        services.syncthing = {
+          enable = true;
+          openDefaultPorts = true;
+          user = "heph";
+          configDir = "${home}/.config/syncthing";
+          settings.gui = { user = "freya"; password = "mypassword"; };
+          devices = {
+            "aron" = { id = "AJ5RD3I-H6AKBMI-J7MP7LC-METYTUB-YEQNZTQ-FJUUTPA-REJTL7O-BKPH5QD"; };
+            "zarel" = { id = "TQR3SDR-KFWUNRW-MLVQFCG-TJN2O72-I36HOMF-JHWHONU-IGDPFDA-3Z3ARAW"; };
+            "timballo" = { id = ""; };
+          };
+          folders = {
+            "Age" = { path = "${home}/.age"; devices = [ "aron" "timballo" ]; };
+            "Emacs" = { path = "${home}/.emacs.d"; devices = [ "aron" "timballo" ]; };
+            "Gnupg" = { path = "${home}/.gnupg"; devices = [ "aron" "timballo" ]; };
+            "Ledger" = { path = "${home}/Documents/finance"; devices = [ "aron" "timballo" ]; };
+          };
+        };
+
+        services.fstrim.enable = true;
+
+        networking.wireguard.interfaces = {
+          wg0 = {
+            ips = [ "10.1.1.6/32" "2a0f:85c1:c4d:1234::6/128" ];
+            listenPort = 51820;
+            privateKeyFile = config.age.secrets.wg.path;
+            peers = [{
+              publicKey = "VaCUhE4J7m4uP+3aKPf0PBeRCnS4Wy1rFX0aZ0imYgU=";
+              allowedIPs = [ "2000::/3" "10.1.1.0/24" "1.1.1.1/32" ];
+              endpoint = "193.57.159.213:51820";
+              persistentKeepalive = 25;
+            }];
+          };
+        };
+
+        nix.settings.trusted-substituters = [
+          "https://ai.cachix.org" "https://heph2.cachix.org"
+          "https://nixos-apple-silicon.cachix.org"
         ];
-      };
-      "Gnupg" = {
-        path = "${home}/.gnupg";
-        devices = [
-          "aron"
-          "timballo"
+        nix.settings.trusted-public-keys = [
+          "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="
+          "heph2.cachix.org-1:aVuYQpvc6De8i9qWwP2V0ErH4VqSpOCWjv116AR1mYc="
+          "nixos-apple-silicon.cachix.org-1:8psDu5SA5dAD7qA0zMy5UT292TxeEPzIz8VVEr2Js20="
         ];
-      };
-      "Ledger" = {
-        path = "${home}/Documents/finance";
-        devices = [
-          "aron"
-          "timballo"
+
+        boot.extraModprobeConfig = "blacklist nouveau\noptions nouveau modeset=0\n";
+        boot.kernelModules = [
+          "kvm-${platform}" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1"
+          "vfio" "wacom" "amdgpu" "usbmon"
         ];
-      };
-    };
-  };
+        boot.kernelParams = [
+          "radeon.si_support=0" "amdgpu.si_support=1"
+          "radeon.cik_support=0" "amdgpu.cik_support=1"
+        ];
+        boot.loader.efi.canTouchEfiVariables = true;
+        boot.loader.systemd-boot.enable = true;
 
-  services.fstrim = {
-    enable = true;
-  };
-  nixpkgs.config.allowUnfree = true;
+        programs.wireshark = { enable = true; usbmon.enable = true; };
 
-  # networking.interfaces.eno1 = {
-  #   ipv6.addresses = [
-  #     {
-  #       address = "2a07:7e81:85f5::dead";
-  #       prefixLength = 64;
-  #     }
-  #   ];
-  # };
+        services.udev.extraRules = ''
+          SUBSYSTEM=="usb", ATTR{idVendor}=="87ad", ATTR{idProduct}=="70db", MODE="0666"
+          SUBSYSTEM=="usbmon", GROUP="wireshark", MODE="0640"
+        '';
+        services.udev.packages = [
+          pkgs.libfido2 pkgs.yubikey-personalization pkgs.wooting-udev-rules
+        ];
+        security.pam.services = { login.u2fAuth = true; sudo.u2fAuth = true; };
 
-  # networking.defaultGateway6 = {
-  #   address = "fe80::6f4:1cff:fe18:162";
-  #   interface = "eno1";
-  # };
+        boot.blacklistedKernelModules = [ "nouveau" ];
 
-  networking.wireguard.interfaces = {
-    wg0 = {
-      ips = [
-        "10.1.1.6/32"
-        "2a0f:85c1:c4d:1234::6/128"
-      ];
-      listenPort = 51820;
-      privateKeyFile = config.age.secrets.wg.path;
+        systemd.tmpfiles.rules = [
+          "f /dev/shm/looking-glass 0660 ${user} kvm -"
+          "d /var/lib/trcc-gif/frames 0755 root root -"
+        ];
 
-      peers = [
-        {
-          publicKey = "VaCUhE4J7m4uP+3aKPf0PBeRCnS4Wy1rFX0aZ0imYgU=";
-          allowedIPs = [
-            "2000::/3"
-            "10.1.1.0/24"
-            "1.1.1.1/32"
-          ];
-          endpoint = "193.57.159.213:51820";
-          persistentKeepalive = 25;
-        }
-      ];
-    };
-    # wg1 = {
-    #   ips = [
-    #     "10.2.1.2/32"
-    #     "2a0f:85c1:c4d:5678::2/128"
-    #   ];
-    #   listenPort = 51820;
-    #   privateKeyFile = config.age.secrets.wg.path;
+        hardware.enableAllFirmware = true;
+        hardware.steam-hardware.enable = true;
+        hardware.xpadneo.enable = true;
+        hardware.graphics.enable = true;
+        hardware.rtl-sdr.enable = true;
+        hardware.cpu.amd.updateMicrocode = true;
+        hardware.graphics.enable32Bit = true;
+        hardware.bluetooth.enable = true;
 
-    #   peers = [
-    #     {
-    #       publicKey = "";
-    #       allowedIPs = [
+        networking.hostName = "freya";
+        networking.hostId = "d81f3ea4";
 
-    #       ];
-    #       endpoint = "";
-    #       persistentKeepalive = 25;
-    #     }
-    #   ];
-    # };
-  };
-  # services.xremap = {
-  #    withX11 = false;
-  #    serviceMode = "system";
-  #    debug = false;
-  #  };
-  #  services.xremap.config.keymap = [{
-  #    name = "Google Chrome";
-  #    application.only = [ "Chromium-browser" ];
-  #    remap = { "Super-s" = "C-f"; };
-  #  }];
+        # Extra user groups beyond dendritic user-heph
+        users.users.heph.extraGroups = [ "wireshark" "qemu-libvirtd" "libvirtd" "disk" "kvm" ];
 
-  nix = {
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
-    };
+        services.xserver.enable = true;
+        services.xserver.xrandrHeads = [
+          { output = "HDMI-A-0"; primary = true; }
+          { output = "DisplayPort-1"; }
+        ];
+        services.xserver.videoDrivers = [ "amdgpu" ];
+        services.displayManager.ly.enable = false;
+        services.xserver.xkb.layout = "us";
+        services.printing.enable = true;
 
-    settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-      auto-optimise-store = true;
-    };
-  };
+        programs.spicetify =
+          let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+          in {
+            enable = true;
+            enabledExtensions = with spicePkgs.extensions; [ adblock hidePodcasts shuffle ];
+            theme = spicePkgs.themes.catppuccin;
+            colorScheme = "mocha";
+          };
 
-  hardware.rtl-sdr.enable = true;
-  hardware.cpu.amd.updateMicrocode = true;
-  hardware.graphics.enable32Bit = true;
-  networking.hostId = "d81f3ea4";
+        programs.streamdeck-ui = { enable = true; autoStart = true; };
 
-  # DHCP and DNS
-  networking.dhcpcd = {
-    enable = true;
-    extraConfig = "nohook resolv.conf";
-  };
-  services.resolved = {
-    enable = true;
-    dnssec = "true";
-    domains = [ "~." ];
-    fallbackDns = [
-      "1.1.1.1#one.one.one.one"
-      "1.0.0.1#one.one.one.one"
-    ];
-    dnsovertls = "true";
-  };
-  networking.nameservers = [
-    "1.1.1.1#one.one.one.one"
-    "1.0.0.1#one.one.one.one"
-  ];
+        services.synergy.server = {
+          enable = false; autoStart = false; screenName = "freya";
+          address = "0.0.0.0:24800"; tls.enable = false;
+        };
 
-  nix.settings.trusted-substituters = [
-    "https://ai.cachix.org"
-    "https://heph2.cachix.org"
-    "https://nixos-apple-silicon.cachix.org"
-  ];
-  nix.settings.trusted-public-keys = [
-    "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="
-    "heph2.cachix.org-1:aVuYQpvc6De8i9qWwP2V0ErH4VqSpOCWjv116AR1mYc="
-    "nixos-apple-silicon.cachix.org-1:8psDu5SA5dAD7qA0zMy5UT292TxeEPzIz8VVEr2Js20="
-  ];
+        virtualisation.docker.enable = true;
 
-  boot.extraModprobeConfig = ''
-    blacklist nouveau
-    options nouveau modeset=0
-  '';
+        users.users.root.openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK heph@fenrir"
+        ];
 
-  boot.kernelModules = [
-    "kvm-${platform}"
-    "vfio_virqfd"
-    "vfio_pci"
-    "vfio_iommu_type1"
-    "vfio"
-    "wacom"
-    "amdgpu"
-    "usbmon"
-  ];
-  boot.kernelParams = [
-    "radeon.si_support=0"
-    "amdgpu.si_support=1"
-    "radeon.cik_support=0"
-    "amdgpu.cik_support=1"
-  ];
+        nixpkgs.overlays = [
+          (self: super: {
+            lutris = inputs.stable-nixpkgs.legacyPackages.${super.system}.lutris.override {
+              extraLibraries = pkgs: with pkgs; [ libadwaita gtk4 ];
+            };
+          })
+          (self: super: {
+            heroic = super.heroic.override { extraPkgs = pkgs: [ pkgs.gamescope ]; };
+          })
+        ];
 
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.systemd-boot.enable = true;
+        programs.gamemode.enable = true;
+        programs.gamescope.enable = true;
+        services.open-webui = { enable = true; port = 11111; };
 
-  programs.wireshark = {
-    enable = true;
-    usbmon.enable = true;
-  };
-  ## Nvidia
+        environment.systemPackages = with pkgs; [
+          inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
+          inputs.nix-ai-tools.packages.${pkgs.system}.opencode
+          steamcmd uxplay llama-cpp-rocm libinput libwacom vim wireshark
+          heroic stable.lutris protonup-qt wineWowPackages.stable winetricks
+          hidapi wget quickemu python3 aider-chat man-pages man-pages-posix
+          ffmpeg kubectl bind fd smartmontools nvme-cli nh nixfmt-classic
+          inetutils openssl virt-manager looking-glass-client pciutils usbutils
+          mg git docker-compose podman-tui remmina lm_sensors rofi scrcpy dive
+          dmenu sxhkd bspwm btrfs-assistant thunderbird xorg.libXxf86vm glib
+          openjdk21 obsidian
+          (aspellWithDicts (dicts: with dicts; [ en en-computers en-science es it ]))
+        ];
 
-  # hardware.nvidia = {
-  #   modesetting.enable = true;
-  #   powerManagement.enable = false;
-  #   powerManagement.finegrained = false;
-  #   open = false;
-  #   nvidiaSettings = true;
-  # };
+        virtualisation = {
+          spiceUSBRedirection.enable = true;
+          libvirtd = { enable = true; onBoot = "start"; onShutdown = "shutdown"; };
+        };
 
-  # hardware.nvidia.prime = {
-  #   offload.enable = true;
-  #   nvidiaBusId = "PCI:7:0:0";
-  #   amdgpuBusId = "PCI:4:0:0";
-  # };
+        programs.mtr.enable = true;
 
-  ## yubikey
-  services.pcscd.enable = true;
-  services.udev.extraRules = ''
-    SUBSYSTEM=="usb", ATTR{idVendor}=="87ad", ATTR{idProduct}=="70db", MODE="0666"
-    SUBSYSTEM=="usbmon", GROUP="wireshark", MODE="0640"
-  '';
-  services.udev.packages = [
-    pkgs.libfido2
-    pkgs.yubikey-personalization
-    pkgs.wooting-udev-rules
-  ];
-  security.pam.services = {
-    login.u2fAuth = true;
-    sudo.u2fAuth = true;
-  };
-  programs = {
-    yubikey-touch-detector.enable = true;
-  };
-  hardware.gpgSmartcards.enable = true;
-  services.yubikey-agent.enable = true;
+        services.openssh.enable = true;
+        networking.firewall.allowedTCPPorts = [ 22 24800 57621 8000 8443 ];
+        networking.firewall.allowedUDPPorts = [ 24800 5353 ];
+        networking.firewall.enable = false;
+        networking.firewall.extraCommands = ''
+          iptables -I INPUT 1 -i docker0 -p tcp -d 172.17.0.1 -j ACCEPT
+          iptables -I INPUT 2 -i docker0 -p udp -d 172.17.0.1 -j ACCEPT
+        '';
+        networking.firewall.trustedInterfaces = [ "virbr0" ];
 
-  programs.zsh.enable = true;
-
-  ## Blacklist Nouveau drivers
-  boot.blacklistedKernelModules = [ "nouveau" ];
-
-  systemd.tmpfiles.rules = [
-    "f /dev/shm/looking-glass 0660 ${user} kvm -"
-    "d /var/lib/trcc-gif/frames 0755 root root -"
-  ];
-
-  fonts = {
-    enableDefaultPackages = true;
-    enableDefaultFonts = true;
-    packages = with pkgs; [
-      nerd-fonts.hack
-      fantasque-sans-mono
-      hack-font
-      fira-code
-      font-awesome
+        system.stateVersion = "23.11";
+      })
     ];
   };
-
-  hardware.enableAllFirmware = true;
-  hardware.steam-hardware.enable = true;
-  hardware.xpadneo.enable = true;
-  hardware.graphics.enable = true;
-
-  hardware.bluetooth.enable = true;
-
-  networking.hostName = "freya"; # Define your hostname.
-  time.timeZone = "Europe/Rome";
-
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  services.xserver.xrandrHeads = [
-    {
-      output = "HDMI-A-0";
-      primary = true;
-    }
-    { output = "DisplayPort-1"; }
-  ];
-
-  services.xserver.videoDrivers = [ "amdgpu" ];
-
-  # services.displayManager.defaultSession = "none+i3";
-  # services.xserver.displayManager = {
-  #   #ly.enable = true;
-  # };
-
-  # services.xserver.displayManager.sessionCommands = ''
-  #   ${pkgs.xorg.xinput} set-prop 'ELECOM TrackBall Mouse DEFT Pro TrackBall Mouse' 'libinput Accel Speed' -0.5
-  # '';
-
-  # services.xserver = { windowManager.i3.enable = true; };
-
-  # services.emacs = {
-  #   enable = true;
-  #   package = pkgs.myEmacs;
-  # };
-
-  services.displayManager.ly.enable = false;
-
-  services.xserver.xkb.layout = "us";
-  services.printing.enable = true;
-
-  # Enable sound.
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  programs.spicetify =
-    let
-      spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-    in
-    {
-      enable = true;
-      enabledExtensions = with spicePkgs.extensions; [
-        adblock
-        hidePodcasts
-        shuffle # shuffle+ (special characters are sanitized out of extension names)
-      ];
-      theme = spicePkgs.themes.catppuccin;
-      colorScheme = "mocha";
-    };
-
-  programs.streamdeck-ui = {
-    enable = true;
-    autoStart = true; # optional
-  };
-
-  users.users.heph = {
-    isNormalUser = true;
-    shell = pkgs.zsh;
-    extraGroups = [
-      "wheel"
-      "wireshark"
-      "qemu-libvirtd"
-      "libvirtd"
-      "disk"
-      "kvm"
-      "docker"
-      "plugdev"
-      "dialout"
-    ];
-  };
-
-  services.synergy.server = {
-    enable = false;
-    autoStart = false;
-    screenName = "freya";
-    address = "0.0.0.0:24800";
-    tls.enable = false;
-  };
-
-  virtualisation = {
-    docker = {
-      enable = true;
-    };
-  };
-
-  users.users.root = {
-    openssh = {
-      authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK heph@fenrir"
-      ];
-    };
-  };
-
-  documentation.dev.enable = true;
-  documentation.man = {
-    man-db.enable = false;
-    mandoc.enable = true;
-  };
-
-  nixpkgs.overlays = [
-    (self: super: {
-      lutris = inputs.stable-nixpkgs.legacyPackages.${super.system}.lutris.override {
-        extraLibraries =
-          pkgs: with pkgs; [
-            libadwaita
-            gtk4
-          ];
-      };
-    })
-    (self: super: {
-      heroic = super.heroic.override { extraPkgs = pkgs: [ pkgs.gamescope ]; };
-    })
-  ];
-
-  programs.gamemode.enable = true;
-  programs.gamescope.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
-    # inputs.nix-ai-tools.packages.${pkgs.system}.codex
-    inputs.nix-ai-tools.packages.${pkgs.system}.opencode
-    steamcmd
-    uxplay
-    libinput
-    libwacom
-    vim
-    wireshark
-    heroic
-    stable.lutris
-    protonup-qt
-    wineWowPackages.stable
-    winetricks
-    hidapi
-    wget
-    quickemu
-    python3
-    aider-chat
-    man-pages
-    man-pages-posix
-    ffmpeg
-    kubectl
-    bind
-    fd
-    smartmontools
-    nvme-cli
-    nh
-    nixfmt-classic
-    inetutils
-    openssl
-    virt-manager
-    looking-glass-client
-    pciutils
-    usbutils
-    mg
-    git
-    docker-compose
-    podman-tui
-    remmina
-    lm_sensors
-    rofi
-    scrcpy
-    dive
-    dmenu
-    sxhkd
-    bspwm
-    btrfs-assistant
-    thunderbird
-    xorg.libXxf86vm
-    glib
-    openjdk21
-    obsidian
-    (aspellWithDicts (
-      dicts: with dicts; [
-        en
-        en-computers
-        en-science
-        es
-        it
-      ]
-    ))
-  ];
-
-  virtualisation = {
-    spiceUSBRedirection.enable = true;
-    libvirtd = {
-      enable = true;
-      onBoot = "start";
-      onShutdown = "shutdown";
-    };
-  };
-
-  programs.mtr.enable = true;
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
-
-  services.openssh.enable = true;
-  networking.firewall.allowedTCPPorts = [
-    22
-    24800
-    57621
-    8000
-    8443 # unifi-controller
-  ];
-  networking.firewall.allowedUDPPorts = [
-    24800
-    5353
-  ];
-  networking.firewall.enable = false;
-  networking.firewall = {
-    extraCommands = ''
-      iptables -I INPUT 1 -i docker0 -p tcp -d 172.17.0.1 -j ACCEPT
-      iptables -I INPUT 2 -i docker0 -p udp -d 172.17.0.1 -j ACCEPT
-    '';
-  };
-  networking.firewall.trustedInterfaces = [ "virbr0" ];
-  # networking.interfaces.enp6s0.wakeOnLan.enable = true;
-
-  system.stateVersion = "23.11";
 }

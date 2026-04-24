@@ -1,11 +1,7 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-
+{ inputs, config, ... }:
 let
+  nixos = config.flake.modules.nixos;
+
   hostname = "sauron";
   localDomain = hostname + ".hephnet.lan";
   pochiDomain = "pochi.casa";
@@ -14,389 +10,244 @@ let
   dataRoot = "/media";
   torrentsDir = "${dataRoot}/torrent";
   mediaDir = "${dataRoot}/jelly";
-
   usenetBase = "${dataRoot}/usenet";
 in
 {
-  imports = [
-    # Include the results of the hardware scan.
-    ./hardware-configuration.nix
-    ./disk-config.nix
-    ./pocked-id.nix
-    ./caddy.nix
-    ./paperless.nix
-    ./minecraft.nix
-    "${
-      builtins.fetchTarball {
-        url = "https://github.com/nix-community/disko/archive/master.tar.gz";
-        sha256 = "sha256:035nyq47jvhxf2d00frd983h5rn56zs84bk41fax88sjq2gb02iw";
-      }
-    }/module.nix"
-  ];
+  flake.nixosConfigurations.sauron = inputs.nixpkgs.lib.nixosSystem {
+    system = "x86_64-linux";
+    modules = [
+      nixos.allow-unfree
+      nixos.common-server
+      nixos.locale-eu
+      inputs.agenix.nixosModules.default
+      inputs.nix-minecraft.nixosModules.minecraft-servers
+      inputs.bo3-server.nixosModules.default
+      { nixpkgs.overlays = [ inputs.nix-minecraft.overlay ]; }
+      ({ modulesPath, ... }: {
+        imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+      })
+      ./hardware-configuration.nix
+      ./disk-config.nix
+      ./pocked-id.nix
+      ./caddy.nix
+      ./paperless.nix
+      ./minecraft.nix
+      "${
+        builtins.fetchTarball {
+          url = "https://github.com/nix-community/disko/archive/master.tar.gz";
+          sha256 = "sha256:035nyq47jvhxf2d00frd983h5rn56zs84bk41fax88sjq2gb02iw";
+        }
+      }/module.nix"
+      ({ config, pkgs, ... }: {
+        boot.loader.grub.efiSupport = true;
+        boot.zfs.extraPools = [ "data" ];
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.grub.efiSupport = true;
-  boot.zfs.extraPools = [ "data" ];
+        networking.hostName = hostname;
 
-  networking.hostName = hostname; # Define your hostname.
+        networking.interfaces.enp1s0 = {
+          ipv6.addresses = [{
+            address = "2a07:7e81:85f5::beef";
+            prefixLength = 64;
+          }];
+        };
+        networking.defaultGateway6 = {
+          address = "fe80::6f4:1cff:fe18:162";
+          interface = "enp1s0";
+        };
 
-  # IPV6 Configuration
-  networking.interfaces.enp1s0 = {
-    ipv6.addresses = [
-      {
-        address = "2a07:7e81:85f5::beef";
-        prefixLength = 64;
-      }
+        boot.loader.grub.enable = true;
+        boot.loader.grub.efiInstallAsRemovable = true;
+        boot.loader.grub.device = "nodev";
+        networking.hostId = "a854bd58";
+
+        hardware.graphics = {
+          enable = true;
+          extraPackages = with pkgs; [ vpl-gpu-rt ];
+        };
+
+        services.zfs.autoScrub.enable = true;
+        services.jellyfin = {
+          enable = true;
+          dataDir = "/media";
+        };
+        services.transmission = {
+          enable = false;
+          settings = {
+            download-dir = "/media/torrent/downloads";
+            incomplete-dir-enabled = false;
+            rpc-bind-address = "127.0.0.1";
+            downloadDirPermissions = "770";
+            rpc-whitelist = "192.168.1.* 127.0.0.1";
+            rpc-whitelist-enabled = false;
+            rpc-host-whitelist-enabled = false;
+          };
+          openRPCPort = true;
+          openFirewall = true;
+        };
+
+        users.groups.${mediaGroup} = { };
+
+        services.qbittorrent = {
+          enable = true;
+          group = mediaGroup;
+          profileDir = "/var/lib/qbittorrent";
+          webuiPort = 8088;
+          serverConfig = {
+            Preferences = {
+              "Downloads\\SavePath" = "${torrentsDir}/download";
+              "Downloads\\TempPath" = "${torrentsDir}/.incomplete";
+              "Downloads\\TempPathEnabled" = true;
+            };
+          };
+        };
+
+        systemd.tmpfiles.rules = [
+          "d /media 0755 root root - -"
+          "d ${usenetBase} 2775 root media - -"
+          "d ${usenetBase}/incomplete 2775 sabnzbd media - -"
+          "d ${usenetBase}/complete 2775 sabnzbd media - -"
+          "Z ${usenetBase}/complete 2775 sabnzbd media - -"
+          "d /media/jelly 2775 root media - -"
+          "d /media/jelly/shows 2775 jellyfin media - -"
+          "d /media/jelly/movies 2775 jellyfin media - -"
+        ];
+
+        services.sabnzbd = {
+          enable = true;
+          openFirewall = false;
+          group = mediaGroup;
+        };
+
+        systemd.services.sabnzbd.serviceConfig.UMask = "0002";
+
+        services.prowlarr = {
+          enable = true;
+          openFirewall = false;
+        };
+
+        services.sonarr = {
+          enable = true;
+          openFirewall = false;
+          group = mediaGroup;
+        };
+
+        services.radarr = {
+          enable = true;
+          openFirewall = false;
+          group = mediaGroup;
+        };
+
+        services.jellyseerr = {
+          enable = true;
+          openFirewall = false;
+        };
+
+        users.users.root.openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK"
+        ];
+
+        age.secrets.netdata_token = {
+          file = ../../secrets/netdata_token.age;
+          mode = "640";
+        };
+        services.netdata = {
+          enable = true;
+          package = pkgs.netdata.override { withCloudUi = true; };
+          claimTokenFile = config.age.secrets.netdata_token.path;
+        };
+
+        environment.systemPackages = with pkgs; [
+          vim mg wget borgbackup git
+        ];
+
+        services.openssh.enable = true;
+
+        networking.firewall.allowedTCPPorts = [
+          22 80 443 1411 8096 9091 27017 19999
+        ];
+        networking.firewall.allowedUDPPorts = [ 27017 ];
+        networking.firewall.enable = true;
+
+        services.bo3-server = {
+          enable = true;
+          steamUser = "olympiczeus";
+          client = "boiii";
+          port = 27017;
+          gameMode = "zm";
+          serverName = "^5Sauron ^7Zombies";
+          description = "NixOS powered BO3 Zombies server";
+          maxClients = 4;
+          lobbyMinPlayers = 1;
+          rconPassword = "banana";
+          modId = "2661297173";
+          openFirewall = false;
+          mapRotation = [
+            { gametype = "zclassic"; map = "zm_town"; }
+            { gametype = "zclassic"; map = "zm_tomb"; }
+            { gametype = "zclassic"; map = "zm_factory"; }
+            { gametype = "zclassic"; map = "zm_theater"; }
+            { gametype = "zclassic"; map = "zm_cosmodrome"; }
+            { gametype = "zclassic"; map = "zm_temple"; }
+            { gametype = "zclassic"; map = "zm_moon"; }
+            { gametype = "zclassic"; map = "zm_castle"; }
+          ];
+        };
+
+        age.secrets.ups_password = {
+          file = ../../secrets/ups-admin.age;
+          mode = "640";
+        };
+
+        power.ups = {
+          enable = true;
+          mode = "standalone";
+          ups."UPS-1" = {
+            description = "Eaton ECO 650 5E";
+            driver = "usbhid-ups";
+            port = "auto";
+          };
+          users."nut-admin" = {
+            passwordFile = config.age.secrets.ups_password.path;
+            upsmon = "primary";
+          };
+          upsmon.monitor."UPS-1" = {
+            system = "UPS-1@localhost";
+            powerValue = 1;
+            user = "nut-admin";
+            passwordFile = config.age.secrets.ups_password.path;
+            type = "primary";
+          };
+          upsmon.settings = {
+            NOTIFYMSG = [
+              [ "ONLINE" ''"UPS %s: On line power."'' ]
+              [ "ONBATT" ''"UPS %s: On battery."'' ]
+              [ "LOWBATT" ''"UPS %s: Battery is low."'' ]
+              [ "REPLBATT" ''"UPS %s: Battery needs to be replaced."'' ]
+              [ "FSD" ''"UPS %s: Forced shutdown in progress."'' ]
+              [ "SHUTDOWN" ''"Auto logout and shutdown proceeding."'' ]
+              [ "COMMOK" ''"UPS %s: Communications (re-)established."'' ]
+              [ "COMMBAD" ''"UPS %s: Communications lost."'' ]
+              [ "NOCOMM" ''"UPS %s: Not available."'' ]
+              [ "NOPARENT" ''"upsmon parent dead, shutdown impossible."'' ]
+            ];
+            NOTIFYFLAG = [
+              [ "ONLINE" "SYSLOG+WALL" ]
+              [ "ONBATT" "SYSLOG+WALL" ]
+              [ "LOWBATT" "SYSLOG+WALL" ]
+              [ "REPLBATT" "SYSLOG+WALL" ]
+              [ "FSD" "SYSLOG+WALL" ]
+              [ "SHUTDOWN" "SYSLOG+WALL" ]
+              [ "COMMOK" "SYSLOG+WALL" ]
+              [ "COMMBAD" "SYSLOG+WALL" ]
+              [ "NOCOMM" "SYSLOG+WALL" ]
+              [ "NOPARENT" "SYSLOG+WALL" ]
+            ];
+            RBWARNTIME = 216000;
+            NOCOMMWARNTIME = 300;
+            FINALDELAY = 0;
+          };
+        };
+      })
     ];
-  };
-  networking.defaultGateway6 = {
-    address = "fe80::6f4:1cff:fe18:162";
-    interface = "enp1s0";
-  };
-
-  boot.loader.grub.enable = true; # Enables wireless support via wpa_suppli
-  boot.loader.grub.efiInstallAsRemovable = true; # Easiest to use and most
-  boot.loader.grub.device = "nodev";
-  time.timeZone = "Europe/Rome";
-  i18n.defaultLocale = "en_US.UTF-8";
-  networking.hostId = "a854bd58";
-
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [ vpl-gpu-rt ];
-  };
-
-  services.zfs.autoScrub.enable = true;
-  services.jellyfin = {
-    enable = true;
-    dataDir = "/media";
-  };
-  services.transmission = {
-    enable = false;
-    settings = {
-      download-dir = "/media/torrent/downloads";
-      incomplete-dir-enabled = false;
-      rpc-bind-address = "127.0.0.1";
-      downloadDirPermissions = "770";
-      rpc-whitelist = "192.168.1.* 127.0.0.1";
-      rpc-whitelist-enabled = false;
-      rpc-host-whitelist-enabled = false;
-    };
-    openRPCPort = true;
-    openFirewall = true;
-  };
-
-  users.groups.${mediaGroup} = { };
-
-  services.qbittorrent = {
-    enable = true;
-    group = mediaGroup;
-    profileDir = "/var/lib/qbittorrent";
-    webuiPort = 8088;
-    serverConfig = {
-      Preferences = {
-        "Downloads\\SavePath" = "${torrentsDir}/download";
-        "Downloads\\TempPath" = "${torrentsDir}/.incomplete";
-        "Downloads\\TempPathEnabled" = true;
-      };
-    };
-  };
-
-  systemd.tmpfiles.rules = [
-    "d /media 0755 root root - -"
-    "d ${usenetBase} 2775 root media - -"
-    "d ${usenetBase}/incomplete 2775 sabnzbd media - -"
-    "d ${usenetBase}/complete 2775 sabnzbd media - -"
-    # Recursively fix permissions on completed downloads so Sonarr/Radarr can access them
-    "Z ${usenetBase}/complete 2775 sabnzbd media - -"
-
-    # Jellyfin TV library (Sonarr writes, Jellyfin reads)
-    "d /media/jelly 2775 root media - -"
-    "d /media/jelly/shows 2775 jellyfin media - -"
-    "d /media/jelly/movies 2775 jellyfin media - -"
-  ];
-
-  services.sabnzbd = {
-    enable = true;
-    openFirewall = false;
-    group = mediaGroup;
-  };
-
-  # Set proper umask for sabnzbd so files are readable by media group
-  systemd.services.sabnzbd.serviceConfig.UMask = "0002";
-
-  services.prowlarr = {
-    enable = true;
-    openFirewall = false;
-  };
-
-  services.sonarr = {
-    enable = true;
-    openFirewall = false;
-    group = mediaGroup;
-  };
-
-  services.radarr = {
-    enable = true;
-    openFirewall = false;
-    group = mediaGroup;
-  };
-
-  services.jellyseerr = {
-    enable = true;
-    openFirewall = false;
-  };
-
-  users.users.root.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK"
-  ];
-
-  age.secrets.netdata_token = {
-    file = ../../secrets/netdata_token.age;
-    mode = "640";
-  };
-  services.netdata = {
-    enable = true;
-    package = pkgs.netdata.override { withCloudUi = true; };
-    claimTokenFile = config.age.secrets.netdata_token.path;
-  };
-
-  environment.systemPackages = with pkgs; [
-    vim
-    mg
-    wget
-    borgbackup
-    git
-  ];
-
-  services.openssh.enable = true;
-
-  networking.firewall.allowedTCPPorts = [
-    22
-    80
-    443
-    1411
-    8096
-    9091
-    27017
-    19999
-  ];
-  networking.firewall.allowedUDPPorts = [ 27017 ];
-  networking.firewall.enable = true;
-
-  # Black Ops 3 Dedicated Server
-  # Available Zombies Maps:
-  #   zm_zod        - Shadows of Evil
-  #   zm_factory    - The Giant
-  #   cp_doa_bo3    - Dead Ops Arcade 2
-  #   zm_castle     - Der Eisendrache
-  #   zm_island     - Zetsubou No Shima
-  #   zm_stalingrad - Gorod Krovi
-  #   zm_genesis    - Revelations
-  #   zm_prototype  - Nacht der Untoten
-  #   zm_asylum     - Verruckt
-  #   zm_sumpf      - Shi No Numa
-  #   zm_theater    - Kino der Toten
-  #   zm_temple     - Shangri-La
-  #   zm_cosmodrome - Ascension
-  #   zm_moon       - Moon
-  #   zm_tomb       - Origins
-  services.bo3-server = {
-    enable = true;
-    steamUser = "olympiczeus";
-    client = "boiii";
-    port = 27017;
-    gameMode = "zm";
-    serverName = "^5Sauron ^7Zombies";
-    description = "NixOS powered BO3 Zombies server";
-    maxClients = 4;
-    lobbyMinPlayers = 1;
-    rconPassword = "banana";
-    # modId = "1638465081"; # Kermit Mod
-    modId = "2661297173"; # Gubblegums enanched
-    openFirewall = false;
-    mapRotation = [
-      # { gametype = "zclassic"; map = "zm_prison"; }     # Mob of the Dead (custom)
-      {
-        gametype = "zclassic";
-        map = "zm_town";
-      } # Town Reimagined (custom)
-      {
-        gametype = "zclassic";
-        map = "zm_tomb";
-      } # Origins
-      {
-        gametype = "zclassic";
-        map = "zm_factory";
-      } # The Giant
-      {
-        gametype = "zclassic";
-        map = "zm_theater";
-      } # Kino der Toten
-      {
-        gametype = "zclassic";
-        map = "zm_cosmodrome";
-      } # Ascension
-      {
-        gametype = "zclassic";
-        map = "zm_temple";
-      } # Shangri-La
-      {
-        gametype = "zclassic";
-        map = "zm_moon";
-      } # Moon
-      {
-        gametype = "zclassic";
-        map = "zm_castle";
-      } # Der Eisendrache
-    ];
-    # mapRotation = [
-    #   {
-    #     gametype = "tdm";
-    #     map = "mp_biodome";
-    #   }
-    #   {
-    #     gametype = "dom";
-    #     map = "mp_sector";
-    #   }
-    #   {
-    #     gametype = "tdm";
-    #     map = "mp_spire";
-    #   }
-    #   {
-    #     gametype = "dom";
-    #     map = "mp_apartments";
-    #   }
-    # ];
-  };
-
-  age.secrets.ups_password = {
-    file = ../../secrets/ups-admin.age;
-    mode = "640";
-  };
-
-  power.ups = {
-    enable = true;
-    mode = "standalone";
-    ups."UPS-1" = {
-      description = "Eaton ECO 650 5E";
-      driver = "usbhid-ups";
-      port = "auto";
-    };
-    users."nut-admin" = {
-      passwordFile = config.age.secrets.ups_password.path;
-      upsmon = "primary";
-    };
-    upsmon.monitor."UPS-1" = {
-      system = "UPS-1@localhost";
-      powerValue = 1;
-      user = "nut-admin";
-      passwordFile = config.age.secrets.ups_password.path;
-      type = "primary";
-    };
-    upsmon.settings = {
-      # This configuration file declares how upsmon is to handle
-      # NOTIFY events.
-
-      # POWERDOWNFLAG and SHUTDOWNCMD is provided by NixOS default
-      # values
-
-      # values provided by ConfigExamples 3.0 book
-      NOTIFYMSG = [
-        [
-          "ONLINE"
-          ''"UPS %s: On line power."''
-        ]
-        [
-          "ONBATT"
-          ''"UPS %s: On battery."''
-        ]
-        [
-          "LOWBATT"
-          ''"UPS %s: Battery is low."''
-        ]
-        [
-          "REPLBATT"
-          ''"UPS %s: Battery needs to be replaced."''
-        ]
-        [
-          "FSD"
-          ''"UPS %s: Forced shutdown in progress."''
-        ]
-        [
-          "SHUTDOWN"
-          ''"Auto logout and shutdown proceeding."''
-        ]
-        [
-          "COMMOK"
-          ''"UPS %s: Communications (re-)established."''
-        ]
-        [
-          "COMMBAD"
-          ''"UPS %s: Communications lost."''
-        ]
-        [
-          "NOCOMM"
-          ''"UPS %s: Not available."''
-        ]
-        [
-          "NOPARENT"
-          ''"upsmon parent dead, shutdown impossible."''
-        ]
-      ];
-      NOTIFYFLAG = [
-        [
-          "ONLINE"
-          "SYSLOG+WALL"
-        ]
-        [
-          "ONBATT"
-          "SYSLOG+WALL"
-        ]
-        [
-          "LOWBATT"
-          "SYSLOG+WALL"
-        ]
-        [
-          "REPLBATT"
-          "SYSLOG+WALL"
-        ]
-        [
-          "FSD"
-          "SYSLOG+WALL"
-        ]
-        [
-          "SHUTDOWN"
-          "SYSLOG+WALL"
-        ]
-        [
-          "COMMOK"
-          "SYSLOG+WALL"
-        ]
-        [
-          "COMMBAD"
-          "SYSLOG+WALL"
-        ]
-        [
-          "NOCOMM"
-          "SYSLOG+WALL"
-        ]
-        [
-          "NOPARENT"
-          "SYSLOG+WALL"
-        ]
-      ];
-      # every RBWARNTIME seconds, upsmon will generate a replace
-      # battery NOTIFY event
-      RBWARNTIME = 216000;
-      # every NOCOMMWARNTIME seconds, upsmon will generate a UPS
-      # unreachable NOTIFY event
-      NOCOMMWARNTIME = 300;
-      # after sending SHUTDOWN NOTIFY event to warn users, upsmon
-      # waits FINALDELAY seconds long before executing SHUTDOWNCMD
-      # Some UPS's don't give much warning for low battery and will
-      # require a value of 0 here for aq safe shutdown.
-      FINALDELAY = 0;
-    };
   };
 }
