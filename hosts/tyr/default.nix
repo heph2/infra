@@ -12,6 +12,7 @@
     ./vikunja.nix
     ./grafana.nix
     ./vaultwarden.nix
+    ./miniflux.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
