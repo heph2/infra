@@ -1,97 +1,35 @@
 let
-  heph = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO5082w5a8Dljon2Qs9N3eGd5+Tg52zzawlZGeHw8D12";
-  freya = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK";
-  zima = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKmSgm97MHi+1dwh79BpyePwiXAcD2R+ceUKbBn6pVRv";
-  sauron = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKECQ6GB+aeG76Sx8Ht4JJH0JmRrMNsf/uoA42eDZFK0";
-  tyr = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINvI0NxnjLWyG+oxLInkBvaKWqV6BWeTPLH5YeaCDYLG";
-  hermes = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJODYFqjgPr4z6UmG0k/jx7LJ/WcJaysVmc8FgQyuJSS";
-  users = [
-    freya
-    heph
-  ];
-in
-{
-  "wg-key-freya.age".publicKeys = [
-    freya
-    heph
-  ];
-  "imap-mbauce-mail.age".publicKeys = [
-    heph
-    freya
-  ];
-  "mailgun-smtp-user.age".publicKeys = [
-    hermes
-    freya
-  ];
-  "actual-oidc-client-secret.age".publicKeys = [
-    heph
-    freya
-    zima
-  ];
-  "cloudflare_api_token.age".publicKeys = [
-    heph
-    freya
-    zima
-    sauron
-    tyr
-    hermes
-  ];
-  "acme-api-token-cloudflare.age".publicKeys = [
-    hermes
-    freya
-  ];
-  "paperless-oidc-client-secret.age".publicKeys = [
-    heph
-    freya
-    zima
-    sauron
-  ];
-  "homebox-oidc-client-secret.age".publicKeys = [
-    heph
-    freya
-    zima
-    sauron
-    tyr
-  ];
-  "vikunja-oidc-client-secret.age".publicKeys = [
-    heph
-    freya
-    tyr
-  ];
-  "pocket-id-encryption-key.age".publicKeys = [
-    heph
-    freya
-    sauron
-  ];
-  "netdata_token.age".publicKeys = [
-    sauron
-    zima
-    tyr
-  ];
+  heph =
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO5082w5a8Dljon2Qs9N3eGd5+Tg52zzawlZGeHw8D12";
+  freya =
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILCmIz2Selg5eJ77lvpJHgDJiRIOZbucMjDK5zrhTEWK";
+  zima =
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKmSgm97MHi+1dwh79BpyePwiXAcD2R+ceUKbBn6pVRv";
+  sauron =
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKECQ6GB+aeG76Sx8Ht4JJH0JmRrMNsf/uoA42eDZFK0";
+  tyr =
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINvI0NxnjLWyG+oxLInkBvaKWqV6BWeTPLH5YeaCDYLG";
+  hermes =
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJODYFqjgPr4z6UmG0k/jx7LJ/WcJaysVmc8FgQyuJSS";
+  users = [ freya heph ];
+in {
+  "wg-key-freya.age".publicKeys = [ freya heph ];
+  "imap-mbauce-mail.age".publicKeys = [ heph freya ];
+  "mailgun-smtp-user.age".publicKeys = [ hermes freya ];
+  "actual-oidc-client-secret.age".publicKeys = [ heph freya zima ];
+  "cloudflare_api_token.age".publicKeys = [ heph freya zima sauron tyr hermes ];
+  "acme-api-token-cloudflare.age".publicKeys = [ hermes freya ];
+  "paperless-oidc-client-secret.age".publicKeys = [ heph freya zima sauron ];
+  "homebox-oidc-client-secret.age".publicKeys = [ heph freya zima sauron tyr ];
+  "vikunja-oidc-client-secret.age".publicKeys = [ heph freya tyr ];
+  "pocket-id-encryption-key.age".publicKeys = [ heph freya sauron ];
+  "netdata_token.age".publicKeys = [ sauron zima tyr ];
   "ups-admin.age".publicKeys = [ sauron ];
-  "grafana-oidc-client-secret.age".publicKeys = [
-    heph
-    zima
-    freya
-    tyr
-    sauron
-  ];
-  "shortcut-api-token.age".publicKeys = [
-    heph
-    freya
-  ];
-  "github-token.age".publicKeys = [
-    heph
-    freya
-  ];
-  "hermes-agent-env.age".publicKeys = [
-    heph
-    freya
-    hermes
-  ];
-  "vaultwarden-oidc-client-secret.age".publicKeys = [
-    heph
-    freya
-    tyr
-  ];
+  "grafana-oidc-client-secret.age".publicKeys = [ heph zima freya tyr sauron ];
+  "shortcut-api-token.age".publicKeys = [ heph freya ];
+  "github-token.age".publicKeys = [ heph freya ];
+  "hermes-agent-env.age".publicKeys = [ heph freya hermes ];
+  "vaultwarden-oidc-client-secret.age".publicKeys = [ heph freya tyr ];
+  "miniflux-db.password.age".publicKeys = [ heph freya tyr ];
+  "miniflux-oidc-client-secret.age".publicKeys = [ heph freya tyr ];
 }
