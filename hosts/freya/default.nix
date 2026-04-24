@@ -606,6 +606,10 @@ in
 
   programs.gamemode.enable = true;
   programs.gamescope.enable = true;
+  services.open-webui = {
+    enable = true;
+    port = 11111;
+  };
 
   environment.systemPackages = with pkgs; [
     inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
@@ -613,6 +617,7 @@ in
     inputs.nix-ai-tools.packages.${pkgs.system}.opencode
     steamcmd
     uxplay
+    llama-cpp-rocm
     libinput
     libwacom
     vim
