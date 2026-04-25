@@ -220,6 +220,9 @@ in
       "timballo" = {
         id = "";
       };
+      "fenrir" = {
+        id = "GBWF7RI-6NQT6HM-P4W32LH-ARGB7Z6-44FNVUZ-57B4JBK-N5MT2UU-GLPS6AK";
+      };
     };
     folders = {
       "Age" = {
@@ -227,6 +230,7 @@ in
         devices = [
           "aron"
           "timballo"
+          "fenrir"
         ];
       };
       "Emacs" = {
@@ -234,6 +238,7 @@ in
         devices = [
           "aron"
           "timballo"
+          "fenrir"
         ];
       };
       "Gnupg" = {
@@ -241,6 +246,7 @@ in
         devices = [
           "aron"
           "timballo"
+          "fenrir"
         ];
       };
       "Ledger" = {
@@ -248,6 +254,7 @@ in
         devices = [
           "aron"
           "timballo"
+          "fenrir"
         ];
       };
     };
