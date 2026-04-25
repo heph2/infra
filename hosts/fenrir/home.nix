@@ -7,8 +7,9 @@
   inputs,
   ...
 }:
-
+with lib;
 let
+  home = config.home.homeDirectory;
   noctalia =
     cmd:
     [
@@ -586,4 +587,58 @@ in
   home.file.".config/aliases".text = ''
     root: shopping@mbauce.com
   '';
+
+  services.syncthing = {
+    enable = true;
+    settings = {
+      devices = {
+        "freya" = {
+          id = "7JOHCPW-KSI55U3-LA357ZI-R7DH2OT-OMRP7Y6-UZ3WVMX-BTU4XB2-5Q27XQ2";
+        };
+        "aron" = {
+          id = "AJ5RD3I-H6AKBMI-J7MP7LC-METYTUB-YEQNZTQ-FJUUTPA-REJTL7O-BKPH5QD";
+        };
+        "timballo" = {
+          id = "";
+        };
+        "fenrir" = {
+          id = "GBWF7RI-6NQT6HM-P4W32LH-ARGB7Z6-44FNVUZ-57B4JBK-N5MT2UU-GLPS6AK";
+        };
+      };
+      folders = {
+        "Age" = {
+          path = "${home}/.age";
+          devices = [
+            "freya"
+            "aron"
+            "timballo"
+          ];
+        };
+        "Emacs" = {
+          path = "${home}/.emacs.d";
+          devices = [
+            "freya"
+            "aron"
+            "timballo"
+          ];
+        };
+        "Gnupg" = {
+          path = "${home}/.gnupg";
+          devices = [
+            "freya"
+            "aron"
+            "timballo"
+          ];
+        };
+        "Ledger" = {
+          path = "${home}/Documents/finance";
+          devices = [
+            "freya"
+            "aron"
+            "timballo"
+          ];
+        };
+      };
+    };
+  };
 }
