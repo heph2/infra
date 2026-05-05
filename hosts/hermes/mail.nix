@@ -1,4 +1,10 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   age.secrets.cloudflare = {
     file = ../../secrets/acme-api-token-cloudflare.age;
     mode = "640";
@@ -12,7 +18,7 @@
     enable = true;
     borgbackup = {
       enable = true;
-      repoLocation = "ssh://root@100.126.120.86//data/backup/hermes";
+      repoLocation = "ssh://root@100.126.120.86//bck/hermes";
       cmdPreexec = ''export BORG_RSH="ssh -o StrictHostKeyChecking=no"'';
     };
     fqdn = "mail.mbauce.com";
@@ -44,6 +50,7 @@
           "kagi-2@mbauce.com"
           "lang@mbauce.com" # # Languages, Anki
           "anime@mbauce.com"
+          "restock@mbauce.com"
         ];
         sieveScript = ''
           require ["fileinto", "mailbox"];
@@ -75,12 +82,16 @@
     certs.${config.mailserver.fqdn} = {
       dnsProvider = "cloudflare";
       environmentFile = config.age.secrets.cloudflare.path;
-      reloadServices = [ "dovecot2" "postfix" ];
+      reloadServices = [
+        "dovecot2"
+        "postfix"
+      ];
     };
   };
 
-  systemd.services."acme-mail.mbauce.com".serviceConfig.EnvironmentFile =
-    [ config.age.secrets.cloudflare.path ];
+  systemd.services."acme-mail.mbauce.com".serviceConfig.EnvironmentFile = [
+    config.age.secrets.cloudflare.path
+  ];
 
   services.dovecot2 = {
     mailPlugins.globally.enable = [ "old_stats" ];
