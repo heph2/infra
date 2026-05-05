@@ -118,7 +118,7 @@ in
         environment.BORG_RSH = "ssh -o 'StrictHostKeyChecking=no' -i /home/heph/.ssh/sekai_ed";
         environment.BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
         extraCreateArgs = "--verbose --stats --checkpoint-interval 600";
-        repo = "ssh://sauron//data/backup/${name}";
+        repo = "ssh://sauron//bck/${name}";
         compression = "zstd,1";
         startAt = "hourly";
         persistentTimer = true;
@@ -613,7 +613,8 @@ in
 
   environment.systemPackages = with pkgs; [
     inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
-    # inputs.nix-ai-tools.packages.${pkgs.system}.codex
+    inputs.nix-ai-tools.packages.${pkgs.system}.codex
+    inputs.nix-ai-tools.packages.${pkgs.system}.pi
     inputs.nix-ai-tools.packages.${pkgs.system}.opencode
     steamcmd
     uxplay
