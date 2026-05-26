@@ -188,6 +188,7 @@ in
 
   environment.systemPackages = with pkgs; [
     inputs.nix-ai-tools.packages.${pkgs.system}.opencode
+    inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
     vim
     wget
     curl
