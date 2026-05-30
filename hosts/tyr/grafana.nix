@@ -5,11 +5,14 @@ let
 in {
   services.grafana = {
     enable = true;
-    domain = domain;
-    port = 3000;
-    addr = "127.0.0.1";
     settings = {
-      server = { root_url = "https://${domain}"; };
+      server = {
+        root_url = "https://${domain}";
+        domain = domain;
+        http_port = 3000;
+        http_addr = "127.0.0.1";
+      };
+      security.secret_key = "SW2YcwTIb9zpOOhoPsMm";
     };
   };
 
