@@ -69,6 +69,7 @@ in
       python313Packages.python-lsp-server
       obsidian
       sdrpp
+      libnotify
       gqrx
       forge-mtg
       vscodium
@@ -179,16 +180,16 @@ in
         user = "vellutata";
         identityFile = "/home/heph/.ssh/asn_id";
       };
-      "pasta.senza.cloud" = {
+      "risotto.senza.cloud" = {
         port = 22;
-        hostname = "pasta.senza.cloud";
-        user = "pasta";
+        hostname = "risotto.senza.cloud";
+        user = "risotto";
         identityFile = "/home/heph/.ssh/asn_id";
       };
-      pasta = {
+      risotto = {
         port = 22;
-        hostname = "103.230.140.116";
-        user = "pasta";
+        hostname = "5.231.80.72";
+        user = "risotto";
         identityFile = "/home/heph/.ssh/asn_id";
       };
       hermes = {
