@@ -12,20 +12,24 @@
     ./vikunja.nix
     ./grafana.nix
     ./vaultwarden.nix
-    ./miniflux.nix
+    # ./miniflux.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  services.tailscale = { enable = true; };
+  services.tailscale = {
+    enable = true;
+  };
 
   # IPV6 Configuration
   networking.interfaces.enp0s31f6 = {
-    ipv6.addresses = [{
-      address = "2a07:7e81:85f5::babe";
-      prefixLength = 64;
-    }];
+    ipv6.addresses = [
+      {
+        address = "2a07:7e81:85f5::babe";
+        prefixLength = 64;
+      }
+    ];
   };
   networking.defaultGateway6 = {
     address = "fe80::6f4:1cff:fe18:162";
@@ -46,7 +50,10 @@
     mongodbPackage = pkgs.mongodb;
   };
 
-  environment.systemPackages = with pkgs; [ vim wget ];
+  environment.systemPackages = with pkgs; [
+    vim
+    wget
+  ];
 
   services.openssh.enable = true;
   networking.firewall.allowedTCPPorts = [
@@ -80,7 +87,13 @@
   services.prometheus.exporters.node = {
     enable = true;
     port = 9000;
-    enabledCollectors = [ "ethtool" "softirqs" "systemd" "tcpstat" "wifi" ];
+    enabledCollectors = [
+      "ethtool"
+      "softirqs"
+      "systemd"
+      "tcpstat"
+      "wifi"
+    ];
   };
 
   services.prometheus = {
@@ -89,48 +102,43 @@
     scrapeConfigs = [
       {
         job_name = "node";
-        static_configs = [{
-          targets = [
-            "localhost:${
-              toString config.services.prometheus.exporters.node.port
-            }"
-          ];
-        }];
+        static_configs = [
+          {
+            targets = [
+              "localhost:${toString config.services.prometheus.exporters.node.port}"
+            ];
+          }
+        ];
       }
       {
         job_name = "dovecot";
-        static_configs = [{
-          targets = [
-            "hermes:${
-              toString config.services.prometheus.exporters.dovecot.port
-            }"
-          ];
-        }];
+        static_configs = [
+          {
+            targets = [
+              "hermes:${toString config.services.prometheus.exporters.dovecot.port}"
+            ];
+          }
+        ];
       }
       {
         job_name = "rspamd";
-        static_configs = [{
-          targets = [
-            "hermes:${
-              toString config.services.prometheus.exporters.rspamd.port
-            }"
-          ];
-        }];
+        static_configs = [ { targets = [ "hermes:11334" ]; } ];
+        metrics_path = "/metrics";
       }
       {
         job_name = "postfix";
-        static_configs = [{
-          targets = [
-            "hermes:${
-              toString config.services.prometheus.exporters.postfix.port
-            }"
-          ];
-        }];
+        static_configs = [
+          {
+            targets = [
+              "hermes:${toString config.services.prometheus.exporters.postfix.port}"
+            ];
+          }
+        ];
       }
       {
         job_name = "esphome";
         scrape_interval = "5s";
-        static_configs = [{ targets = [ "192.168.0.117:80" ]; }];
+        static_configs = [ { targets = [ "192.168.0.117:80" ]; } ];
       }
     ];
   };
