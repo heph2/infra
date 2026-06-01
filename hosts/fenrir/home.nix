@@ -91,6 +91,7 @@ in
 
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
     matchBlocks = {
       freya = {
         port = 22;
@@ -192,7 +193,30 @@ in
       {
         name = "nix";
         auto-format = true;
-        formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+        formatter.command = lib.getExe pkgs.nixfmt;
+      }
+      {
+        name = "gmpl";
+        scope = "source.gmpl";
+        file-types = [
+          "mod"
+          "gmpl"
+        ];
+        comment-tokens = [ "#" ];
+        block-comment-tokens = {
+          start = "/*";
+          end = "*/";
+        };
+        indent = {
+          tab-width = 4;
+          unit = "    ";
+        };
+      }
+    ];
+    languages.grammar = [
+      {
+        name = "gmpl";
+        source.path = inputs.tree-sitter-gmpl;
       }
     ];
     themes = {
@@ -202,6 +226,12 @@ in
       };
     };
   };
+
+  xdg.configFile."helix/runtime/grammars/gmpl.so".source =
+    "${inputs.tree-sitter-gmpl.packages.aarch64-linux.default}/parser";
+
+  xdg.configFile."helix/runtime/queries/gmpl".source =
+    "${inputs.tree-sitter-gmpl.packages.aarch64-linux.default}/queries";
 
   programs.fzf = {
     enable = true;
@@ -456,8 +486,8 @@ in
         };
       };
     };
-    userEmail = "srht@mrkeebs.eu";
-    userName = "heph";
+    settings.user.email = "srht@mrkeebs.eu";
+    settings.user.name = "heph";
   };
 
   programs.firefox = {

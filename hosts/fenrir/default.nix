@@ -14,7 +14,7 @@ in
   imports = [ ./hardware-configuration.nix ];
 
   hardware.bluetooth.enable = true;
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   hardware.asahi.extractPeripheralFirmware = true;
 
   services.power-profiles-daemon.enable = true;
@@ -57,13 +57,15 @@ in
 
   services.resolved = {
     enable = true;
-    dnssec = "true";
-    domains = [ "~." ];
-    fallbackDns = [
-      "1.1.1.1#one.one.one.one"
-      "1.0.0.1#one.one.one.one"
-    ];
-    dnsovertls = "true";
+    settings.Resolve = {
+      DNSSEC = "true";
+      Domains = [ "~." ];
+      FallbackDNS = [
+        "1.1.1.1#one.one.one.one"
+        "1.0.0.1#one.one.one.one"
+      ];
+      DNSOverTLS = "true";
+    };
   };
   networking.nameservers = [
     "1.1.1.1#one.one.one.one"
@@ -153,7 +155,7 @@ in
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.greetd}/bin/agreety --cmd niri";
+        command = "${pkgs.greetd}/bin/agreety --cmd niri";
       };
     };
   };
@@ -189,13 +191,14 @@ in
   environment.systemPackages = with pkgs; [
     inputs.nix-ai-tools.packages.${pkgs.system}.opencode
     inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
+    inputs.nix-ai-tools.packages.${pkgs.system}.codex
     vim
     wget
     curl
     git
     fd
     nh
-    nixfmt-rfc-style
+    nixfmt
     lm_sensors
     pciutils
     usbutils
