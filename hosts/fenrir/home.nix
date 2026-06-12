@@ -253,6 +253,7 @@ in
   home.packages = with pkgs; [
     mpv
     thunar
+    tree
     w3m
     kdePackages.okular
     hledger
@@ -559,6 +560,12 @@ in
             "freya"
             "aron"
             "timballo"
+          ];
+        };
+        "Ricop" = {
+          path = "${home}/code/ricop";
+          devices = [
+            "freya"
           ];
         };
       };
