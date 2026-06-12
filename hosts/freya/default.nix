@@ -292,6 +292,12 @@ in
           "fenrir"
         ];
       };
+      "Ricop" = {
+        path = "${home}/Documents/ricop";
+        devices = [
+          "fenrir"
+        ];
+      };
     };
   };
 
