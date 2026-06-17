@@ -10,6 +10,10 @@ let
       host = "budget.pochi.casa";
       upstream = "zima.pochi.casa:5006";
     }
+    {
+      host = "trippiamo.mbauce.com";
+      upstream = "tyr.pochi.casa:6767";
+    }
   ];
 
   caddyFile = pkgs.writeText "Caddyfile" (
