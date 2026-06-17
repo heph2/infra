@@ -21,6 +21,16 @@
   services.tailscale = {
     enable = true;
   };
+  virtualisation.docker = {
+    enable = true;
+    # public DNS for *.pochi.casa is IPv6-only; docker must forward published
+    # ports over v6 (DNAT in PREROUTING) or the SYN hits INPUT and is dropped.
+    daemon.settings = {
+      ipv6 = true;
+      ip6tables = true;
+      fixed-cidr-v6 = "fd00:dead:beef::/48";
+    };
+  };
 
   # IPV6 Configuration
   networking.interfaces.enp0s31f6 = {
@@ -53,11 +63,14 @@
   environment.systemPackages = with pkgs; [
     vim
     wget
+    git
+    docker-compose
   ];
 
   services.openssh.enable = true;
   networking.firewall.allowedTCPPorts = [
     22
+    6767 # Trippiamo Webapp
     8443
     6443 # k3s: required so that pods can reach the API server (running on port 6443 by default)
     6444
