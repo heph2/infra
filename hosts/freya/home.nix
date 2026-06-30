@@ -55,6 +55,7 @@ in
   home.packages =
     with pkgs;
     [
+      bitwig-studio
       wootility
       mpv
       dwarf-fortress
