@@ -161,6 +161,9 @@
     role = "server";
     token = "uasdfnl8yho";
     clusterInit = true;
+    extraFlags = [
+      "--tls-san pumba.pochi.casa"
+    ];
   };
 
   networking.firewall.enable = true;
