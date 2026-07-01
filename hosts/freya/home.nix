@@ -156,7 +156,9 @@ in
 
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
     matchBlocks = {
+      "*".addKeysToAgent = "yes";
       zima = {
         port = 22;
         hostname = "192.168.0.105";
@@ -317,6 +319,7 @@ in
 
   programs.yazi = {
     enable = true;
+    shellWrapperName = "yy";
   };
 
   programs.zellij = {
@@ -379,7 +382,7 @@ in
       {
         name = "nix";
         auto-format = true;
-        formatter.command = lib.getExe pkgs.nixfmt-rfc-style;
+        formatter.command = lib.getExe pkgs.nixfmt;
       }
     ];
     themes = {
@@ -450,7 +453,7 @@ in
       id = 0;
       name = "heph";
       isDefault = true;
-      extensions.packages = with firefox-addons.packages.${pkgs.system}; [
+      extensions.packages = with firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
         ublock-origin
         bitwarden
         user-agent-string-switcher
@@ -547,7 +550,10 @@ in
 
   programs.git = {
     enable = true;
+    signing.format = "openpgp";
     settings = {
+      user.email = "srht@mrkeebs.eu";
+      user.name = "heph";
       aliases = {
         gp = "add -p";
         co = "checkout";
@@ -566,9 +572,6 @@ in
         };
       };
     };
-    userEmail = "srht@mrkeebs.eu";
-    userName = "heph";
-
   };
 
   programs.mbsync.enable = true;

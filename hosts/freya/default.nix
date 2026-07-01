@@ -210,7 +210,7 @@ in
       user = "freya";
       password = "mypassword";
     };
-    devices = {
+    settings.devices = {
       "aron" = {
         id = "AJ5RD3I-H6AKBMI-J7MP7LC-METYTUB-YEQNZTQ-FJUUTPA-REJTL7O-BKPH5QD";
       };
@@ -224,7 +224,7 @@ in
         id = "GBWF7RI-6NQT6HM-P4W32LH-ARGB7Z6-44FNVUZ-57B4JBK-N5MT2UU-GLPS6AK";
       };
     };
-    folders = {
+    settings.folders = {
       "Age" = {
         path = "${home}/.age";
         devices = [
@@ -360,13 +360,15 @@ in
   };
   services.resolved = {
     enable = true;
-    dnssec = "true";
-    domains = [ "~." ];
-    fallbackDns = [
-      "1.1.1.1#one.one.one.one"
-      "1.0.0.1#one.one.one.one"
-    ];
-    dnsovertls = "true";
+    settings.Resolve = {
+      DNSSEC = "true";
+      Domains = [ "~." ];
+      FallbackDNS = [
+        "1.1.1.1#one.one.one.one"
+        "1.0.0.1#one.one.one.one"
+      ];
+      DNSOverTLS = "true";
+    };
   };
   networking.nameservers = [
     "1.1.1.1#one.one.one.one"
@@ -462,7 +464,6 @@ in
 
   fonts = {
     enableDefaultPackages = true;
-    enableDefaultFonts = true;
     packages = with pkgs; [
       nerd-fonts.hack
       fantasque-sans-mono
@@ -612,10 +613,10 @@ in
   };
 
   environment.systemPackages = with pkgs; [
-    inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
-    inputs.nix-ai-tools.packages.${pkgs.system}.codex
-    inputs.nix-ai-tools.packages.${pkgs.system}.pi
-    inputs.nix-ai-tools.packages.${pkgs.system}.opencode
+    inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
+    inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
+    inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.pi
+    inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.opencode
     steamcmd
     uxplay
     llama-cpp-rocm
@@ -626,7 +627,7 @@ in
     heroic
     stable.lutris
     protonup-qt
-    wineWowPackages.stable
+    wineWow64Packages.stable
     winetricks
     hidapi
     wget
@@ -642,7 +643,7 @@ in
     smartmontools
     nvme-cli
     nh
-    nixfmt-classic
+    nixfmt
     inetutils
     openssl
     virt-manager
@@ -663,7 +664,7 @@ in
     bspwm
     btrfs-assistant
     thunderbird
-    xorg.libXxf86vm
+    libxxf86vm
     glib
     openjdk21
     obsidian
@@ -706,6 +707,7 @@ in
     5353
   ];
   networking.firewall.enable = false;
+  services.fail2ban.enable = lib.mkForce false; # ponytail: no firewall on this workstation, fail2ban is a no-op
   networking.firewall = {
     extraCommands = ''
       iptables -I INPUT 1 -i docker0 -p tcp -d 172.17.0.1 -j ACCEPT

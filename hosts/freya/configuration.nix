@@ -9,7 +9,7 @@
           inputs.emacs-overlay.overlay
           (final: prev: {
             stable = import inputs.stable-nixpkgs {
-              system = prev.system;
+              system = prev.stdenv.hostPlatform.system;
               config.allowUnfree = true;
             };
           })
