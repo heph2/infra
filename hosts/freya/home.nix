@@ -55,6 +55,7 @@ in
   home.packages =
     with pkgs;
     [
+      (pkgs.writers.writePython3Bin "totp" { } (builtins.readFile ../../pkgs/totp.py))
       bitwig-studio
       wootility
       mpv
