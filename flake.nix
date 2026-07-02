@@ -54,6 +54,10 @@
       url = "github:Infinidoge/nix-minecraft";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     bo3-server = {
       url = "github:heph2/BlackOps3ServerInstaller";
       inputs.nixpkgs.follows = "nixpkgs";
