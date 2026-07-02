@@ -4,6 +4,7 @@
     modules = [
       ./default.nix
       inputs.agenix.nixosModules.default
+      inputs.disko.nixosModules.disko
       inputs.nix-minecraft.nixosModules.minecraft-servers
       inputs.bo3-server.nixosModules.default
       { nixpkgs.overlays = [ inputs.nix-minecraft.overlay ]; }

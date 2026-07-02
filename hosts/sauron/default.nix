@@ -26,12 +26,6 @@ in
     ./caddy.nix
     ./paperless.nix
     ./minecraft.nix
-    "${
-      builtins.fetchTarball {
-        url = "https://github.com/nix-community/disko/archive/master.tar.gz";
-        sha256 = "sha256:035nyq47jvhxf2d00frd983h5rn56zs84bk41fax88sjq2gb02iw";
-      }
-    }/module.nix"
   ];
 
   # Use the systemd-boot EFI boot loader.
