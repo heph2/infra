@@ -46,3 +46,7 @@ just deploy-darwin
 ```
 
 This will build the closure using `--build-host` and `--target-host` for avoiding cross-compiling issues.
+
+## Operations
+
+- [K3s internal ingress notes](docs/k3s-internal-ingress.md)
