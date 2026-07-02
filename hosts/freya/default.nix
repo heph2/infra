@@ -19,7 +19,6 @@ in
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./disk-config.nix
-    "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/master.tar.gz"}/module.nix"
   ];
 
   # specialisation."VFIO".configuration = {

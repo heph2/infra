@@ -17,6 +17,7 @@
       }
       ./default.nix
       inputs.agenix.nixosModules.default
+      inputs.disko.nixosModules.disko
       inputs.spicetify-nix.nixosModules.default
       inputs.trcc_gif.nixosModules.trcc-gif
       inputs.home-manager.nixosModules.home-manager
