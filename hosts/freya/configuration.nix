@@ -1,6 +1,6 @@
-{ pkgs, inputs, ... }:
+{ inputs, ... }:
 {
-  flake.nixosConfigurations.freya = inputs.nixpkgs.lib.nixosSystem {
+  infra.nixos.hosts.freya = {
     system = "x86_64-linux";
     specialArgs = { inherit inputs; };
     modules = [

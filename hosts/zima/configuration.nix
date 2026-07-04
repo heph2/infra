@@ -1,6 +1,6 @@
-{ pkgs, inputs, ... }:
+{ inputs, ... }:
 {
-  flake.nixosConfigurations.zima = inputs.nixpkgs.lib.nixosSystem {
+  infra.nixos.hosts.zima = {
     system = "x86_64-linux";
     modules = [
       ./default.nix

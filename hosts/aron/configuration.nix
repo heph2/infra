@@ -1,6 +1,6 @@
-{ pkgs, inputs, ... }:
+{ inputs, ... }:
 {
-  flake.darwinConfigurations.aron = inputs.darwin.lib.darwinSystem {
+  infra.darwin.hosts.aron = {
     system = "aarch64-darwin";
     specialArgs = { inherit inputs; };
     modules = [
