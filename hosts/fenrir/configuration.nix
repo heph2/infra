@@ -1,5 +1,6 @@
-{ pkgs, inputs, ... }: {
-  flake.nixosConfigurations.fenrir = inputs.nixpkgs.lib.nixosSystem {
+{ inputs, ... }:
+{
+  infra.nixos.hosts.fenrir = {
     system = "aarch64-linux";
     specialArgs = { inherit inputs; };
     modules = [
@@ -33,9 +34,12 @@
         };
       }
       { nixpkgs.config.allowUnfree = true; }
-      ({ modulesPath, ... }: {
-        imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
-      })
+      (
+        { modulesPath, ... }:
+        {
+          imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+        }
+      )
     ];
   };
 }

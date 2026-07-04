@@ -1,6 +1,6 @@
-{ pkgs, inputs, ... }:
+{ inputs, ... }:
 {
-  flake.nixosConfigurations.tyr = inputs.nixpkgs.lib.nixosSystem {
+  infra.nixos.hosts.tyr = {
     system = "x86_64-linux";
     specialArgs = { inherit inputs; };
     modules = [
