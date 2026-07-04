@@ -20,6 +20,7 @@
       inputs.disko.nixosModules.disko
       inputs.spicetify-nix.nixosModules.default
       inputs.trcc_gif.nixosModules.trcc-gif
+      inputs.handy.nixosModules.default
       inputs.home-manager.nixosModules.home-manager
       {
         home-manager.useGlobalPkgs = true;
@@ -27,6 +28,7 @@
         home-manager.users.heph = import ./home.nix;
         home-manager.backupFileExtension = "backup";
         home-manager.extraSpecialArgs = {
+          inherit inputs;
           agenix = inputs.agenix;
           stardew-modding = inputs.stardew-modding;
           firefox-addons = inputs.firefox-addons;

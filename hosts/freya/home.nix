@@ -5,16 +5,25 @@
   agenix,
   stardew-modding,
   firefox-addons,
+  inputs,
   ...
 }:
 
 let
   cfg = config.xsession.windowManager.i3;
+  piSkills = {
+    chrome-cdp = inputs.chrome-cdp-skill + "/skills/chrome-cdp";
+    grill-me = inputs.mattpocock-skills + "/skills/productivity/grill-me";
+    imagegen = inputs.openai-skills + "/skills/.system/imagegen";
+    ponytail = inputs.ponytail + "/skills/ponytail";
+    tdd = inputs.superpowers + "/skills/test-driven-development";
+  };
 in
 {
   imports = [
     agenix.homeManagerModules.default
     stardew-modding.homeManagerModules.default
+    inputs.pi.homeModules.default
     #    ../../modules/graphical/firefox/default.nix
   ];
 
@@ -34,6 +43,18 @@ in
       imap-mbauce = {
         file = ../../secrets/imap-mbauce-mail.age;
       };
+    };
+  };
+
+  programs.pi.coding-agent = {
+    enable = true;
+    skills = builtins.attrValues piSkills;
+    settings = {
+      hideThinkingBlock = true;
+      packages = [
+        "npm:pi-subagents@0.33.1"
+        "npm:@narumitw/pi-goal@0.9.2"
+      ];
     };
   };
 
@@ -298,6 +319,7 @@ in
     shell = "${pkgs.zsh}/bin/zsh";
     extraConfig = ''
       set-option -g mouse on
+      set -g extended-keys on
       bind-key h split-window -v
       bind-key v split-window -h
     '';

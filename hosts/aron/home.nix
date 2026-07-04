@@ -202,7 +202,10 @@ in
     tmux = {
       enable = true;
       shell = "/etc/profiles/per-user/marco/bin/fish";
-      extraConfig = "setw -g mouse on";
+      extraConfig = ''
+        setw -g mouse on
+        set -g extended-keys on
+      '';
     };
     fzf = {
       enable = true;

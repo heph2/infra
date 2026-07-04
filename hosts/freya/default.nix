@@ -399,6 +399,7 @@ in
     "wacom"
     "amdgpu"
     "usbmon"
+    "uinput"
   ];
   boot.kernelParams = [
     "radeon.si_support=0"
@@ -558,6 +559,7 @@ in
       "docker"
       "plugdev"
       "dialout"
+      "input"
     ];
   };
 
@@ -606,6 +608,7 @@ in
 
   programs.gamemode.enable = true;
   programs.gamescope.enable = true;
+  programs.handy.enable = true;
   services.open-webui = {
     enable = true;
     port = 11111;
@@ -614,7 +617,6 @@ in
   environment.systemPackages = with pkgs; [
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
-    inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.pi
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.opencode
     steamcmd
     uxplay
