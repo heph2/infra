@@ -52,8 +52,17 @@ in
     settings = {
       hideThinkingBlock = true;
       packages = [
+        # Agent orchestration and explicit goal tracking.
         "npm:pi-subagents@0.33.1"
         "npm:@narumitw/pi-goal@0.9.2"
+
+        # Safer operation: sandbox bash/read/write/edit behind .pi/sandbox.json.
+        "npm:pi-landstrip@0.16.22"
+
+        # Research and context tools: search/fetch/PDF/video plus skill UX polish.
+        "npm:pi-web-access@0.13.0"
+        "npm:pi-skillful@0.3.11"
+        "npm:@eko24ive/pi-ask@1.1.0"
       ];
     };
   };
