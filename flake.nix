@@ -67,6 +67,10 @@
       url = "github:obra/superpowers";
       flake = false;
     };
+    aws-best-practices-skill = {
+      url = "github:ferdinandobons/AWSBestPracticesSkill";
+      flake = false;
+    };
     hermes-agent = {
       url = "github:NousResearch/hermes-agent";
       inputs.nixpkgs.follows = "nixpkgs";

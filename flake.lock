@@ -58,6 +58,22 @@
         "type": "github"
       }
     },
+    "aws-best-practices-skill": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783328648,
+        "narHash": "sha256-nGsUgMbD/MRT1k3ucxjK5oFmm//jGnNxRdYpP+iSYdI=",
+        "owner": "ferdinandobons",
+        "repo": "AWSBestPracticesSkill",
+        "rev": "c56d636f10f450bbfce87c47733eafa2399c4b86",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ferdinandobons",
+        "repo": "AWSBestPracticesSkill",
+        "type": "github"
+      }
+    },
     "blobs": {
       "flake": false,
       "locked": {
@@ -1447,6 +1463,7 @@
         "agenix": "agenix",
         "apple-silicon": "apple-silicon",
         "avf": "avf",
+        "aws-best-practices-skill": "aws-best-practices-skill",
         "bo3-server": "bo3-server",
         "chrome-cdp-skill": "chrome-cdp-skill",
         "darwin": "darwin_2",

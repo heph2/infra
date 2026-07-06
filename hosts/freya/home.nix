@@ -17,6 +17,7 @@ let
     imagegen = inputs.openai-skills + "/skills/.system/imagegen";
     ponytail = inputs.ponytail + "/skills/ponytail";
     tdd = inputs.superpowers + "/skills/test-driven-development";
+    aws-best-practices = inputs.aws-best-practices-skill;
   };
 in
 {
@@ -199,7 +200,7 @@ in
         "npm:@narumitw/pi-goal@0.9.2"
 
         # Safer operation: sandbox bash/read/write/edit behind .pi/sandbox.json.
-        "npm:pi-sandbox@0.4.3"
+        "git:github.com/carderne/pi-sandbox@d14e15a76b4ae030b07bdd3e6f42732ed3636679"
 
         # Research and context tools: search/fetch/PDF/video plus skill UX polish.
         "npm:pi-web-access@0.13.0"
