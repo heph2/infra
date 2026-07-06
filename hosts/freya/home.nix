@@ -37,6 +37,56 @@ in
     XDG_DATA_DIRS = "$XDG_DATA_DIRS:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
   };
 
+  home.file.".pi/agent/sandbox.json".text = builtins.toJSON {
+    enabled = true;
+    allowBrowserProcess = true;
+    network = {
+      allowLocalBinding = true;
+      allowAllUnixSockets = true;
+      allowedDomains = [
+        "localhost"
+        "127.0.0.1"
+        "html.duckduckgo.com"
+        "*.npmjs.org"
+        "*.pypi.org"
+        "*.github.com"
+        "raw.githubusercontent.com"
+        "mcp.context7.com"
+      ];
+      deniedDomains = [ ];
+    };
+    filesystem = {
+      denyRead = [ "/Users" ];
+      allowRead = [
+        "."
+        "~/projects"
+        "~/.config"
+        "~/.cargo"
+        "~/.local"
+        "~/Library"
+        "~/.cache"
+        "/Applications/Google Chrome.app"
+        "/System/Volumes/Data/Applications/Google Chrome.app"
+      ];
+      allowWrite = [
+        "."
+        "/tmp"
+        "~/.pi/"
+        "~/.cache/uv"
+        "~/.rustup"
+        "~/.agent-browser"
+        "~/Library/Application Support/Google/Chrome"
+        "~/Library/Application Support/Google/Chrome for Testing/Crashpad"
+      ];
+      denyWrite = [
+        ".env"
+        ".env.*"
+        "*.pem"
+        "*.key"
+      ];
+    };
+  };
+
   age = {
     identityPaths = [ "/home/heph/.ssh/sekai_ed" ];
     secrets = {
@@ -57,12 +107,14 @@ in
         "npm:@narumitw/pi-goal@0.9.2"
 
         # Safer operation: sandbox bash/read/write/edit behind .pi/sandbox.json.
-        "npm:pi-landstrip@0.16.22"
+        "npm:pi-sandbox@0.4.3"
 
         # Research and context tools: search/fetch/PDF/video plus skill UX polish.
         "npm:pi-web-access@0.13.0"
         "npm:pi-skillful@0.3.11"
         "npm:@eko24ive/pi-ask@1.1.0"
+        "npm:pi-tool-display@0.5.0"
+        "npm:@quintinshaw/pi-dynamic-workflows@2.11.0"
       ];
     };
   };
