@@ -206,6 +206,7 @@ in
         "npm:pi-skillful@0.3.11"
         "npm:@eko24ive/pi-ask@1.1.0"
         "npm:pi-tool-display@0.5.0"
+        "npm:pi-powerline-footer@0.6.1"
         "npm:@quintinshaw/pi-dynamic-workflows@2.11.0"
         "npm:@victor-software-house/pi-agent-browser"
       ];
@@ -494,6 +495,12 @@ in
       enableBashIntegration = true; # see note on other shells below
       enableZshIntegration = true;
       nix-direnv.enable = true;
+    };
+
+    zoxide = {
+      enable = true;
+      enableZshIntegration = true;
+      options = [ "--cmd z" ];
     };
 
     bash.enable = true;
