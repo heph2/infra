@@ -37,6 +37,147 @@ in
     XDG_DATA_DIRS = "$XDG_DATA_DIRS:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
   };
 
+  home.file.".pi/agent/sandbox.json".text = builtins.toJSON {
+    enabled = true;
+    allowBrowserProcess = true;
+    network = {
+      allowLocalBinding = true;
+      allowAllUnixSockets = true;
+      allowedDomains = [
+        "localhost"
+        "127.0.0.1"
+        "html.duckduckgo.com"
+        "*.npmjs.org"
+        "*.pypi.org"
+        "*.github.com"
+        "raw.githubusercontent.com"
+        "mcp.context7.com"
+      ];
+      deniedDomains = [ ];
+    };
+    filesystem = {
+      denyRead = [ "/Users" ];
+      allowRead = [
+        "."
+        "~/projects"
+        "~/.config"
+        "~/.cargo"
+        "~/.local"
+        "~/Library"
+        "~/.cache"
+        "/Applications/Google Chrome.app"
+        "/System/Volumes/Data/Applications/Google Chrome.app"
+      ];
+      allowWrite = [
+        "."
+        "/tmp"
+        "~/.pi/"
+        "~/.cache/uv"
+        "~/.rustup"
+        "~/.agent-browser"
+        "~/Library/Application Support/Google/Chrome"
+        "~/Library/Application Support/Google/Chrome for Testing/Crashpad"
+      ];
+      denyWrite = [
+        ".env"
+        ".env.*"
+        "*.pem"
+        "*.key"
+      ];
+    };
+  };
+
+  home.file.".pi/agent/themes/catpuccino-mocha.json".text = builtins.toJSON {
+    "$schema" = "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json";
+    name = "catpuccino-mocha";
+    vars = {
+      rosewater = "#f5e0dc";
+      flamingo = "#f2cdcd";
+      pink = "#f5c2e7";
+      mauve = "#cba6f7";
+      red = "#f38ba8";
+      maroon = "#eba0ac";
+      peach = "#fab387";
+      yellow = "#f9e2af";
+      green = "#a6e3a1";
+      teal = "#94e2d5";
+      sky = "#89dceb";
+      sapphire = "#74c7ec";
+      blue = "#89b4fa";
+      lavender = "#b4befe";
+      text = "#cdd6f4";
+      subtext1 = "#bac2de";
+      subtext0 = "#a6adc8";
+      overlay2 = "#9399b2";
+      overlay1 = "#7f849c";
+      overlay0 = "#6c7086";
+      surface2 = "#585b70";
+      surface1 = "#45475a";
+      surface0 = "#313244";
+      base = "#1e1e2e";
+      mantle = "#181825";
+      crust = "#11111b";
+    };
+    colors = {
+      accent = "mauve";
+      border = "surface2";
+      borderAccent = "mauve";
+      borderMuted = "surface1";
+      success = "green";
+      error = "red";
+      warning = "yellow";
+      muted = "overlay2";
+      dim = "overlay0";
+      text = "text";
+      thinkingText = "subtext0";
+      selectedBg = "surface0";
+      userMessageBg = "surface0";
+      userMessageText = "text";
+      customMessageBg = "surface0";
+      customMessageText = "text";
+      customMessageLabel = "mauve";
+      toolPendingBg = "mantle";
+      toolSuccessBg = "#1e3326";
+      toolErrorBg = "#3a202e";
+      toolTitle = "blue";
+      toolOutput = "text";
+      mdHeading = "mauve";
+      mdLink = "blue";
+      mdLinkUrl = "sapphire";
+      mdCode = "peach";
+      mdCodeBlock = "text";
+      mdCodeBlockBorder = "surface2";
+      mdQuote = "subtext0";
+      mdQuoteBorder = "surface2";
+      mdHr = "surface2";
+      mdListBullet = "mauve";
+      toolDiffAdded = "green";
+      toolDiffRemoved = "red";
+      toolDiffContext = "overlay1";
+      syntaxComment = "overlay1";
+      syntaxKeyword = "mauve";
+      syntaxFunction = "blue";
+      syntaxVariable = "text";
+      syntaxString = "green";
+      syntaxNumber = "peach";
+      syntaxType = "yellow";
+      syntaxOperator = "sky";
+      syntaxPunctuation = "overlay2";
+      thinkingOff = "overlay0";
+      thinkingMinimal = "lavender";
+      thinkingLow = "blue";
+      thinkingMedium = "teal";
+      thinkingHigh = "peach";
+      thinkingXhigh = "red";
+      bashMode = "green";
+    };
+    export = {
+      pageBg = "base";
+      cardBg = "mantle";
+      infoBg = "surface0";
+    };
+  };
+
   age = {
     identityPaths = [ "/home/heph/.ssh/sekai_ed" ];
     secrets = {
@@ -51,9 +192,22 @@ in
     skills = builtins.attrValues piSkills;
     settings = {
       hideThinkingBlock = true;
+      theme = "catpuccino-mocha";
       packages = [
+        # Agent orchestration and explicit goal tracking.
         "npm:pi-subagents@0.33.1"
         "npm:@narumitw/pi-goal@0.9.2"
+
+        # Safer operation: sandbox bash/read/write/edit behind .pi/sandbox.json.
+        "npm:pi-sandbox@0.4.3"
+
+        # Research and context tools: search/fetch/PDF/video plus skill UX polish.
+        "npm:pi-web-access@0.13.0"
+        "npm:pi-skillful@0.3.11"
+        "npm:@eko24ive/pi-ask@1.1.0"
+        "npm:pi-tool-display@0.5.0"
+        "npm:@quintinshaw/pi-dynamic-workflows@2.11.0"
+        "npm:@victor-software-house/pi-agent-browser"
       ];
     };
   };
@@ -83,11 +237,15 @@ in
       dwarf-fortress
       thunar
       aporetic
+      agent-browser
       w3m
       kdePackages.okular
       hledger
       jujutsu
       lazygit
+      ripgrep
+      bubblewrap
+      socat
       xournalpp
       python313Packages.python-lsp-server
       obsidian
@@ -320,6 +478,7 @@ in
     extraConfig = ''
       set-option -g mouse on
       set -g extended-keys on
+      set -g extended-keys-format csi-u
       bind-key h split-window -v
       bind-key v split-window -h
     '';

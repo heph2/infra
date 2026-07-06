@@ -140,6 +140,7 @@ in
     extraConfig = ''
       set-option -g mouse on
       set -g extended-keys on
+      set -g extended-keys-format csi-u
       bind-key h split-window -v
       bind-key v split-window -h
     '';
