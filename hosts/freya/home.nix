@@ -87,6 +87,97 @@ in
     };
   };
 
+  home.file.".pi/agent/themes/catpuccino-mocha.json".text = builtins.toJSON {
+    "$schema" = "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json";
+    name = "catpuccino-mocha";
+    vars = {
+      rosewater = "#f5e0dc";
+      flamingo = "#f2cdcd";
+      pink = "#f5c2e7";
+      mauve = "#cba6f7";
+      red = "#f38ba8";
+      maroon = "#eba0ac";
+      peach = "#fab387";
+      yellow = "#f9e2af";
+      green = "#a6e3a1";
+      teal = "#94e2d5";
+      sky = "#89dceb";
+      sapphire = "#74c7ec";
+      blue = "#89b4fa";
+      lavender = "#b4befe";
+      text = "#cdd6f4";
+      subtext1 = "#bac2de";
+      subtext0 = "#a6adc8";
+      overlay2 = "#9399b2";
+      overlay1 = "#7f849c";
+      overlay0 = "#6c7086";
+      surface2 = "#585b70";
+      surface1 = "#45475a";
+      surface0 = "#313244";
+      base = "#1e1e2e";
+      mantle = "#181825";
+      crust = "#11111b";
+    };
+    colors = {
+      accent = "mauve";
+      border = "surface2";
+      borderAccent = "mauve";
+      borderMuted = "surface1";
+      success = "green";
+      error = "red";
+      warning = "yellow";
+      muted = "overlay2";
+      dim = "overlay0";
+      text = "text";
+      thinkingText = "subtext0";
+      selectedBg = "surface0";
+      userMessageBg = "surface0";
+      userMessageText = "text";
+      customMessageBg = "surface0";
+      customMessageText = "text";
+      customMessageLabel = "mauve";
+      toolPendingBg = "mantle";
+      toolSuccessBg = "#1e3326";
+      toolErrorBg = "#3a202e";
+      toolTitle = "blue";
+      toolOutput = "text";
+      mdHeading = "mauve";
+      mdLink = "blue";
+      mdLinkUrl = "sapphire";
+      mdCode = "peach";
+      mdCodeBlock = "text";
+      mdCodeBlockBorder = "surface2";
+      mdQuote = "subtext0";
+      mdQuoteBorder = "surface2";
+      mdHr = "surface2";
+      mdListBullet = "mauve";
+      toolDiffAdded = "green";
+      toolDiffRemoved = "red";
+      toolDiffContext = "overlay1";
+      syntaxComment = "overlay1";
+      syntaxKeyword = "mauve";
+      syntaxFunction = "blue";
+      syntaxVariable = "text";
+      syntaxString = "green";
+      syntaxNumber = "peach";
+      syntaxType = "yellow";
+      syntaxOperator = "sky";
+      syntaxPunctuation = "overlay2";
+      thinkingOff = "overlay0";
+      thinkingMinimal = "lavender";
+      thinkingLow = "blue";
+      thinkingMedium = "teal";
+      thinkingHigh = "peach";
+      thinkingXhigh = "red";
+      bashMode = "green";
+    };
+    export = {
+      pageBg = "base";
+      cardBg = "mantle";
+      infoBg = "surface0";
+    };
+  };
+
   age = {
     identityPaths = [ "/home/heph/.ssh/sekai_ed" ];
     secrets = {
@@ -101,6 +192,7 @@ in
     skills = builtins.attrValues piSkills;
     settings = {
       hideThinkingBlock = true;
+      theme = "catpuccino-mocha";
       packages = [
         # Agent orchestration and explicit goal tracking.
         "npm:pi-subagents@0.33.1"
@@ -115,6 +207,7 @@ in
         "npm:@eko24ive/pi-ask@1.1.0"
         "npm:pi-tool-display@0.5.0"
         "npm:@quintinshaw/pi-dynamic-workflows@2.11.0"
+        "npm:@victor-software-house/pi-agent-browser"
       ];
     };
   };
@@ -144,12 +237,15 @@ in
       dwarf-fortress
       thunar
       aporetic
+      agent-browser
       w3m
       kdePackages.okular
       hledger
       jujutsu
       lazygit
       ripgrep
+      bubblewrap
+      socat
       xournalpp
       python313Packages.python-lsp-server
       obsidian
