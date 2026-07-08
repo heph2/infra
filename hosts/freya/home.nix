@@ -11,13 +11,25 @@
 
 let
   cfg = config.xsession.windowManager.i3;
+  awsBestPracticesSkill = pkgs.runCommand "aws-best-practices-skill" { } ''
+        cp -R ${inputs.aws-best-practices-skill} $out
+        chmod -R u+w $out
+        cat > $out/SKILL.md <<'EOF'
+    ---
+    name: aws-best-practices
+    description: Local AWS best-practices catalog. Use for AWS Well-Architected/security/reliability/performance/cost/operations/sustainability guidance. Read local catalog files first; avoid web unless user asks for live verification or local coverage is missing.
+    ---
+    EOF
+        awk 'BEGIN { frontmatter = 0; body = 0 } /^---$/ { frontmatter++; if (frontmatter == 2) { body = 1; next } } body { print }' ${inputs.aws-best-practices-skill}/SKILL.md >> $out/SKILL.md
+  '';
   piSkills = {
     chrome-cdp = inputs.chrome-cdp-skill + "/skills/chrome-cdp";
     grill-me = inputs.mattpocock-skills + "/skills/productivity/grill-me";
     imagegen = inputs.openai-skills + "/skills/.system/imagegen";
     ponytail = inputs.ponytail + "/skills/ponytail";
     tdd = inputs.superpowers + "/skills/test-driven-development";
-    aws-best-practices = inputs.aws-best-practices-skill;
+    aws-best-practices = awsBestPracticesSkill;
+    nixos-host-workflow = ../../skills/nixos-host-workflow;
   };
 in
 {
@@ -89,7 +101,8 @@ in
   };
 
   home.file.".pi/agent/themes/catpuccino-mocha.json".text = builtins.toJSON {
-    "$schema" = "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json";
+    "$schema" =
+      "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json";
     name = "catpuccino-mocha";
     vars = {
       rosewater = "#f5e0dc";
@@ -229,6 +242,41 @@ in
 
   programs.kitty.enable = true;
 
+  programs.wezterm = {
+    enable = true;
+    extraConfig = ''
+      local wezterm = require("wezterm")
+
+      local config = wezterm.config_builder()
+
+      config.color_scheme = "rose-pine-moon"
+      config.font = wezterm.font("Hack Nerd Font")
+      config.font_size = 15.0
+      config.window_background_opacity = 0.8
+      config.macos_window_background_blur = 50
+      config.hide_tab_bar_if_only_one_tab = true
+      config.window_decorations = "RESIZE"
+
+      return config
+    '';
+  };
+
+  home.file.".config/herdr/config.toml".text = ''
+    [keys]
+    prefix = "ctrl+b"
+    focus_pane_left  = "prefix+h"
+    focus_pane_down  = "prefix+j"
+    focus_pane_up    = "prefix+k"
+    focus_pane_right = "prefix+l"
+    split_horizontal = "prefix+double_quote"
+    split_vertical    = "prefix+percent"
+    new_tab   = "prefix+c"
+    close_tab = "prefix+ampersand"
+    workspace_picker = "prefix+w"
+    goto             = "prefix+g"
+    copy_mode  = "prefix+y"  # herdr's copy-mode entry key; copy-mode's own internal keys (v/space select, y/Enter copy, q/Esc cancel) aren't configurable
+  '';
+
   home.packages =
     with pkgs;
     [
@@ -314,10 +362,11 @@ in
       pwvucontrol
       alsa-utils
       wireplumber
-      wezterm
+      inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default
       devenv
       anki
       gh
+      git-annex
       faugus-launcher
       chromium
       age
@@ -760,6 +809,12 @@ in
           light = false;
           side-by-side = true;
         };
+      };
+      filter.annex = {
+        clean = "git-annex smudge --clean -- %f";
+        smudge = "git-annex smudge -- %f";
+        process = "git-annex filter-process";
+        required = true;
       };
     };
   };
