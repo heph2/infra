@@ -690,6 +690,26 @@
         "type": "github"
       }
     },
+    "herdr": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1783430736,
+        "narHash": "sha256-X8WX1ktiK9Qn3O/xefUA5zBnjQ9mvB1gHNaRyZTdAIc=",
+        "owner": "ogulcancelik",
+        "repo": "herdr",
+        "rev": "d190c1f55e05419b299fc68f60ea0aabc1ff7379",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ogulcancelik",
+        "repo": "herdr",
+        "type": "github"
+      }
+    },
     "hermes-agent": {
       "inputs": {
         "flake-parts": "flake-parts_3",
@@ -1472,6 +1492,7 @@
         "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts",
         "handy": "handy",
+        "herdr": "herdr",
         "hermes-agent": "hermes-agent",
         "home-manager": "home-manager_2",
         "mattpocock-skills": "mattpocock-skills",
