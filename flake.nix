@@ -43,6 +43,10 @@
     agenix.url = "github:ryantm/agenix";
     nix-ai-tools.url = "github:numtide/nix-ai-tools";
     pi.url = "github:lukasl-dev/pi.nix";
+    paseo = {
+      url = "github:getpaseo/paseo";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     handy = {
       url = "github:cjpais/Handy";
       inputs.nixpkgs.follows = "nixpkgs";

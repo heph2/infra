@@ -618,6 +618,7 @@ in
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.opencode
+    inputs.paseo.packages.${pkgs.stdenv.hostPlatform.system}.paseo
     steamcmd
     uxplay
     llama-cpp-rocm

@@ -1354,6 +1354,26 @@
         "type": "github"
       }
     },
+    "paseo": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1783546743,
+        "narHash": "sha256-r/S2rkJYEGJUN3Kheup6cuBmff/k8C3huiY3vlNUJi8=",
+        "owner": "getpaseo",
+        "repo": "paseo",
+        "rev": "d96d599466738ea7621d4b67d3c33419b991b1ae",
+        "type": "github"
+      },
+      "original": {
+        "owner": "getpaseo",
+        "repo": "paseo",
+        "type": "github"
+      }
+    },
     "pi": {
       "inputs": {
         "bun2nix": "bun2nix_3",
@@ -1505,6 +1525,7 @@
         "nur": "nur",
         "openai-skills": "openai-skills",
         "paneru": "paneru",
+        "paseo": "paseo",
         "pi": "pi",
         "ponytail": "ponytail",
         "simple-nixos-mailserver": "simple-nixos-mailserver",
