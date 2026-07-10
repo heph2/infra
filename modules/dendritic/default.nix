@@ -32,6 +32,12 @@ let
 in
 {
   options.infra = {
+    modules = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.attrsOf lib.types.deferredModule);
+      default = { };
+      description = "Dendritic module registry grouped by module class.";
+    };
+
     nixos.hosts = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule hostModule);
       default = { };

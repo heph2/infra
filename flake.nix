@@ -123,6 +123,7 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         ./modules/dendritic
+        ./modules/home
         #./hosts/fafnir/default.nix ## Router
         ./hosts/freya/configuration.nix # # Desktop
         ./hosts/hermes/configuration.nix # # Hetzner VPS

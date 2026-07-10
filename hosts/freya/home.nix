@@ -1,10 +1,8 @@
 {
   config,
   pkgs,
-  lib,
   agenix,
   stardew-modding,
-  firefox-addons,
   inputs,
   ...
 }:
@@ -40,11 +38,7 @@ in
     #    ../../modules/graphical/firefox/default.nix
   ];
 
-  home.username = "heph";
-  home.homeDirectory = "/home/heph";
   home.stateVersion = "24.05";
-  home.enableNixpkgsReleaseCheck = false;
-  programs.home-manager.enable = true;
 
   home.sessionVariables = {
     XDG_DATA_DIRS = "$XDG_DATA_DIRS:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
@@ -189,15 +183,6 @@ in
       pageBg = "base";
       cardBg = "mantle";
       infoBg = "surface0";
-    };
-  };
-
-  age = {
-    identityPaths = [ "/home/heph/.ssh/sekai_ed" ];
-    secrets = {
-      imap-mbauce = {
-        file = ../../secrets/imap-mbauce-mail.age;
-      };
     };
   };
 
@@ -385,126 +370,49 @@ in
       yeganesh
     ]);
 
-  programs.ssh = {
-    enable = true;
-    enableDefaultConfig = false;
-    matchBlocks = {
-      "*".addKeysToAgent = "yes";
-      zima = {
-        port = 22;
-        hostname = "192.168.0.105";
-        user = "root";
-        identityFile = "/home/heph/.ssh/sekai_ed";
-      };
-      fenrir = {
-        port = 22;
-        hostname = "192.168.0.165";
-        user = "root";
-        identityFile = "/home/heph/.ssh/sekai_ed";
-      };
-      vellutata = {
-        port = 22;
-        hostname = "193.57.159.213";
-        user = "vellutata";
-        identityFile = "/home/heph/.ssh/asn_id";
-      };
-      "vellutata.senza.cloud" = {
-        port = 22;
-        hostname = "vellutata.senza.cloud";
-        user = "vellutata";
-        identityFile = "/home/heph/.ssh/asn_id";
-      };
-      "risotto.senza.cloud" = {
-        port = 22;
-        hostname = "risotto.senza.cloud";
-        user = "risotto";
-        identityFile = "/home/heph/.ssh/asn_id";
-      };
-      risotto = {
-        port = 22;
-        hostname = "5.231.80.72";
-        user = "risotto";
-        identityFile = "/home/heph/.ssh/asn_id";
-      };
-      hermes = {
-        port = 22;
-        hostname = "135.181.85.238";
-        user = "root";
-        identityFile = "/home/heph/.ssh/sekai_ed";
-      };
-      tyr = {
-        port = 22;
-        hostname = "192.168.0.104";
-        user = "root";
-        identityFile = "/home/heph/.ssh/sekai_ed";
-      };
-      github = {
-        port = 22;
-        hostname = "github.com";
-        user = "git";
-        identityFile = "/home/heph/.ssh/sr-ht_rsa";
-      };
-      remarkable = {
-        port = 22;
-        hostname = "10.11.99.1";
-        user = "root";
-        identityFile = "/home/heph/.ssh/test-id_rsa";
-      };
-      sauron = {
-        port = 22;
-        hostname = "192.168.0.106";
-        user = "root";
-        identityFile = "/home/heph/.ssh/sekai_ed";
-      };
-      # Tailscale SSH
-      pixie = {
-        hostname = "pixie";
-        user = "root";
-      };
+  programs.ssh.matchBlocks = {
+    "*".addKeysToAgent = "yes";
+    fenrir = {
+      port = 22;
+      hostname = "192.168.0.165";
+      user = "root";
+      identityFile = "/home/heph/.ssh/sekai_ed";
+    };
+    vellutata = {
+      port = 22;
+      hostname = "193.57.159.213";
+      user = "vellutata";
+      identityFile = "/home/heph/.ssh/asn_id";
+    };
+    "vellutata.senza.cloud" = {
+      port = 22;
+      hostname = "vellutata.senza.cloud";
+      user = "vellutata";
+      identityFile = "/home/heph/.ssh/asn_id";
+    };
+    "risotto.senza.cloud" = {
+      port = 22;
+      hostname = "risotto.senza.cloud";
+      user = "risotto";
+      identityFile = "/home/heph/.ssh/asn_id";
+    };
+    risotto = {
+      port = 22;
+      hostname = "5.231.80.72";
+      user = "risotto";
+      identityFile = "/home/heph/.ssh/asn_id";
+    };
+    remarkable = {
+      port = 22;
+      hostname = "10.11.99.1";
+      user = "root";
+      identityFile = "/home/heph/.ssh/test-id_rsa";
+    };
+    pixie = {
+      hostname = "pixie";
+      user = "root";
     };
   };
-
-  # custom afew config
-  home.file.".config/afew/config".text = ''
-    [SpamFilter]
-    [KillThreadsFilter]
-    [ListMailsFilter]
-    [SentMailsFilter]
-    sent_tag = sent
-    [ArchiveSentMailsFilter]
-
-    [Filter.0]
-    message = "Filter Personal Mails"
-    query = 'folder:~/Maildir/personal/'
-    tags = +personal
-
-    [Filter.1]
-    message = "delete all message from fitexpress"
-    query = from:no_reply@fitexpress.it
-    tags = +junk;-new
-
-    [Filter.2]
-    message = "Filter mailing lists"
-    query = from:nexa@server-nexa.polito.it
-    tags = +lists;-new
-
-    [Filter.3]
-    message = "Filter Work Mails"
-    query = 'to:m.bauce@davinci.care'
-    tags = +work
-
-    [Filter.4]
-    message = "Filter OVH Mails"
-    query = 'folder:~/Maildir/ovh/'
-    tags = +ovh
-
-    [InboxFilter]
-  '';
-
-  # handle aliases
-  home.file.".config/aliases".text = ''
-    root: shopping@mbauce.com
-  '';
 
   home.file.".config/helix/yazi-picker.sh".text = ''
     #!/usr/bin/env bash
@@ -521,48 +429,13 @@ in
     fi
   '';
 
-  programs.tmux = {
-    enable = true;
-    terminal = "tmux-256color";
-    mouse = true;
-    shell = "${pkgs.zsh}/bin/zsh";
-    extraConfig = ''
-      set-option -g mouse on
-      set -g extended-keys on
-      set -g extended-keys-format csi-u
-      bind-key h split-window -v
-      bind-key v split-window -h
-    '';
-  };
-
-  programs.nushell = {
-    enable = false;
-  };
-
   programs = {
-    direnv = {
-      enable = true;
-      enableBashIntegration = true; # see note on other shells below
-      enableZshIntegration = true;
-      nix-direnv.enable = true;
-    };
-
     zoxide = {
       enable = true;
       enableZshIntegration = true;
       options = [ "--cmd z" ];
     };
-
-    bash.enable = true;
-  };
-
-  programs.yazi = {
-    enable = true;
-    shellWrapperName = "yy";
-  };
-
-  programs.zellij = {
-    enable = true;
+    yazi.shellWrapperName = "yy";
   };
 
   services.picom = {
@@ -577,13 +450,6 @@ in
     shadowOpacity = 0.85;
   };
 
-  programs.ghostty = {
-    enable = true;
-    enableZshIntegration = true;
-    settings = {
-      window-decoration = "none";
-    };
-  };
   programs.rofi = {
     enable = true;
     theme = "arthur";
@@ -599,37 +465,10 @@ in
     };
   };
 
-  programs.helix = {
-    enable = true;
-    settings = {
-      theme = "autumn_night_transparent";
-      editor.cursor-shape = {
-        normal = "block";
-        insert = "bar";
-        select = "underline";
-      };
-      # keys.normal = {
-      #  C-y = ":sh zellij run -n Yazi -c -f -x 10% -y 10% --width 80% --height 80% -- bash ~/.config/helix/yazi-picker.sh open";
-      #};
-      keys.normal.C-y = {
-        y = ":sh zellij run -n Yazi -c -f -x 10% -y 10% --width 80% --height 80% -- bash ~/.config/helix/yazi-picker.sh open";
-        v = ":sh zellij run -n Yazi -c -f -x 10% -y 10% --width 80% --height 80% -- bash ~/.config/helix/yazi-picker.sh vsplit";
-        h = ":sh zellij run -n Yazi -c -f -x 10% -y 10% --width 80% --height 80% -- bash ~/.config/helix/yazi-picker.sh hsplit";
-      };
-    };
-    languages.language = [
-      {
-        name = "nix";
-        auto-format = true;
-        formatter.command = lib.getExe pkgs.nixfmt;
-      }
-    ];
-    themes = {
-      autumn_night_transparent = {
-        "inherits" = "autumn_night";
-        "ui.background" = { };
-      };
-    };
+  programs.helix.settings.keys.normal.C-y = {
+    y = ":sh zellij run -n Yazi -c -f -x 10% -y 10% --width 80% --height 80% -- bash ~/.config/helix/yazi-picker.sh open";
+    v = ":sh zellij run -n Yazi -c -f -x 10% -y 10% --width 80% --height 80% -- bash ~/.config/helix/yazi-picker.sh vsplit";
+    h = ":sh zellij run -n Yazi -c -f -x 10% -y 10% --width 80% --height 80% -- bash ~/.config/helix/yazi-picker.sh hsplit";
   };
 
   programs.alacritty = {
@@ -643,100 +482,14 @@ in
       selection.save_to_clipboard = true;
     };
   };
-  programs.fzf = {
-    enable = true;
-  };
-  programs.htop.enable = true;
-  programs.zathura.enable = true;
-  programs.gpg.enable = true;
-  services.gpg-agent = {
-    enable = true;
-    defaultCacheTtl = 36000;
-    maxCacheTtl = 36000;
-    defaultCacheTtlSsh = 36000;
-    maxCacheTtlSsh = 36000;
-    extraConfig = ''
-      pinentry-program ${pkgs.pinentry-qt}/bin/pinentry
-    '';
-  };
   services.blueman-applet.enable = true;
   services.flameshot.enable = true;
   services.unclutter.enable = true;
   services.emacs.enable = true;
-  programs.k9s.enable = true;
 
-  programs.firefox = {
-    enable = true;
-    policies = {
-      DisableTelemetry = true;
-      DisableFirefoxStudies = true;
-      DisablePocket = true;
-      DisableFirefoxAccounts = false;
-      NoDefaultBookmarks = true;
-      OfferToSaveLogins = false;
-      OfferToSaveLoginsDefault = false;
-      PasswordManagerEnabled = false;
-      FirefoxHome = {
-        Search = true;
-        Pocket = false;
-        Snippets = false;
-        TopSites = false;
-        Highlights = false;
-      };
-      UserMessaging = {
-        ExtensionRecommendations = false;
-        SkipOnboarding = true;
-      };
-    };
-    profiles.default = {
-      id = 0;
-      name = "heph";
-      isDefault = true;
-      extensions.packages = with firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
-        ublock-origin
-        bitwarden
-        user-agent-string-switcher
-        multi-account-containers
-        kagi-search
-      ];
-      settings = {
-        # Vertical tabs (native Firefox 131+)
-        "sidebar.verticalTabs" = true;
-        "sidebar.revamp" = true;
-
-        # Privacy
-        "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
-        "browser.newtabpage.activity-stream.showSponsored" = false;
-        "browser.urlbar.suggest.quicksuggest.sponsored" = false;
-        "browser.urlbar.suggest.quicksuggest.nonsponsored" = false;
-        "browser.search.suggest.enabled" = false;
-        "browser.search.suggest.enabled.private" = false;
-        "browser.urlbar.suggest.searches" = false;
-        "datareporting.healthreport.uploadEnabled" = false;
-        "toolkit.telemetry.enabled" = false;
-        "app.shield.optoutstudies.enabled" = false;
-
-        # Performance / Hardware acceleration
-        "media.ffmpeg.vaapi.enabled" = true;
-        "media.rdd-vpx.enabled" = true;
-        "gfx.webrender.all" = true;
-        "layers.acceleration.force-enabled" = true;
-
-        # UI / UX
-        "browser.tabs.drawInTitlebar" = true;
-        "browser.shell.checkDefaultBrowser" = false;
-        "general.smoothScroll" = true;
-        "browser.sessionstore.resume_from_crash" = true;
-        "browser.tabs.tabmanager.enabled" = false;
-
-        # Use XDG portals for file picker
-        "widget.use-xdg-desktop-portal.file-picker" = 1;
-        "widget.use-xdg-desktop-portal.mime-handler" = 1;
-
-        # Enable custom CSS
-        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-      };
-    };
+  programs.firefox.profiles.default.settings = {
+    "media.ffmpeg.vaapi.enabled" = true;
+    "media.rdd-vpx.enabled" = true;
   };
 
   # systemd.user.services.mpris-proxy = {
@@ -757,59 +510,21 @@ in
   #   };
   # };
 
-  programs.zsh = {
-    enable = true;
-    initContent = "source ~/.p10k.zsh";
-    shellAliases = {
-      a = "amused";
-      d = "docker";
-      ll = "ls -l";
-      mg = "mg -n";
-      zzz = "shutdown now";
-      lz = "lazygit";
-      k = "kubectl";
-      ks = "kubectl config get-contexts |  awk 'NR>1 { print $2 }' | fzf | xargs kubectl config use-context";
-      update = "sudo nixos-rebuild switch";
-      game = "sudo virsh start win11-2";
-    };
-    zplug = {
-      enable = true;
-      plugins = [
-        { name = "zsh-users/zsh-autosuggestions"; } # Simple plugin installation
-        {
-          name = "romkatv/powerlevel10k";
-          tags = [
-            "as:theme"
-            "depth:1"
-          ];
-        } # Installations with additional options. For the list of options, please refer to Zplug README.
-      ];
-    };
+  programs.zsh.shellAliases = {
+    a = "amused";
+    d = "docker";
+    mg = "mg -n";
+    zzz = "shutdown now";
+    k = "kubectl";
+    ks = "kubectl config get-contexts |  awk 'NR>1 { print $2 }' | fzf | xargs kubectl config use-context";
+    update = "sudo nixos-rebuild switch";
+    game = "sudo virsh start win11-2";
   };
 
   programs.git = {
-    enable = true;
     signing.format = "openpgp";
     settings = {
-      user.email = "srht@mrkeebs.eu";
-      user.name = "heph";
-      aliases = {
-        gp = "add -p";
-        co = "checkout";
-        s = "switch";
-        st = "status";
-        month-exp = " hledger balance expenses --period thismonth -f ~/Documents/finance/2026.journal";
-      };
-      extraConfig = {
-        pull.ff = "only";
-        core.pager = "delta";
-        interactive.diffFilter = "delta --color-only";
-        delta = {
-          navigate = true;
-          light = false;
-          side-by-side = true;
-        };
-      };
+      aliases.month-exp = " hledger balance expenses --period thismonth -f ~/Documents/finance/2026.journal";
       filter.annex = {
         clean = "git-annex smudge --clean -- %f";
         smudge = "git-annex smudge -- %f";
@@ -819,84 +534,38 @@ in
     };
   };
 
-  programs.mbsync.enable = true;
-  programs.msmtp = {
-    enable = true;
-  };
-  programs.aerc.extraConfig.general.unsafe-accounts-conf = true;
+  programs.notmuch.enable = true;
   programs.aerc = {
     enable = true;
-    extraAccounts = {
-      Personal = {
-        source = "maildir://~/Maildir/personal";
-        outgoing = "${pkgs.msmtp}/bin/msmtp";
-        default = "INBOX";
-        from = "Marco Bauce <me@mbauce.com>";
-        copy-to = "Sent";
-        check-mail-cmd = "mbsync personal";
-        check-mail = "1m";
-      };
-    };
     extraConfig = {
-      filters = {
-        "text/html" = "w3m -T text/html";
-      };
+      general.unsafe-accounts-conf = true;
+      filters."text/html" = "w3m -T text/html";
+    };
+    extraAccounts.Personal = {
+      source = "maildir://~/Maildir/personal";
+      outgoing = "${pkgs.msmtp}/bin/msmtp";
+      default = "INBOX";
+      from = "Marco Bauce <me@mbauce.com>";
+      copy-to = "Sent";
+      check-mail-cmd = "mbsync personal";
+      check-mail = "1m";
     };
   };
-  programs.notmuch = {
-    enable = true;
-    hooks = {
-      preNew = "mbsync --all";
-      postNew = "afew -tnv";
+  accounts.email.accounts.work = {
+    address = "m.bauce@davinci.care";
+    imap.host = "imap.gmail.com";
+    mbsync = {
+      enable = true;
+      create = "maildir";
     };
+    msmtp.enable = true;
+    notmuch.enable = true;
+    realName = "Marco Bauce";
+    passwordCommand = "passage show m.bauce@davinci.care-oauth2";
+    smtp.host = "smtp.gmail.com";
+    userName = "m.bauce@davinci.care";
   };
-  accounts.email = {
-    accounts.personal = {
-      address = "me@mbauce.com";
-      imap.host = "mail.mbauce.com";
-      mbsync = {
-        enable = true;
-        create = "maildir";
-      };
-      msmtp.enable = true;
-      notmuch.enable = true;
-      primary = true;
-      realName = "Marco Bauce";
-      passwordCommand = "${pkgs.coreutils-full}/bin/cat ${config.age.secrets.imap-mbauce.path}";
-      smtp.host = "mail.mbauce.com";
-      userName = "me@mbauce.com";
-    };
-    # accounts.ovh = {
-    #   address = "hephaestus@mrkeebs.eu";
-    #   imap.host = "ssl0.ovh.net";
-    #   imap.tls.useStartTls = true;
-    #   imap.port = 465;
-    #   mbsync = {
-    #     enable = true;
-    #     create = "maildir";
-    #   };
-    #   msmtp.enable = true;
-    #   notmuch.enable = true;
-    #   realName = "Heph";
-    #   passwordCommand = "passage show hephaestus@mrkeebs.eu";
-    #   smtp.host = "pro2.mail.ovh.net";
-    #   userName = "hephaestus@mrkeebs.eu";
-    # };
-    accounts.work = {
-      address = "m.bauce@davinci.care";
-      imap.host = "imap.gmail.com";
-      mbsync = {
-        enable = true;
-        create = "maildir";
-      };
-      msmtp.enable = true;
-      notmuch.enable = true;
-      realName = "Marco Bauce";
-      passwordCommand = "passage show m.bauce@davinci.care-oauth2";
-      smtp.host = "smtp.gmail.com";
-      userName = "m.bauce@davinci.care";
-    };
-  };
+
   services.dunst = {
     enable = true;
     settings = {

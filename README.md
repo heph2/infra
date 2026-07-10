@@ -12,6 +12,10 @@ It is structured to manage multiple machines and user configurations.
 - `secrets`: Sops-nix and age directory
 - `pkgs`: Custom packages and scripts
 
+Shared NixOS, nix-darwin, and Home Manager modules are registered by class under
+`infra.modules` and composed by each host declaration. Home Manager aspects live
+in `modules/home/`; host-specific settings remain in `hosts/<name>/home.nix`.
+
 ## Hosts
 
 - `Fafnir`: Router

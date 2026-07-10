@@ -25,20 +25,7 @@ in
     inputs.noctalia.homeModules.default
   ];
 
-  age = {
-    identityPaths = [ "/home/heph/.ssh/sekai_ed" ];
-    secrets = {
-      imap-mbauce = {
-        file = ../../secrets/imap-mbauce-mail.age;
-      };
-    };
-  };
-
-  home.username = "heph";
-  home.homeDirectory = "/home/heph";
   home.stateVersion = "25.05";
-  home.enableNixpkgsReleaseCheck = false;
-  programs.home-manager.enable = true;
 
   home.sessionVariables = {
     EDITOR = "hx";
@@ -89,114 +76,28 @@ in
     afew
   ];
 
-  programs.ssh = {
-    enable = true;
-    enableDefaultConfig = false;
-    matchBlocks = {
-      freya = {
-        port = 22;
-        hostname = "192.168.0.102";
-        user = "heph";
-        identityFile = "/home/heph/.ssh/sekai_ed";
-      };
-      zima = {
-        port = 22;
-        hostname = "192.168.0.105";
-        user = "root";
-        identityFile = "/home/heph/.ssh/sekai_ed";
-      };
-      hermes = {
-        port = 22;
-        hostname = "135.181.85.238";
-        user = "root";
-        identityFile = "/home/heph/.ssh/sekai_ed";
-      };
-      tyr = {
-        port = 22;
-        hostname = "192.168.0.104";
-        user = "root";
-        identityFile = "/home/heph/.ssh/sekai_ed";
-      };
-      sauron = {
-        port = 22;
-        hostname = "192.168.0.106";
-        user = "root";
-        identityFile = "/home/heph/.ssh/sekai_ed";
-      };
-      github = {
-        port = 22;
-        hostname = "github.com";
-        user = "git";
-        identityFile = "/home/heph/.ssh/sr-ht_rsa";
-      };
-    };
+  programs.ssh.matchBlocks.freya = {
+    port = 22;
+    hostname = "192.168.0.102";
+    user = "heph";
+    identityFile = "/home/heph/.ssh/sekai_ed";
   };
 
-  programs.tmux = {
-    enable = true;
-    terminal = "tmux-256color";
-    mouse = true;
-    shell = "${pkgs.zsh}/bin/zsh";
-    extraConfig = ''
-      set-option -g mouse on
-      set -g extended-keys on
-      set -g extended-keys-format csi-u
-      bind-key h split-window -v
-      bind-key v split-window -h
-    '';
-  };
+  programs.yazi.shellWrapperName = "y";
 
-  programs = {
-    direnv = {
-      enable = true;
-      enableBashIntegration = true;
-      enableZshIntegration = true;
-      nix-direnv.enable = true;
-    };
-    bash.enable = true;
-  };
-
-  programs.yazi = {
-    enable = true;
-    shellWrapperName = "y";
-  };
-
-  programs.zellij = {
-    enable = true;
-  };
-
-  programs.ghostty = {
-    enable = true;
-    enableZshIntegration = true;
-    settings = {
-      window-decoration = "none";
-      font-size = 13;
-      font-family = "Hack Nerd Font";
-      unfocused-split-opacity = 0.96;
-      font-feature = [
-        "-liga"
-        "-dlig"
-        "-calt"
-      ];
-    };
+  programs.ghostty.settings = {
+    font-size = 13;
+    font-family = "Hack Nerd Font";
+    unfocused-split-opacity = 0.96;
+    font-feature = [
+      "-liga"
+      "-dlig"
+      "-calt"
+    ];
   };
 
   programs.helix = {
-    enable = true;
-    settings = {
-      theme = "autumn_night_transparent";
-      editor.cursor-shape = {
-        normal = "block";
-        insert = "bar";
-        select = "underline";
-      };
-    };
     languages.language = [
-      {
-        name = "nix";
-        auto-format = true;
-        formatter.command = lib.getExe pkgs.nixfmt;
-      }
       {
         name = "gmpl";
         scope = "source.gmpl";
@@ -221,12 +122,6 @@ in
         source.path = inputs.tree-sitter-gmpl;
       }
     ];
-    themes = {
-      autumn_night_transparent = {
-        "inherits" = "autumn_night";
-        "ui.background" = { };
-      };
-    };
   };
 
   xdg.configFile."helix/runtime/grammars/gmpl.so".source =
@@ -234,26 +129,6 @@ in
 
   xdg.configFile."helix/runtime/queries/gmpl".source =
     "${inputs.tree-sitter-gmpl.packages.aarch64-linux.default}/queries";
-
-  programs.fzf = {
-    enable = true;
-  };
-
-  programs.htop.enable = true;
-  programs.zathura.enable = true;
-  programs.k9s.enable = true;
-
-  programs.gpg.enable = true;
-  services.gpg-agent = {
-    enable = true;
-    defaultCacheTtl = 36000;
-    maxCacheTtl = 36000;
-    defaultCacheTtlSsh = 36000;
-    maxCacheTtlSsh = 36000;
-    extraConfig = ''
-      pinentry-program ${pkgs.pinentry-qt}/bin/pinentry
-    '';
-  };
 
   programs.noctalia-shell = {
     enable = true;
@@ -327,7 +202,7 @@ in
         };
       };
 
-      spawn-at-startup = [ { command = [ "noctalia-shell" ]; } ];
+      spawn-at-startup = [{ command = [ "noctalia-shell" ]; }];
 
       binds =
         with config.lib.niri.actions;
@@ -445,180 +320,11 @@ in
     };
   };
 
-  programs.zsh = {
-    enable = true;
-    initContent = "source ~/.p10k.zsh";
-    shellAliases = {
-      ll = "ls -l";
-      lz = "lazygit";
-      update = "sudo nixos-rebuild switch --flake .#fenrir";
-    };
-    zplug = {
-      enable = true;
-      plugins = [
-        { name = "zsh-users/zsh-autosuggestions"; }
-        {
-          name = "romkatv/powerlevel10k";
-          tags = [
-            "as:theme"
-            "depth:1"
-          ];
-        }
-      ];
-    };
-  };
+  programs.zsh.shellAliases.update = "sudo nixos-rebuild switch --flake .#fenrir";
 
-  programs.git = {
-    enable = true;
-    settings = {
-      aliases = {
-        gp = "add -p";
-        co = "checkout";
-        s = "switch";
-        st = "status";
-      };
-      extraConfig = {
-        pull.ff = "only";
-        core.pager = "delta";
-        interactive.diffFilter = "delta --color-only";
-        delta = {
-          navigate = true;
-          light = false;
-          side-by-side = true;
-        };
-      };
-    };
-    settings.user.email = "srht@mrkeebs.eu";
-    settings.user.name = "heph";
-  };
-
-  programs.firefox = {
-    enable = true;
-    policies = {
-      DisableTelemetry = true;
-      DisableFirefoxStudies = true;
-      DisablePocket = true;
-      DisableFirefoxAccounts = false;
-      NoDefaultBookmarks = true;
-      OfferToSaveLogins = false;
-      OfferToSaveLoginsDefault = false;
-      PasswordManagerEnabled = false;
-      FirefoxHome = {
-        Search = true;
-        Pocket = false;
-        Snippets = false;
-        TopSites = false;
-        Highlights = false;
-      };
-      UserMessaging = {
-        ExtensionRecommendations = false;
-        SkipOnboarding = true;
-      };
-    };
-    profiles.default = {
-      id = 0;
-      name = "heph";
-      isDefault = true;
-      extensions.packages = with firefox-addons.packages.${pkgs.system}; [
-        ublock-origin
-        bitwarden
-        user-agent-string-switcher
-        multi-account-containers
-        kagi-search
-        ipvfoo
-      ];
-      settings = {
-        "sidebar.verticalTabs" = true;
-        "sidebar.revamp" = true;
-        "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
-        "browser.newtabpage.activity-stream.showSponsored" = false;
-        "browser.urlbar.suggest.quicksuggest.sponsored" = false;
-        "browser.urlbar.suggest.quicksuggest.nonsponsored" = false;
-        "browser.search.suggest.enabled" = false;
-        "browser.search.suggest.enabled.private" = false;
-        "browser.urlbar.suggest.searches" = false;
-        "datareporting.healthreport.uploadEnabled" = false;
-        "toolkit.telemetry.enabled" = false;
-        "app.shield.optoutstudies.enabled" = false;
-        "gfx.webrender.all" = true;
-        "layers.acceleration.force-enabled" = true;
-        "browser.tabs.drawInTitlebar" = true;
-        "browser.shell.checkDefaultBrowser" = false;
-        "general.smoothScroll" = true;
-        "browser.sessionstore.resume_from_crash" = true;
-        "browser.tabs.tabmanager.enabled" = false;
-        "widget.use-xdg-desktop-portal.file-picker" = 1;
-        "widget.use-xdg-desktop-portal.mime-handler" = 1;
-        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-      };
-    };
-  };
-
-  programs.mbsync.enable = true;
-  programs.msmtp.enable = true;
-  programs.notmuch = {
-    hooks = {
-      preNew = "mbsync --all";
-      postNew = "afew -tnv";
-    };
-  };
-  accounts.email = {
-    accounts.personal = {
-      address = "me@mbauce.com";
-      imap.host = "mail.mbauce.com";
-      mbsync = {
-        enable = true;
-        create = "maildir";
-      };
-      msmtp.enable = true;
-      notmuch.enable = true;
-      primary = true;
-      realName = "Marco Bauce";
-      passwordCommand = "${pkgs.coreutils-full}/bin/cat ${config.age.secrets.imap-mbauce.path}";
-      smtp.host = "mail.mbauce.com";
-      userName = "me@mbauce.com";
-    };
-  };
-
-  home.file.".config/afew/config".text = ''
-    [SpamFilter]
-    [KillThreadsFilter]
-    [ListMailsFilter]
-    [SentMailsFilter]
-    sent_tag = sent
-    [ArchiveSentMailsFilter]
-
-    [Filter.0]
-    message = "Filter Personal Mails"
-    query = 'folder:~/Maildir/personal/'
-    tags = +personal
-
-    [Filter.1]
-    message = "delete all message from fitexpress"
-    query = from:no_reply@fitexpress.it
-    tags = +junk;-new
-
-    [Filter.2]
-    message = "Filter mailing lists"
-    query = from:nexa@server-nexa.polito.it
-    tags = +lists;-new
-
-    [Filter.3]
-    message = "Filter Work Mails"
-    query = 'to:m.bauce@davinci.care'
-    tags = +work
-
-    [Filter.4]
-    message = "Filter OVH Mails"
-    query = 'folder:~/Maildir/ovh/'
-    tags = +ovh
-
-    [InboxFilter]
-  '';
-
-  home.file.".config/aliases".text = ''
-    root: shopping@mbauce.com
-  '';
+  programs.firefox.profiles.default.extensions.packages = [
+    firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}.ipvfoo
+  ];
 
   services.syncthing = {
     enable = true;
