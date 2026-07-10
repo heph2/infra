@@ -1,16 +1,12 @@
-{ inputs, ... }:
+{ config, ... }:
 {
   infra.nixos.hosts.timballo = {
     system = "x86_64-linux";
     modules = [
       ./default.nix
       { nixpkgs.config.allowUnfree = true; }
-      inputs.home-manager.nixosModules.home-manager
-      {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.users.heph = import ./home.nix;
-      }
+      config.infra.modules.nixos.home-manager
+      { home-manager.users.heph = import ./home.nix; }
       ../../modules/common/default.nix
       (
         { modulesPath, ... }:
