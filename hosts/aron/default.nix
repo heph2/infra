@@ -1,11 +1,23 @@
-{ pkgs, lib, nur, config, inputs, ... }: {
+{
+  pkgs,
+  lib,
+  nur,
+  config,
+  inputs,
+  ...
+}:
+{
 
-  imports = [ ./brew.nix ./wm.nix ];
+  imports = [
+    ./brew.nix
+    ./wm.nix
+  ];
 
   nix.extraOptions = ''
     auto-optimise-store = true
     experimental-features = nix-command flakes
-  '' + lib.optionalString (pkgs.system == "aarch64-darwin") ''
+  ''
+  + lib.optionalString (pkgs.system == "aarch64-darwin") ''
     extra-platforms = x86_64-darwin aarch64-darwin
   '';
 
@@ -14,7 +26,10 @@
   nix.enable = false; # determinate-system installer
   ids.uids.nixbld = 350;
   nix.settings = {
-    trusted-users = [ "marco" "root" ];
+    trusted-users = [
+      "marco"
+      "root"
+    ];
     substituters = [
       "https://cache.nixos.org"
       "https://nix-community.cachix.org"
@@ -37,8 +52,12 @@
   };
   system.primaryUser = "marco";
 
-  services.postgresql = { enable = true; };
-  services.emacs = { enable = true; };
+  services.postgresql = {
+    enable = true;
+  };
+  services.emacs = {
+    enable = true;
+  };
 
   users.users.marco.home = "/Users/marco";
   programs.zsh.enable = true;
@@ -63,8 +82,17 @@
       # lan = "192.168.1.30";
     };
   };
-  services.synapse-bt = { enable = false; }; # Current using Barrier
-  services.tailscale = { enable = false; }; # This doesn't ship with Tray
+
+  # Dimensione IPv6, same /64/gateway used by sauron/zima.
+  system.activationScripts.postActivation.text = ''
+    /usr/sbin/networksetup -setv6manual "Wi-Fi" 2a07:7e81:85f5::a10 64 fe80::6f4:1cff:fe18:162
+  '';
+  services.synapse-bt = {
+    enable = false;
+  }; # Current using Barrier
+  services.tailscale = {
+    enable = false;
+  }; # This doesn't ship with Tray
 
   # Apps
   # `home-manager` currently has issues adding them to `~/Applications`
