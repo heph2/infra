@@ -265,18 +265,22 @@ in
   nixpkgs.config.allowUnfree = true;
 
   # Dimensione IPv6, same /64/gateway used by sauron/zima.
-  networking.interfaces.eno1 = {
-    ipv6.addresses = [
-      {
-        address = "2a07:7e81:85f5::fade";
-        prefixLength = 64;
-      }
-    ];
-  };
-
-  networking.defaultGateway6 = {
-    address = "fe80::6f4:1cff:fe18:162";
-    interface = "eno1";
+  networking.networkmanager = {
+    settings.main.no-auto-default = "eno1";
+    ensureProfiles.profiles.eno1 = {
+      connection = {
+        id = "eno1";
+        type = "ethernet";
+        interface-name = "eno1";
+        autoconnect = true;
+      };
+      ipv4.method = "auto";
+      ipv6 = {
+        method = "auto";
+        addresses = "2a07:7e81:85f5::fade/64";
+        gateway = "fe80::6f4:1cff:fe18:162";
+      };
+    };
   };
 
   networking.wireguard.interfaces = {
@@ -353,11 +357,7 @@ in
   hardware.graphics.enable32Bit = true;
   networking.hostId = "d81f3ea4";
 
-  # DHCP and DNS
-  networking.dhcpcd = {
-    enable = true;
-    extraConfig = "nohook resolv.conf";
-  };
+  # DNS
   services.resolved = {
     enable = true;
     settings.Resolve = {
