@@ -26,6 +26,13 @@ let
     imagegen = inputs.openai-skills + "/skills/.system/imagegen";
     ponytail = inputs.ponytail + "/skills/ponytail";
     tdd = inputs.superpowers + "/skills/test-driven-development";
+    ansible-good-practices = inputs.claude-ansible-skills + "/ansible-good-practices/skills/ansible-good-practices";
+    ansible-new-role = inputs.claude-ansible-skills + "/ansible-new-role/skills/ansible-new-role";
+    ansible-new-collection = inputs.claude-ansible-skills + "/ansible-new-collection/skills/ansible-new-collection";
+    ansible-new-ee = inputs.claude-ansible-skills + "/ansible-new-ee/skills/ansible-new-ee";
+    ansible-new-molecule = inputs.claude-ansible-skills + "/ansible-new-molecule/skills/ansible-new-molecule";
+    ansible-docs = inputs.claude-ansible-skills + "/ansible-docs/skills/ansible-docs";
+    ansible-zen = inputs.claude-ansible-skills + "/ansible-zen/skills/ansible-zen";
     aws-best-practices = awsBestPracticesSkill;
     nixos-host-workflow = ../../skills/nixos-host-workflow;
   };
@@ -208,6 +215,10 @@ in
         "npm:pi-powerline-footer@0.6.1"
         "npm:@quintinshaw/pi-dynamic-workflows@2.11.0"
         "npm:@victor-software-house/pi-agent-browser"
+
+        # Reuse the local Claude Code OAuth session as a pi provider.
+        # Risk accepted interactively: this third-party extension uses non-public Anthropic protocol details.
+        "npm:@cgaravitoq/pi-claude-code-auth@2.3.0"
       ];
     };
   };
