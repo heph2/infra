@@ -1,8 +1,15 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   domain = "grafana.pochi.casa";
   issuer = "https://auth.pochi.casa";
-in {
+  dashboards = pkgs.writeTextDir "smtp.json" (builtins.readFile ./dashboards/smtp.json);
+in
+{
   services.grafana = {
     enable = true;
     settings = {
@@ -13,6 +20,26 @@ in {
         http_addr = "127.0.0.1";
       };
       security.secret_key = "SW2YcwTIb9zpOOhoPsMm";
+    };
+    provision = {
+      enable = true;
+      datasources.settings.datasources = [
+        {
+          name = "Prometheus";
+          type = "prometheus";
+          uid = "prometheus";
+          access = "proxy";
+          url = "http://127.0.0.1:${toString config.services.prometheus.port}";
+          isDefault = true;
+        }
+      ];
+      dashboards.settings.providers = [
+        {
+          name = "infra";
+          type = "file";
+          options.path = dashboards;
+        }
+      ];
     };
   };
 
@@ -33,5 +60,8 @@ in {
     reverse_proxy 127.0.0.1:3000
   '';
 
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
 }
