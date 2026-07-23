@@ -51,6 +51,7 @@
       url = "github:cjpais/Handy";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    comfyui-nix.url = "github:utensils/comfyui-nix";
     chrome-cdp-skill = {
       url = "github:pasky/chrome-cdp-skill";
       flake = false;
@@ -69,6 +70,10 @@
     };
     superpowers = {
       url = "github:obra/superpowers";
+      flake = false;
+    };
+    claude-ansible-skills = {
+      url = "github:leogallego/claude-ansible-skills";
       flake = false;
     };
     aws-best-practices-skill = {
@@ -113,10 +118,6 @@
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    tree-sitter-gmpl = {
-      url = "path:/home/heph/code/ricop/tree-sitter-gmpl";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
   outputs =
     inputs@{ flake-parts, ... }:
@@ -124,6 +125,7 @@
       imports = [
         ./modules/dendritic
         ./modules/home
+        ./modules/nixos
         #./hosts/fafnir/default.nix ## Router
         ./hosts/freya/configuration.nix # # Desktop
         ./hosts/hermes/configuration.nix # # Hetzner VPS
