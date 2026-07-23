@@ -123,9 +123,8 @@
   services.postfix = {
     settings.main = {
       relayhost = [ "[smtp.eu.mailgun.org]:587" ];
-      relay_domains = [ "mbauce.com" ];
       smtp_sasl_auth_enable = true;
-      smtp_sasl_password_maps = "texthash:/etc/postfix/sasl_passwd";
+      smtp_sasl_password_maps = "texthash:/var/lib/postfix/sasl_passwd";
       smtp_sasl_security_options = "noanonymous";
     };
   };
@@ -138,10 +137,9 @@
       RemainAfterExit = true;
     };
     script = ''
-      echo '[smtp.eu.mailgun.org]:587 postmaster@mailgun.mbauce.com:'$(cat ${config.age.secrets.mailgun-smtp.path}) > /etc/postfix/sasl_passwd
-      ${pkgs.postfix}/bin/postmap /etc/postfix/sasl_passwd
-      chown root:postfix /etc/postfix/sasl_passwd
-      chmod 640 /etc/postfix/sasl_passwd
+      echo '[smtp.eu.mailgun.org]:587 postmaster@mailgun.mbauce.com:'$(cat ${config.age.secrets.mailgun-smtp.path}) > /var/lib/postfix/sasl_passwd
+      chown root:postfix /var/lib/postfix/sasl_passwd
+      chmod 640 /var/lib/postfix/sasl_passwd
     '';
   };
 
