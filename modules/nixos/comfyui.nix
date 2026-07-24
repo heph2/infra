@@ -28,6 +28,10 @@
         listenAddress = "127.0.0.1";
         port = 8188;
         openFirewall = false;
+        extraArgs = [
+          "--disable-xformers"
+          "--use-pytorch-cross-attention"
+        ];
       };
     };
 }
