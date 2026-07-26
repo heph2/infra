@@ -26,11 +26,14 @@ let
     imagegen = inputs.openai-skills + "/skills/.system/imagegen";
     ponytail = inputs.ponytail + "/skills/ponytail";
     tdd = inputs.superpowers + "/skills/test-driven-development";
-    ansible-good-practices = inputs.claude-ansible-skills + "/ansible-good-practices/skills/ansible-good-practices";
+    ansible-good-practices =
+      inputs.claude-ansible-skills + "/ansible-good-practices/skills/ansible-good-practices";
     ansible-new-role = inputs.claude-ansible-skills + "/ansible-new-role/skills/ansible-new-role";
-    ansible-new-collection = inputs.claude-ansible-skills + "/ansible-new-collection/skills/ansible-new-collection";
+    ansible-new-collection =
+      inputs.claude-ansible-skills + "/ansible-new-collection/skills/ansible-new-collection";
     ansible-new-ee = inputs.claude-ansible-skills + "/ansible-new-ee/skills/ansible-new-ee";
-    ansible-new-molecule = inputs.claude-ansible-skills + "/ansible-new-molecule/skills/ansible-new-molecule";
+    ansible-new-molecule =
+      inputs.claude-ansible-skills + "/ansible-new-molecule/skills/ansible-new-molecule";
     ansible-docs = inputs.claude-ansible-skills + "/ansible-docs/skills/ansible-docs";
     ansible-zen = inputs.claude-ansible-skills + "/ansible-zen/skills/ansible-zen";
     aws-best-practices = awsBestPracticesSkill;
@@ -238,6 +241,9 @@ in
 
   programs.kitty.enable = true;
 
+  home.file.".config/wezterm/agincourttriptych.jpg".source =
+    ../../assets/agincourttriptych-center-donato-3000-2560x1474.jpg;
+
   programs.wezterm = {
     enable = true;
     extraConfig = ''
@@ -246,6 +252,7 @@ in
       local config = wezterm.config_builder()
 
       config.color_scheme = "rose-pine-moon"
+      config.window_background_image = "${config.home.homeDirectory}/.config/wezterm/agincourttriptych.jpg"
       config.font = wezterm.font("Hack Nerd Font")
       config.font_size = 15.0
       config.window_background_opacity = 0.8
@@ -324,6 +331,7 @@ in
       orca-slicer
       nix-output-monitor
       brave
+      vja # Vikunja Cli
       speedtest-cli
       ispell
       transmission_4-qt
