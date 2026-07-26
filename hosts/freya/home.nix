@@ -38,6 +38,7 @@ let
     ansible-zen = inputs.claude-ansible-skills + "/ansible-zen/skills/ansible-zen";
     aws-best-practices = awsBestPracticesSkill;
     nixos-host-workflow = ../../skills/nixos-host-workflow;
+    vikunja = ../../skills/vikunja;
   };
 in
 {
@@ -69,6 +70,7 @@ in
         "*.github.com"
         "raw.githubusercontent.com"
         "mcp.context7.com"
+        "vikunja.pochi.casa"
       ];
       deniedDomains = [ ];
     };
@@ -240,6 +242,20 @@ in
   };
 
   programs.kitty.enable = true;
+
+  age = {
+    identityPaths = [ "/home/heph/.ssh/sekai_ed" ];
+    secrets.vja-api-token = {
+      file = ../../secrets/vja-api-token.age;
+      path = "${config.home.homeDirectory}/.config/vja/token.json";
+    };
+  };
+
+  home.file.".config/vja/config.rc".text = ''
+    [application]
+    frontend_url=https://vikunja.pochi.casa/
+    api_url=https://vikunja.pochi.casa/api/v1
+  '';
 
   home.file.".config/wezterm/agincourttriptych.jpg".source =
     ../../assets/agincourttriptych-center-donato-3000-2560x1474.jpg;

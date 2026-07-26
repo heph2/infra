@@ -22,6 +22,7 @@ in {
   "paperless-oidc-client-secret.age".publicKeys = [ heph freya zima sauron ];
   "homebox-oidc-client-secret.age".publicKeys = [ heph freya zima sauron tyr ];
   "vikunja-oidc-client-secret.age".publicKeys = [ heph freya tyr ];
+  "vja-api-token.age".publicKeys = [ heph freya ];
   "pocket-id-encryption-key.age".publicKeys = [ heph freya sauron ];
   "netdata_token.age".publicKeys = [ sauron zima tyr ];
   "ups-admin.age".publicKeys = [ sauron ];
