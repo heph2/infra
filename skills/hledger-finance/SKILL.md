@@ -1,6 +1,6 @@
 ---
 name: hledger-finance
-description: Manage a personal hledger finance journal: validate entries, safely import and categorise bank/card exports, reconcile accounts, and create expense, income, and balance reports or visualisations. Use when working with hledger journals or personal-finance imports.
+description: "Manage a personal hledger finance journal: validate entries, safely import and categorise bank/card exports, reconcile accounts, and create expense, income, and balance reports or visualisations. Use when working with hledger journals or personal-finance imports."
 ---
 
 # Hledger Finance
