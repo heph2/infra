@@ -51,6 +51,7 @@
           "lang@mbauce.com" # # Languages, Anki
           "anime@mbauce.com"
           "restock@mbauce.com"
+          "consulting@mbauce.com"
         ];
         sieveScript = ''
           require ["fileinto", "mailbox"];
