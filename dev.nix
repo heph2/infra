@@ -8,6 +8,11 @@
     }:
     {
       formatter = pkgs.nixpkgs-fmt;
+
+      # Exposed so `nix build .#openwiki` and `pkgs/openwiki/update.sh`
+      # (nix-update --flake openwiki) both work.
+      packages.openwiki = pkgs.callPackage ./pkgs/openwiki/package.nix { };
+
       devShells.default =
         with pkgs;
         mkShell {

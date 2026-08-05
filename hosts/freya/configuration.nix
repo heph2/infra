@@ -38,6 +38,7 @@ in
           hm.ssh-heph
           hm.firefox-heph
           hm.mail-heph
+          hm.openwiki
           ./home.nix
         ];
         home-manager.extraSpecialArgs = {

@@ -1,4 +1,7 @@
 { config, inputs, ... }:
+let
+  hm = config.infra.modules.homeManager;
+in
 {
   infra.darwin.hosts.aron = {
     system = "aarch64-darwin";
@@ -14,7 +17,10 @@
       inputs.spicetify-nix.darwinModules.spicetify
       {
         home-manager.backupFileExtension = "backup";
-        home-manager.users.marco = import ./home.nix;
+        home-manager.users.marco.imports = [
+          ./home.nix
+          hm.openwiki
+        ];
         home-manager.extraSpecialArgs = {
           inherit inputs;
         };
