@@ -304,6 +304,7 @@ in
       bitwig-studio
       wootility
       mpv
+      anydesk
       dwarf-fortress
       thunar
       aporetic
