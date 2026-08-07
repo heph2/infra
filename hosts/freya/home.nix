@@ -47,6 +47,7 @@ in
     agenix.homeManagerModules.default
     stardew-modding.homeManagerModules.default
     inputs.pi.homeModules.default
+    inputs.voxtype.homeManagerModules.default
     #    ../../modules/graphical/firefox/default.nix
   ];
 
@@ -218,7 +219,10 @@ in
         "npm:pi-skillful@0.3.11"
         "npm:@eko24ive/pi-ask@1.1.0"
         "npm:pi-tool-display@0.5.0"
-        "npm:pi-powerline-footer@0.6.1"
+        # 0.6.1 monkey-patched tui.doRender; pi 0.84.0 proxies it -> infinite
+        # recursion -> "Maximum call stack size exceeded" on TUI start.
+        # 0.9.0 dropped the extension-owned fixed editor.
+        "npm:pi-powerline-footer@0.12.1"
         "npm:@quintinshaw/pi-dynamic-workflows@2.11.0"
         "npm:@victor-software-house/pi-agent-browser"
 
@@ -227,6 +231,21 @@ in
         "npm:@cgaravitoq/pi-claude-code-auth@2.3.0"
       ];
     };
+  };
+
+  programs.voxtype = {
+    enable = true;
+    # Vulkan build = GPU transcription on the RX 9060 XT (whisper.cpp gpu-vulkan feature).
+    package = inputs.voxtype.packages.${pkgs.stdenv.hostPlatform.system}.vulkan;
+    model.name = "base.en";
+    service.enable = true;
+    settings.hotkey = {
+      enabled = true;
+      key = "RIGHTALT";
+    };
+    # ponytail: gpu_device left unset (Vulkan device 0). If it picks the Raphael
+    # iGPU instead of the dGPU, set settings.whisper.gpu_device to the right index
+    # from `vulkaninfo --summary`.
   };
 
   programs.stardew-modding.enable = true;
