@@ -52,6 +52,7 @@
           "anime@mbauce.com"
           "restock@mbauce.com"
           "consulting@mbauce.com"
+          "google@mbauce.com"
         ];
         sieveScript = ''
           require ["fileinto", "mailbox"];
