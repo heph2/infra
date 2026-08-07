@@ -51,6 +51,10 @@
       url = "github:cjpais/Handy";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    voxtype = {
+      url = "github:peteonrails/voxtype";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     comfyui-nix.url = "github:utensils/comfyui-nix";
     chrome-cdp-skill = {
       url = "github:pasky/chrome-cdp-skill";
