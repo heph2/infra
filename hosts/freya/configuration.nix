@@ -10,6 +10,7 @@ in
       {
         nixpkgs.overlays = [
           inputs.emacs-overlay.overlay
+          (import ../../pkgs/plakar { inherit inputs; })
           (final: prev: {
             stable = import inputs.stable-nixpkgs {
               system = prev.stdenv.hostPlatform.system;

@@ -620,6 +620,7 @@ in
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.opencode
     inputs.paseo.packages.${pkgs.stdenv.hostPlatform.system}.paseo
+    (plakar.withPlugins (plugins: [ plugins.routeros ]))
     steamcmd
     uxplay
     llama-cpp-rocm
