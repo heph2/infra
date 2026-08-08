@@ -35,6 +35,23 @@ in
     owner = "systemd-network";
     group = "systemd-network";
   };
+  age.secrets.plakar-routeros-passphrase.file = ../../secrets/plakar-routeros-passphrase.age;
+
+  services.plakar-routeros-backup = {
+    enable = true;
+    repository = "${home}/.backups/routeros";
+    routerAddress = "192.168.0.1";
+    routerUser = "admin";
+    privateKeyFile = "${home}/.ssh/plakar";
+    passphraseFile = config.age.secrets.plakar-routeros-passphrase.path;
+    user = user;
+    group = "users";
+    modes = [
+      "export"
+      "backup"
+    ];
+    onCalendar = "weekly";
+  };
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
