@@ -47,6 +47,22 @@ buildNpmPackage rec {
     rm -rf $bs/build/Release/obj $bs/build/Release/obj.target \
       $bs/build/Release/sqlite3.a $bs/build/Release/test_extension.node \
       $bs/deps $bs/src
+
+    # syncBundledSkills() copies skills/ out of the store with fs.cp, which
+    # preserves mode. Store dirs are 0555, so the staged copy has no write bit:
+    # rename(staged, target) needs it to rewrite "..", fails EACCES, and the
+    # scratch cleanup then fails unlinking staged/SKILL.md. openwiki's
+    # isAuthError() matches /permission denied/, so it surfaces as the bogus
+    # "Your provider rejected the credentials" panel.
+    # ponytail: chmod the staged root only, since bundled skills are flat
+    # files; make it recursive if upstream ever nests directories in a skill.
+    skills=$out/lib/node_modules/openwiki/dist/agent/skills.js
+    substituteInPlace $skills \
+      --replace-fail 'import { cp, mkdir,' 'import { chmod, cp, mkdir,' \
+      --replace-fail \
+        'await cp(path.join(sourceDir, name), staged, { recursive: true });' \
+        'await cp(path.join(sourceDir, name), staged, { recursive: true });
+        await chmod(staged, 0o755);'
   '';
 
   meta = {
