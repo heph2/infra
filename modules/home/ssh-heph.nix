@@ -4,6 +4,12 @@
       enable = true;
       enableDefaultConfig = false;
       matchBlocks = {
+        mikrotik = {
+          port = 22;
+          hostname = "192.168.0.1";
+          user = "admin";
+          identityFile = "/home/heph/.ssh/plakar";
+        };
         zima = {
           port = 22;
           hostname = "192.168.0.105";
