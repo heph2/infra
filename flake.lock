@@ -1468,6 +1468,22 @@
         "type": "github"
       }
     },
+    "plakar-nixpkgs": {
+      "locked": {
+        "lastModified": 1785967620,
+        "narHash": "sha256-IItrdb7Puk05RqOBWZYFC5X6Wl1sJmCfh5MWVHw5iMM=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "b7c2ada94fe99c15b0dbcf4d11fd7850b957a436",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "ponytail": {
       "flake": false,
       "locked": {
@@ -1603,6 +1619,7 @@
         "paneru": "paneru",
         "paseo": "paseo",
         "pi": "pi",
+        "plakar-nixpkgs": "plakar-nixpkgs",
         "ponytail": "ponytail",
         "simple-nixos-mailserver": "simple-nixos-mailserver",
         "sops-nix": "sops-nix",
