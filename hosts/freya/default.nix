@@ -13,6 +13,10 @@ let
     "10de:1aef"
   ];
   home = "/home/${user}";
+  plakarPackage = pkgs.plakar.withPlugins (plugins: [
+    plugins.remarkable
+    plugins.routeros
+  ]);
 in
 {
   imports = [
@@ -51,6 +55,52 @@ in
       "backup"
     ];
     onCalendar = "weekly";
+  };
+
+  systemd.services.plakar-remarkable-backup = {
+    description = "Back up reMarkable when connected over USB";
+    after = [ "NetworkManager.service" ];
+    environment.HOME = home;
+    path = [ pkgs.openssh ];
+    script = ''
+      set -euo pipefail
+
+      for attempt in {1..30}; do
+        if ${pkgs.netcat-openbsd}/bin/nc -z -w 1 10.11.99.1 22; then
+          break
+        fi
+        if (( attempt == 30 )); then
+          echo "reMarkable SSH did not become available" >&2
+          exit 1
+        fi
+        ${pkgs.coreutils}/bin/sleep 1
+      done
+
+      export PLAKAR_PASSPHRASE="$(${pkgs.coreutils}/bin/cat "$CREDENTIALS_DIRECTORY/repository-passphrase")"
+      ${lib.escapeShellArgs [
+        (lib.getExe plakarPackage)
+        "-stdio"
+        "at"
+        "${home}/.backups/remarkable"
+        "backup"
+        "-name"
+        "remarkable"
+        "-tag"
+        "remarkable,usb"
+        "-o"
+        "private_key=${home}/.ssh/plakar"
+        "remarkable://10.11.99.1"
+      ]}
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = user;
+      Group = "users";
+      UMask = "0077";
+      LoadCredential = [
+        "repository-passphrase:${config.age.secrets.plakar-routeros-passphrase.path}"
+      ];
+    };
   };
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
@@ -452,6 +502,7 @@ in
   ## yubikey
   services.pcscd.enable = true;
   services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="04b3", ATTR{idProduct}=="4010", TAG+="systemd", ENV{SYSTEMD_WANTS}+="plakar-remarkable-backup.service"
     SUBSYSTEM=="usb", ATTR{idVendor}=="87ad", ATTR{idProduct}=="70db", MODE="0666"
     SUBSYSTEM=="usbmon", GROUP="wireshark", MODE="0640"
   '';
@@ -637,10 +688,7 @@ in
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.opencode
     inputs.paseo.packages.${pkgs.stdenv.hostPlatform.system}.paseo
-    (plakar.withPlugins (plugins: [
-      plugins.remarkable
-      plugins.routeros
-    ]))
+    plakarPackage
     steamcmd
     uxplay
     llama-cpp-rocm
