@@ -6,6 +6,7 @@ let
   };
 
   plugins = {
+    remarkable = plakarPkgs.callPackage ./remarkable.nix { };
     routeros = plakarPkgs.callPackage ./routeros.nix { };
   };
 
