@@ -28,6 +28,7 @@ in
       config.infra.modules.nixos.home-manager
       config.infra.modules.nixos.comfyui
       config.infra.modules.nixos.plakar-routeros-backup
+      config.infra.modules.nixos.plakar-usb-backup
       {
         home-manager.backupFileExtension = "backup";
         home-manager.users.heph.imports = [

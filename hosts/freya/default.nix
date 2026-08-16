@@ -57,50 +57,19 @@ in
     onCalendar = "weekly";
   };
 
-  systemd.services.plakar-remarkable-backup = {
-    description = "Back up reMarkable when connected over USB";
-    after = [ "NetworkManager.service" ];
-    environment.HOME = home;
-    path = [ pkgs.openssh ];
-    script = ''
-      set -euo pipefail
-
-      for attempt in {1..30}; do
-        if ${pkgs.netcat-openbsd}/bin/nc -z -w 1 10.11.99.1 22; then
-          break
-        fi
-        if (( attempt == 30 )); then
-          echo "reMarkable SSH did not become available" >&2
-          exit 1
-        fi
-        ${pkgs.coreutils}/bin/sleep 1
-      done
-
-      export PLAKAR_PASSPHRASE="$(${pkgs.coreutils}/bin/cat "$CREDENTIALS_DIRECTORY/repository-passphrase")"
-      ${lib.escapeShellArgs [
-        (lib.getExe plakarPackage)
-        "-stdio"
-        "at"
-        "${home}/.backups/remarkable"
-        "backup"
-        "-name"
-        "remarkable"
-        "-tag"
-        "remarkable,usb"
-        "-o"
-        "private_key=${home}/.ssh/plakar"
-        "remarkable://10.11.99.1"
-      ]}
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      User = user;
-      Group = "users";
-      UMask = "0077";
-      LoadCredential = [
-        "repository-passphrase:${config.age.secrets.plakar-routeros-passphrase.path}"
-      ];
-    };
+  services.plakar-usb-backup.remarkable = {
+    enable = true;
+    package = plakarPackage;
+    repository = "${home}/.backups/remarkable";
+    location = "remarkable://10.11.99.1";
+    connectorOptions.private_key = "${home}/.ssh/plakar";
+    passphraseFile = config.age.secrets.plakar-routeros-passphrase.path;
+    user = user;
+    group = "users";
+    runtimePackages = [ pkgs.openssh ];
+    usbVendorId = "04b3";
+    usbProductId = "4010";
+    readiness.host = "10.11.99.1";
   };
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
@@ -502,7 +471,6 @@ in
   ## yubikey
   services.pcscd.enable = true;
   services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="04b3", ATTR{idProduct}=="4010", TAG+="systemd", ENV{SYSTEMD_WANTS}+="plakar-remarkable-backup.service"
     SUBSYSTEM=="usb", ATTR{idVendor}=="87ad", ATTR{idProduct}=="70db", MODE="0666"
     SUBSYSTEM=="usbmon", GROUP="wireshark", MODE="0640"
   '';
