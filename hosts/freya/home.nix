@@ -1,14 +1,14 @@
-{
-  config,
-  pkgs,
-  agenix,
-  stardew-modding,
-  inputs,
-  ...
+{ config
+, pkgs
+, agenix
+, stardew-modding
+, inputs
+, ...
 }:
 
 let
   cfg = config.xsession.windowManager.i3;
+  obscuraPackage = inputs.obscura.packages.${pkgs.stdenv.hostPlatform.system}.obscura-browser-bin;
   awsBestPracticesSkill = pkgs.runCommand "aws-best-practices-skill" { } ''
         cp -R ${inputs.aws-best-practices-skill} $out
         chmod -R u+w $out
@@ -55,6 +55,10 @@ in
 
   home.sessionVariables = {
     XDG_DATA_DIRS = "$XDG_DATA_DIRS:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
+  };
+
+  home.file.".agent-browser/config.json".text = builtins.toJSON {
+    cdp = "9222";
   };
 
   home.file.".pi/agent/sandbox.json".text = builtins.toJSON {
@@ -339,6 +343,7 @@ in
       xournalpp
       python313Packages.python-lsp-server
       obsidian
+      obscuraPackage
       sdrpp
       libnotify
       gqrx
@@ -546,6 +551,20 @@ in
   programs.firefox.profiles.default.settings = {
     "media.ffmpeg.vaapi.enabled" = true;
     "media.rdd-vpx.enabled" = true;
+  };
+
+  systemd.user.services.obscura = {
+    Unit = {
+      Description = "Obscura headless browser";
+      After = [ "network.target" ];
+    };
+    Install.WantedBy = [ "default.target" ];
+    Service = {
+      ExecStart =
+        "${obscuraPackage}/bin/obscura serve --host 127.0.0.1 --port 9222 --storage-dir ${config.xdg.stateHome}/obscura";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
   };
 
   # systemd.user.services.mpris-proxy = {

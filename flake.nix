@@ -57,6 +57,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     comfyui-nix.url = "github:utensils/comfyui-nix";
+    obscura = {
+      url = "github:George-Miao/flakes";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     chrome-cdp-skill = {
       url = "github:pasky/chrome-cdp-skill";
       flake = false;
