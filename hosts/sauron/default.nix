@@ -121,6 +121,22 @@ in
   # Set proper umask for sabnzbd so files are readable by media group
   systemd.services.sabnzbd.serviceConfig.UMask = "0002";
 
+  # SABnzbd manages the permissions of completed job folders itself via its
+  # internal `permissions` setting. When empty it defaults to 0700, which
+  # locks out the `media` group so Sonarr/Radarr cannot import the download
+  # ("No files found are eligible for import"). The sabnzbd.ini is stateful
+  # (not Nix-managed), so enforce `permissions = 775` before every start.
+  systemd.services.sabnzbd.serviceConfig.ExecStartPre =
+    let
+      fixPerms = pkgs.writeShellScript "sabnzbd-force-permissions" ''
+        ini=/var/lib/sabnzbd/sabnzbd.ini
+        if [ -f "$ini" ] && ${pkgs.gnugrep}/bin/grep -q '^permissions' "$ini"; then
+          ${pkgs.gnused}/bin/sed -i 's|^permissions *=.*|permissions = 775|' "$ini"
+        fi
+      '';
+    in
+    "${fixPerms}";
+
   services.prowlarr = {
     enable = true;
     openFirewall = false;
