@@ -1,9 +1,10 @@
-{ config
-, pkgs
-, agenix
-, stardew-modding
-, inputs
-, ...
+{
+  config,
+  pkgs,
+  agenix,
+  stardew-modding,
+  inputs,
+  ...
 }:
 
 let
@@ -24,6 +25,7 @@ let
     chrome-cdp = inputs.chrome-cdp-skill + "/skills/chrome-cdp";
     grill-me = inputs.mattpocock-skills + "/skills/productivity/grill-me";
     imagegen = inputs.openai-skills + "/skills/.system/imagegen";
+    lavish = inputs.lavish-axi + "/skills/lavish";
     ponytail = inputs.ponytail + "/skills/ponytail";
     tdd = inputs.superpowers + "/skills/test-driven-development";
     ansible-good-practices =
@@ -396,6 +398,8 @@ in
       feh
       trayer
       chiaki-ng
+      cmake
+      gcc
       xscreensaver
       reaper
       nautilus
@@ -566,8 +570,7 @@ in
     };
     Install.WantedBy = [ "default.target" ];
     Service = {
-      ExecStart =
-        "${obscuraPackage}/bin/obscura serve --host 127.0.0.1 --port 9222 --storage-dir ${config.xdg.stateHome}/obscura";
+      ExecStart = "${obscuraPackage}/bin/obscura serve --host 127.0.0.1 --port 9222 --storage-dir ${config.xdg.stateHome}/obscura";
       Restart = "on-failure";
       RestartSec = 5;
     };

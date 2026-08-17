@@ -70,6 +70,10 @@
       url = "github:mattpocock/skills";
       flake = false;
     };
+    lavish-axi = {
+      url = "github:kunchenguid/lavish-axi";
+      flake = false;
+    };
     openai-skills = {
       url = "github:openai/skills";
       flake = false;
