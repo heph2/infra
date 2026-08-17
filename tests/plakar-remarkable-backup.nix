@@ -4,8 +4,13 @@
   pkgs,
 }:
 let
+  backup = config.services.plakar-usb-backup.remarkable;
   service = config.systemd.services.plakar-remarkable-backup;
 in
+assert backup.usbVendorId == "04b3";
+assert backup.usbProductId == "4010";
+assert backup.readiness.host == "10.11.99.1";
+assert backup.connectorOptions.private_key == "/home/heph/.ssh/plakar";
 assert service.serviceConfig.Type == "oneshot";
 assert service.serviceConfig.User == "heph";
 assert builtins.elem pkgs.openssh service.path;
