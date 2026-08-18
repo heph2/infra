@@ -77,10 +77,21 @@
     9000
     2379 # k3s, etcd clients: required if using a "High Availability Embedded etcd" configuration
     2380 # k3s, etcd peers: required if using a "High Availability Embedded etcd" configuration
+    3478 # coturn: TURN over TCP, for networks that block UDP
   ];
   networking.firewall.allowedUDPPorts = [
     51820
     8472 # k3s, flannel: required if using multi-node for inter-node networking
+    3478 # coturn: STUN and TURN for warship
+  ];
+  # coturn relay allocations. Without this range TURN completes its handshake
+  # and then relays nothing, which presents as a mysterious ICE failure rather
+  # than as a firewall problem.
+  networking.firewall.allowedUDPPortRanges = [
+    {
+      from = 49160;
+      to = 49200;
+    }
   ];
   # networking.wireguard.interfaces = {
   #   wg0 = {

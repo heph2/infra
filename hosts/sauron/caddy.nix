@@ -45,6 +45,14 @@ let
       host = "cuppy.pochi.casa";
       upstream = "192.168.0.104:30298 192.168.0.105:30298";
     }
+    {
+      # warship signaling: websocket, k3s NodePort on both nodes. Only used to
+      # pair two players and pass ICE payloads; the game itself is peer to peer
+      # and never comes through here. TURN is separate and cannot be proxied,
+      # since it is UDP: turn.pochi.casa points straight at tyr.
+      host = "signal.pochi.casa";
+      upstream = "192.168.0.104:30777 192.168.0.105:30777";
+    }
   ];
 
   caddyFile = pkgs.writeText "Caddyfile" (''
