@@ -11,7 +11,10 @@ let
 in
 {
 
-  imports = [ ./hardware-configuration.nix ];
+  imports = [
+    ./hardware-configuration.nix
+    ./wireguard.nix
+  ];
 
   hardware.bluetooth.enable = true;
   services.pulseaudio.enable = false;
