@@ -26,6 +26,7 @@ in {
   "vja-api-token.age".publicKeys = [ heph freya ];
   "pocket-id-encryption-key.age".publicKeys = [ heph freya sauron ];
   "netdata_token.age".publicKeys = [ sauron zima tyr ];
+  "webdav_htpasswd.age".publicKeys = [ sauron heph freya ];
   "ups-admin.age".publicKeys = [ sauron ];
   "grafana-oidc-client-secret.age".publicKeys = [ heph zima freya tyr sauron ];
   "shortcut-api-token.age".publicKeys = [ heph freya ];

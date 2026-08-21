@@ -24,6 +24,7 @@ in
     ./disk-config.nix
     ./pocked-id.nix
     ./caddy.nix
+    ./webdav.nix
     ./paperless.nix
     ./minecraft.nix
   ];
@@ -108,6 +109,7 @@ in
     "d /media/jelly 2775 root media - -"
     "d /media/jelly/shows 2775 jellyfin media - -"
     "d /media/jelly/movies 2775 jellyfin media - -"
+    "d /media/jelly/music 2775 root media - -"
   ];
 
   services.sabnzbd = {

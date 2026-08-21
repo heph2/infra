@@ -35,6 +35,13 @@ let
       upstream = "localhost:5055";
     }
     {
+      host = "dav.pochi.casa";
+      upstream = "localhost:8787";
+      extra = ''
+        bind 2a07:7e81:85f5::beef
+      '';
+    }
+    {
       host = "cuppy.pochi.casa";
       upstream = "192.168.0.104:30298 192.168.0.105:30298";
     }
