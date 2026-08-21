@@ -14,6 +14,7 @@ let
   users = [ freya heph ];
 in {
   "wg-key-freya.age".publicKeys = [ freya heph ];
+  "wg-key-fenrir.age".publicKeys = [ heph freya ];
   "plakar-routeros-passphrase.age".publicKeys = [ freya heph ];
   "imap-mbauce-mail.age".publicKeys = [ heph freya ];
   "mailgun-smtp-user.age".publicKeys = [ hermes freya ];
