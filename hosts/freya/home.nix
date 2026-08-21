@@ -112,6 +112,12 @@ in
     };
   };
 
+  home.file.".pi/agent/extensions/pi-tool-display/config.json".text = builtins.toJSON {
+    # pi-sandbox already overrides bash for sandboxing; avoid dueling
+    # tool-ownership registration between the two extensions.
+    registerToolOverrides.bash = false;
+  };
+
   home.file.".pi/agent/themes/catpuccino-mocha.json".text = builtins.toJSON {
     "$schema" =
       "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json";
