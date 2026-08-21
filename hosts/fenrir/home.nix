@@ -120,6 +120,14 @@ in
   };
 
   home.file.".pi/agent/extensions/pi-tool-display/config.json".text = builtins.toJSON {
+    # Keep tool output quiet by default; use /tool-display for temporary changes.
+    readOutputMode = "hidden";
+    searchOutputMode = "hidden";
+    mcpOutputMode = "hidden";
+    bashOutputMode = "summary";
+    showTruncationHints = false;
+    showRtkCompactionHints = false;
+
     # pi-sandbox already overrides bash for sandboxing; avoid dueling
     # tool-ownership registration between the two extensions.
     registerToolOverrides.bash = false;
@@ -242,6 +250,11 @@ in
         "npm:pi-powerline-footer@0.12.1"
         "npm:@quintinshaw/pi-dynamic-workflows@2.11.0"
         "npm:@victor-software-house/pi-agent-browser"
+
+        # Additional providers and account-usage visibility.
+        # Runtime-discovered OpenCode Zen/Go models, so new free models show up immediately.
+        "npm:pi-opencode-provider@0.7.3"
+        "npm:@narumitw/pi-usage@0.52.1"
 
         # Reuse the local Claude Code OAuth session as a pi provider.
         # Risk accepted interactively: this third-party extension uses non-public Anthropic protocol details.
@@ -388,7 +401,7 @@ in
         };
       };
 
-      spawn-at-startup = [{ command = [ "noctalia-shell" ]; }];
+      spawn-at-startup = [ { command = [ "noctalia-shell" ]; } ];
 
       binds =
         with config.lib.niri.actions;
