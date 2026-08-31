@@ -29,6 +29,66 @@ in
     EDITOR = "hx";
   };
 
+  programs.zsh.shellAliases = {
+    mail = "mail-fzf";
+    mail-search = "mail-search-fzf";
+    mail-sync = "notmuch new";
+    mail-compose = "mcom";
+    mail-reply = "mrep";
+  };
+
+  home.file.".local/bin/mail-fzf" = {
+    executable = true;
+    text = ''
+      #!/bin/sh
+      set -eu
+      mdirs "$HOME/Maildir/personal" \
+        | mlist -t \
+        | msort -d -r \
+        | mail-list \
+        | fzf --delimiter='\t' --with-nth=2.. --no-multi \
+            --prompt='Mail> ' \
+            --preview='mshow {1} | fold -s -w 80' \
+            --preview-window='right:60%:wrap' \
+            --bind='enter:execute(mshow {1} | fold -s -w 100 | less -R)' \
+            --bind='ctrl-r:execute(mrep -- {1})'
+    '';
+  };
+
+  home.file.".local/bin/mail-list" = {
+    executable = true;
+    text = ''
+      #!/bin/sh
+      while IFS= read -r msg; do
+        mshow -q -h date:subject:from:to "$msg" | awk -v msg="$msg" '
+          /^Date:/    { date = substr($0, 7) }
+          /^Subject:/ { subject = substr($0, 10) }
+          /^From:/    { from = substr($0, 7) }
+          /^To:/      { to = substr($0, 5) }
+          END { printf "%s\t%s\t%s\t%s\t%s\n", msg, date, subject, from, to }
+        '
+      done
+    '';
+  };
+
+  home.file.".local/bin/mail-search-fzf" = {
+    executable = true;
+    text = ''
+      #!/bin/sh
+      set -eu
+      query="$*"
+      [ -n "$query" ] || { echo "usage: mail-search <notmuch query>" >&2; exit 2; }
+      notmuch search --output=files "$query" \
+        | msort -d -r \
+        | mail-list \
+        | fzf --delimiter='\t' --with-nth=2.. --no-multi \
+            --prompt="Search: $query> " \
+            --preview='mshow {1} | fold -s -w 80' \
+            --preview-window='right:60%:wrap' \
+            --bind='enter:execute(mshow {1} | fold -s -w 100 | less -R)' \
+            --bind='ctrl-r:execute(mrep -- {1})'
+    '';
+  };
   home.packages = with pkgs; [
     mpv
     thunar

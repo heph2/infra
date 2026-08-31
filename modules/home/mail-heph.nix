@@ -10,6 +10,7 @@
       programs = {
         mbsync.enable = true;
         msmtp.enable = true;
+        notmuch.enable = true;
         notmuch.hooks = {
           preNew = "mbsync --all";
           postNew = "afew -tnv";
@@ -70,6 +71,12 @@
         '';
         ".config/aliases".text = ''
           root: shopping@mbauce.com
+        '';
+        ".mblaze/profile".text = ''
+          Maildir: ~/Maildir/personal
+          Reply-From: Marco Bauce <me@mbauce.com>
+          Sendmail: ${pkgs.msmtp}/bin/msmtp
+          Sendmail-Args: -t
         '';
       };
     };
