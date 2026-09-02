@@ -4,6 +4,9 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     plakar-nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     stable-nixpkgs.url = "github:nixos/nixpkgs/release-25.05";
+    # Keep llama.cpp updates independent from the main nixpkgs input.
+    llama-cpp-nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    sonora.url = "github:nolight132/sonora";
     simple-nixos-mailserver = {
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver/master";
     };

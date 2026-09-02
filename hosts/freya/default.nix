@@ -17,6 +17,10 @@ let
     plugins.remarkable
     plugins.routeros
   ]);
+  llamaPackage = inputs.llama-cpp-nixpkgs.legacyPackages.${pkgs.system}.llama-cpp.override {
+    rocmSupport = true;
+    rocmGpuTargets = [ "gfx1200" ];
+  };
 in
 {
   imports = [
@@ -665,7 +669,8 @@ in
     plakarPackage
     steamcmd
     uxplay
-    llama-cpp-rocm
+    llamaPackage
+    inputs.sonora.packages.${pkgs.stdenv.hostPlatform.system}.default
     libinput
     libwacom
     vim
