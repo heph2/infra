@@ -37,6 +37,7 @@ in
           hm.ssh-heph
           hm.firefox-heph
           hm.mail-heph
+          hm.pi
           ./home.nix
         ];
         home-manager.extraSpecialArgs = {
