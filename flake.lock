@@ -885,22 +885,6 @@
         "type": "sourcehut"
       }
     },
-    "lavish-axi": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1788014365,
-        "narHash": "sha256-CBLXETPodSAQpJXrbwGGJa5/n90I2Fkf3l0ZO9LkM3Y=",
-        "owner": "kunchenguid",
-        "repo": "lavish-axi",
-        "rev": "ffd7aacff563b8bca09eb7ebfb17c14faeb968ce",
-        "type": "github"
-      },
-      "original": {
-        "owner": "kunchenguid",
-        "repo": "lavish-axi",
-        "type": "github"
-      }
-    },
     "llama-cpp-nixpkgs": {
       "locked": {
         "lastModified": 1788179007,
@@ -1711,7 +1695,6 @@
         "herdr": "herdr",
         "hermes-agent": "hermes-agent",
         "home-manager": "home-manager_2",
-        "lavish-axi": "lavish-axi",
         "llama-cpp-nixpkgs": "llama-cpp-nixpkgs",
         "mattpocock-skills": "mattpocock-skills",
         "niri": "niri",
