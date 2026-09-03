@@ -1,0 +1,69 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: lorebound
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: ssh://git@github.com/heph2/lorebound
+  ref:
+    branch: main
+  secretRef:
+    name: lorebound-git
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: lorebound-infrastructure
+  namespace: flux-system
+spec:
+  interval: 10m
+  timeout: 10m
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: lorebound
+  path: ./deploy/kubernetes/clusters/pumba/infrastructure
+  healthChecks:
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      name: lorebound-postgres
+      namespace: lorebound
+    - apiVersion: dragonflydb.io/v1alpha1
+      kind: Dragonfly
+      name: lorebound-dragonfly
+      namespace: lorebound
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: lorebound-migration
+  namespace: flux-system
+spec:
+  interval: 10m
+  timeout: 10m
+  prune: true
+  dependsOn:
+    - name: lorebound-infrastructure
+  sourceRef:
+    kind: GitRepository
+    name: lorebound
+  path: ./deploy/kubernetes/clusters/pumba/migration
+  wait: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: lorebound-backend
+  namespace: flux-system
+spec:
+  interval: 10m
+  timeout: 10m
+  prune: true
+  dependsOn:
+    - name: lorebound-migration
+  sourceRef:
+    kind: GitRepository
+    name: lorebound
+  path: ./deploy/kubernetes/clusters/pumba/backend
+  wait: true
