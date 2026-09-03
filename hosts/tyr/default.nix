@@ -78,6 +78,7 @@
     2379 # k3s, etcd clients: required if using a "High Availability Embedded etcd" configuration
     2380 # k3s, etcd peers: required if using a "High Availability Embedded etcd" configuration
     3478 # coturn: TURN over TCP, for networks that block UDP
+    30298 # Traefik HTTP NodePort for Hermes reverse proxy
   ];
   networking.firewall.allowedUDPPorts = [
     51820

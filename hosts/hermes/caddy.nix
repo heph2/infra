@@ -14,6 +14,10 @@ let
       host = "trippiamo.mbauce.com";
       upstream = "tyr.pochi.casa:6767";
     }
+    {
+      host = "api.lorebound.shop";
+      upstream = "tyr.pochi.casa:30298";
+    }
   ];
 
   caddyFile = pkgs.writeText "Caddyfile" (
