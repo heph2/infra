@@ -10,6 +10,7 @@
     ./ssh-heph.nix
     ./firefox-heph.nix
     ./mail-heph.nix
+    ./pi.nix
     ./openwiki.nix
   ];
 }
