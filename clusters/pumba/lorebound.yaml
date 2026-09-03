@@ -43,6 +43,7 @@ spec:
   interval: 10m
   timeout: 10m
   prune: true
+  force: true
   dependsOn:
     - name: lorebound-infrastructure
   sourceRef:
