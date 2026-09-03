@@ -7,13 +7,13 @@
 
 buildGo126Module rec {
   pname = "plakar-bitwarden";
-  version = "0.1.0";
+  version = "0.1.1";
 
   src = fetchFromGitHub {
     owner = "heph2";
     repo = "plakar-integration-bitwarden";
     rev = "v${version}";
-    hash = "sha256-3dJNiUHzNA2nYd+46n/xQE0uVVrq1bKF57IuMeh/Enk=";
+    hash = "sha256-5tAgwcBM63bX+Ey0hw1EIN5Xt6gR3vueNI1dqwUSI2g=";
   };
 
   vendorHash = "sha256-p0lC7zOcPP+YvTwLogChKHqAdCyj4bU3aVTzeUGYLOg=";
