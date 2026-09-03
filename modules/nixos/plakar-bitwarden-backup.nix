@@ -21,20 +21,16 @@
         "-tag"
         "bitwarden,scheduled"
         "-o"
-        "client_id_env=PLAKAR_BITWARDEN_CLIENT_ID"
+        "session_env=PLAKAR_BITWARDEN_SESSION"
         "-o"
-        "client_secret_env=PLAKAR_BITWARDEN_CLIENT_SECRET"
-        "-o"
-        "master_password_env=PLAKAR_BITWARDEN_MASTER_PASSWORD"
+        "data_dir=${cfg.dataDir}"
         cfg.location
       ];
 
       backupScript = pkgs.writeShellScript "plakar-bitwarden-backup" ''
         set -euo pipefail
         export PLAKAR_PASSPHRASE="$(${pkgs.coreutils}/bin/cat "$CREDENTIALS_DIRECTORY/repository-passphrase")"
-        export PLAKAR_BITWARDEN_CLIENT_ID="$(${pkgs.coreutils}/bin/cat "$CREDENTIALS_DIRECTORY/client-id")"
-        export PLAKAR_BITWARDEN_CLIENT_SECRET="$(${pkgs.coreutils}/bin/cat "$CREDENTIALS_DIRECTORY/client-secret")"
-        export PLAKAR_BITWARDEN_MASTER_PASSWORD="$(${pkgs.coreutils}/bin/cat "$CREDENTIALS_DIRECTORY/master-password")"
+        export PLAKAR_BITWARDEN_SESSION="$(${pkgs.coreutils}/bin/cat "$CREDENTIALS_DIRECTORY/session")"
         exec ${backupCommand}
       '';
     in
@@ -59,19 +55,14 @@
           description = "Bitwarden connector location.";
         };
 
-        clientIdFile = lib.mkOption {
-          type = lib.types.path;
-          description = "File containing the Bitwarden API client ID.";
+        dataDir = lib.mkOption {
+          type = lib.types.str;
+          description = "Persistent Bitwarden CLI state directory.";
         };
 
-        clientSecretFile = lib.mkOption {
+        sessionFile = lib.mkOption {
           type = lib.types.path;
-          description = "File containing the Bitwarden API client secret.";
-        };
-
-        masterPasswordFile = lib.mkOption {
-          type = lib.types.path;
-          description = "File containing the Bitwarden master password.";
+          description = "File containing the BW_SESSION session key.";
         };
 
         passphraseFile = lib.mkOption {
@@ -126,9 +117,7 @@
             UMask = "0077";
             LoadCredential = [
               "repository-passphrase:${cfg.passphraseFile}"
-              "client-id:${cfg.clientIdFile}"
-              "client-secret:${cfg.clientSecretFile}"
-              "master-password:${cfg.masterPasswordFile}"
+              "session:${cfg.sessionFile}"
             ];
             ExecStart = backupScript;
           };

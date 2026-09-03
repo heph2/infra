@@ -16,9 +16,7 @@ in {
   "wg-key-freya.age".publicKeys = [ freya heph ];
   "wg-key-fenrir.age".publicKeys = [ heph freya ];
   "plakar-routeros-passphrase.age".publicKeys = [ freya heph ];
-  "plakar-bitwarden-client-id.age".publicKeys = [ freya heph ];
-  "plakar-bitwarden-client-secret.age".publicKeys = [ freya heph ];
-  "plakar-bitwarden-master-password.age".publicKeys = [ freya heph ];
+  "plakar-bitwarden-session.age".publicKeys = [ freya heph ];
   "imap-mbauce-mail.age".publicKeys = [ heph freya ];
   "mailgun-smtp-user.age".publicKeys = [ hermes freya ];
   "actual-oidc-client-secret.age".publicKeys = [ heph freya zima ];
