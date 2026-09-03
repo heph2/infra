@@ -32,6 +32,7 @@
         ansible-zen = inputs.claude-ansible-skills + "/ansible-zen/skills/ansible-zen";
         aws-best-practices = awsBestPracticesSkill;
         nixos-host-workflow = ../../skills/nixos-host-workflow;
+        linux-game-compatibility = ../../skills/linux-game-compatibility;
         hledger-finance = ../../skills/hledger-finance;
         vikunja = ../../skills/vikunja;
       };
