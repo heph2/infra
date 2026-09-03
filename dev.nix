@@ -1,9 +1,10 @@
 {
   perSystem =
-    { pkgs
-    , self'
-    , inputs'
-    , ...
+    {
+      pkgs,
+      self',
+      inputs',
+      ...
     }:
     {
       formatter = pkgs.nixpkgs-fmt;
@@ -27,6 +28,7 @@
             ragenix
             nixos-rebuild
             nixos-rebuild-ng
+            fluxcd
           ];
           shellHook = ''
             export SOPS_AGE_KEY_FILE=$(pwd)/secrets/age-privkey.txt
