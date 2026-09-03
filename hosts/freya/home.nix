@@ -25,7 +25,6 @@ let
     chrome-cdp = inputs.chrome-cdp-skill + "/skills/chrome-cdp";
     grill-me = inputs.mattpocock-skills + "/skills/productivity/grill-me";
     imagegen = inputs.openai-skills + "/skills/.system/imagegen";
-    lavish = inputs.lavish-axi + "/skills/lavish";
     ponytail = inputs.ponytail + "/skills/ponytail";
     tdd = inputs.superpowers + "/skills/test-driven-development";
     ansible-good-practices =
@@ -61,6 +60,13 @@ in
 
   home.file.".agent-browser/config.json".text = builtins.toJSON {
     cdp = "9222";
+  };
+
+  # Discover Lavish from the single global skill path. Passing the same skill
+  # with --skill also loads ~/.pi/agent/skills/lavish and causes a collision.
+  home.file.".pi/agent/skills/lavish" = {
+    source = inputs.lavish-axi + "/skills/lavish";
+    force = true;
   };
 
   home.file.".pi/agent/sandbox.json".text = builtins.toJSON {
