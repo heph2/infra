@@ -16,7 +16,8 @@ let
     }
     {
       host = "api.lorebound.shop";
-      upstream = "tyr.pochi.casa:30298";
+      upstream = "tyr.pochi.casa:80";
+      extra = "header_up Host api.lorebound.shop";
     }
   ];
 
