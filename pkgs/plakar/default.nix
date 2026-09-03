@@ -6,6 +6,7 @@ let
   };
 
   plugins = {
+    bitwarden = plakarPkgs.callPackage ./bitwarden.nix { };
     remarkable = plakarPkgs.callPackage ./remarkable.nix { };
     routeros = plakarPkgs.callPackage ./routeros.nix { };
   };

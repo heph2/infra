@@ -14,6 +14,7 @@ let
   ];
   home = "/home/${user}";
   plakarPackage = pkgs.plakar.withPlugins (plugins: [
+    plugins.bitwarden
     plugins.remarkable
     plugins.routeros
   ]);
@@ -44,6 +45,9 @@ in
     group = "systemd-network";
   };
   age.secrets.plakar-routeros-passphrase.file = ../../secrets/plakar-routeros-passphrase.age;
+  age.secrets.plakar-bitwarden-client-id.file = ../../secrets/plakar-bitwarden-client-id.age;
+  age.secrets.plakar-bitwarden-client-secret.file = ../../secrets/plakar-bitwarden-client-secret.age;
+  age.secrets.plakar-bitwarden-master-password.file = ../../secrets/plakar-bitwarden-master-password.age;
 
   services.plakar-routeros-backup = {
     enable = true;
@@ -58,6 +62,20 @@ in
       "export"
       "backup"
     ];
+    onCalendar = "weekly";
+  };
+
+  services.plakar-bitwarden-backup = {
+    enable = true;
+    package = plakarPackage;
+    repository = "${home}/.backups/bitwarden";
+    location = "bitwarden://vault.bitwarden.com";
+    clientIdFile = config.age.secrets.plakar-bitwarden-client-id.path;
+    clientSecretFile = config.age.secrets.plakar-bitwarden-client-secret.path;
+    masterPasswordFile = config.age.secrets.plakar-bitwarden-master-password.path;
+    passphraseFile = config.age.secrets.plakar-routeros-passphrase.path;
+    user = user;
+    group = "users";
     onCalendar = "weekly";
   };
 
