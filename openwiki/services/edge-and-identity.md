@@ -16,6 +16,7 @@ Caddy ingress is distributed, not centralized. Hermes provides public cross-host
 | Hermes | `trippiamo.mbauce.com` | `tyr.pochi.casa:6767` | Cross-host proxy |
 | Sauron | `torrent.pochi.casa`, `prowlarr.pochi.casa`, `sonarr.pochi.casa`, `radarr.pochi.casa`, `usenet.pochi.casa`, `paperless.pochi.casa`, `jelly.pochi.casa`, `jellyseerr.pochi.casa` | localhost 8088, 9696, 8989, 7878, 8080, 28981, 8096, 5055 | Cloudflare DNS TLS; `hosts/sauron/caddy.nix` |
 | Sauron | `cuppy.pochi.casa` | two K3s node addresses on `30298` | Cross-cluster upstream |
+| Sauron | `signal.pochi.casa` | Tyr and Zima K3s NodePort `30777` | WebSocket signaling only; peer-to-peer game traffic and TURN do not traverse Caddy. See [cluster and observability](cluster-and-observability.md). |
 | Tyr | `homebox.pochi.casa`, `grafana.pochi.casa`, `pass.pochi.casa`, `vikunja.pochi.casa` | localhost 7745, 3000, 8222, 3456 | local Caddy vhosts defined by the service modules |
 | Tyr disabled module | `feed.pochi.casa` | localhost 8080 | Miniflux is not imported by Tyr's `default.nix` |
 

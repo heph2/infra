@@ -27,6 +27,10 @@ Fafnir enables IPv4 and IPv6 forwarding and NAT; DHCP is disabled on physical in
 
 The source contains literal PPP credentials and other sensitive material; this wiki intentionally does not reproduce them. Migrate secrets before expanding this surface; see [credentials](../security/secrets-and-credentials.md).
 
+## RB5009 operational VPN boundary
+
+The [RB5009 IPv6-only WireGuard runbook](rb5009-wireguard-ipv6.md) documents a live RouterOS road-warrior endpoint, dual-stack tunnel, and firewall ordering. It is operationally separate from this NixOS Fafnir design: it uses `192.168.0.0/24` for the home IPv4 LAN rather than Fafnir's declared `10.1.1.0/24`, and it is not imported or evaluated by this flake. Use the runbook for RB5009 peers, DNS, WAN filtering, or tunnel diagnosis; use this page only for a future restoration or change of the Fafnir declaration.
+
 ## Shared addressing and overlays
 
 Sauron, Tyr, Zima, Freya, Fenrir, and Aron declare addresses from the same IPv6 /64 and reference the same link-local gateway, each on a host-specific interface. Treat this as a coordinated convention: interface or gateway changes require updates to all consumers, not just one host. Tailscale is enabled through the common module and explicitly on Pixie; it is used as a private exposure boundary for the Sauron Minecraft service. Ushi has the common Tailscale baseline.

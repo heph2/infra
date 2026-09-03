@@ -12,7 +12,7 @@ This repository is a `flake-parts` infrastructure flake for NixOS, nix-darwin, H
 ## Map
 
 - [Host estate](hosts/estate.md): all registered machines and composition conventions.
-- [Router and topology](networking/router-and-topology.md): Fafnir status, VLANs, PPPoE, routing, IPv6, and overlay boundaries.
+- Networking: [Fafnir router topology](networking/router-and-topology.md) and the operational [RB5009 IPv6-only WireGuard runbook](networking/rb5009-wireguard-ipv6.md).
 - [Credentials](security/secrets-and-credentials.md): agenix/SOPS selection, recipients, runtime file injection, and Terraform decryption.
 - Services: [edge and identity](services/edge-and-identity.md), [Hermes mail and agent](services/hermes-mail-and-agent.md), [Sauron media](services/sauron-media.md), [Tyr/Zima cluster and observability](services/cluster-and-observability.md).
 - Workstations: [Freya](workstations/freya.md), [Fenrir](workstations/fenrir.md), [other clients](workstations/other-clients.md).
@@ -25,10 +25,12 @@ This repository is a `flake-parts` infrastructure flake for NixOS, nix-darwin, H
 | Add/change an exported host or shared module | [Flake composition](architecture/flake-composition.md) | `flake.nix`, `modules/dendritic/default.nix`, host `configuration.nix` | `just list-nixos-hosts` or `just list-darwin-hosts`, then `just build <host>` |
 | Change a service route, TLS, or OIDC hostname | [Edge and identity](services/edge-and-identity.md) | host `caddy.nix`, application module, Pocket-ID | affected host build, Caddy status, controlled request |
 | Change mail or Hermes agent | [Hermes](services/hermes-mail-and-agent.md) | `hosts/hermes/mail.nix`, `hermes-agent.nix` | `just build hermes`, unit status |
-| Change NAS/media/games/document service | [Sauron](services/sauron-media.md) | `hosts/sauron/default.nix` and service module | `just build sauron`, service/path check |
-| Change K3s, metrics, Actual, or Tyr app | [Cluster and observability](services/cluster-and-observability.md) | `hosts/tyr/*`, `hosts/zima/*` | affected host build, target/unit health |
+| Change NAS/media/games/document service | [Sauron](services/sauron-media.md) | `hosts/sauron/default.nix`, `hosts/sauron/caddy.nix`; `systemd.tmpfiles.rules`, `services.sabnzbd` | `just build sauron`, then a controlled media-group path check |
+| Change K3s, metrics, Actual, Signal/TURN exposure, or Tyr app | [Cluster and observability](services/cluster-and-observability.md) | `hosts/tyr/default.nix`, `hosts/zima/default.nix`; `services.k3s`, Tyr firewall rules | `just build tyr` or `just build zima`, then target/unit health |
+| Change the reMarkable USB backup or shared USB Plakar behavior | [Freya](workstations/freya.md) | `hosts/freya/default.nix`, `modules/nixos/plakar-usb-backup.nix`; `services.plakar-usb-backup` | `just build freya`; inspect `plakar-remarkable-backup` and USB-trigger behavior |
 | Change a secret or recipient | [Credentials](security/secrets-and-credentials.md) | `secrets/secrets.nix`, `.sops.yaml`, consumer declaration | build consumer and verify non-sensitive unit metadata |
-| Change router/network behavior | [Router and topology](networking/router-and-topology.md) | `hosts/fafnir/default.nix` | evaluate only after restoring export; console-backed network test |
+| Change the Fafnir NixOS router design | [Fafnir router topology](networking/router-and-topology.md) | `hosts/fafnir/default.nix`, `flake.nix` | evaluate only after restoring export; console-backed network test |
+| Change RB5009 WireGuard, IPv6 WAN filtering, peer routes, or endpoint DNS | [RB5009 IPv6-only WireGuard](networking/rb5009-wireguard-ipv6.md) | `docs/rb5009-wireguard-ipv6.md`; RouterOS `wg-road` and IPv6 firewall state | external IPv6 client handshake plus RouterOS peer/rule-counter inspection |
 | Change cloud server/DNS | [Terraform](infrastructure/terraform.md) | `terraform/hetzner`, `terraform/cloudflare` | `terraform fmt -check`, reviewed plan |
 | Change OpenWiki/package/dev tooling | [Packages and workflow](packages-and-developer-workflow.md) | `dev.nix`, `.justfile`, `pkgs/`, `modules/home/openwiki.nix` | formatter and narrow package/host build |
 
