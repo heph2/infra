@@ -114,6 +114,7 @@ in
       (pkgs.writers.writePython3Bin "totp" { } (builtins.readFile ../../pkgs/totp.py))
       bitwig-studio
       wootility
+      wl-clipboard
       mpv
       anydesk
       dwarf-fortress
