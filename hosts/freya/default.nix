@@ -442,6 +442,12 @@ in
     "heph2.cachix.org-1:aVuYQpvc6De8i9qWwP2V0ErH4VqSpOCWjv116AR1mYc="
     "nixos-apple-silicon.cachix.org-1:8psDu5SA5dAD7qA0zMy5UT292TxeEPzIz8VVEr2Js20="
   ];
+  nix.settings.extra-substituters = [
+    "https://cache.numtide.com"
+  ];
+  nix.settings.extra-trusted-public-keys = [
+    "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+  ];
 
   boot.extraModprobeConfig = ''
     blacklist nouveau
