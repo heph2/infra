@@ -29,31 +29,26 @@ data:
           - type: container
             id: container-parser
             add_metadata_from_filepath: true
-          - type: regex_parser
-            id: kubernetes-metadata
-            parse_from: attributes["log.file.path"]
-            regex: '^/var/log/pods/(?P<namespace>[^_]+)_(?P<pod>[^_]+)_(?P<uid>[0-9a-f-]+)/(?P<container>[^/]+)/'
-            parse_to: attributes
           - type: move
-            id: namespace-resource
-            from: attributes.namespace
-            to: resource["k8s.namespace.name"]
+            id: namespace-attribute
+            from: resource["k8s.namespace.name"]
+            to: attributes["k8s.namespace.name"]
           - type: move
-            id: pod-resource
-            from: attributes.pod
-            to: resource["k8s.pod.name"]
+            id: pod-attribute
+            from: resource["k8s.pod.name"]
+            to: attributes["k8s.pod.name"]
           - type: move
-            id: uid-resource
-            from: attributes.uid
-            to: resource["k8s.pod.uid"]
+            id: uid-attribute
+            from: resource["k8s.pod.uid"]
+            to: attributes["k8s.pod.uid"]
           - type: move
-            id: container-resource
-            from: attributes.container
-            to: resource["k8s.container.name"]
+            id: container-attribute
+            from: resource["k8s.container.name"]
+            to: attributes["k8s.container.name"]
 
     processors:
-      resource:
-        attributes:
+      attributes:
+        actions:
           - key: k8s.node.name
             value: ${env:K8S_NODE_NAME}
             action: upsert
@@ -89,7 +84,7 @@ data:
           receivers:
             - filelog/kubernetes
           processors:
-            - resource
+            - attributes
             - memory_limiter
             - batch
           exporters:
