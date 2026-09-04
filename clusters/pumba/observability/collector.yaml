@@ -18,7 +18,7 @@ spec:
       annotations:
         config-version: "2"
     spec:
-      serviceAccountName: openobserve-collector
+      automountServiceAccountToken: false
       nodeSelector:
         kubernetes.io/os: linux
       tolerations:
@@ -44,10 +44,6 @@ spec:
           args:
             - --config=/conf/otelcol.yaml
           env:
-            - name: K8S_NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
             - name: OPENOBSERVE_USER
               valueFrom:
                 secretKeyRef:

@@ -9,6 +9,5 @@ resources:
   - openobserve-config.yaml
   - openobserve-pvc.yaml
   - openobserve.yaml
-  - collector-rbac.yaml
   - collector-config.yaml
   - collector.yaml
