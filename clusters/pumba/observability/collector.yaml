@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: openobserve-collector
+  namespace: openobserve
+  labels:
+    app.kubernetes.io/name: openobserve-collector
+    app.kubernetes.io/part-of: observability
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: openobserve-collector
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: openobserve-collector
+        app.kubernetes.io/part-of: observability
+    spec:
+      serviceAccountName: openobserve-collector
+      nodeSelector:
+        kubernetes.io/os: linux
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: collector
+          image: otel/opentelemetry-collector-contrib:0.128.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - --config=/conf/otelcol.yaml
+          env:
+            - name: K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: OPENOBSERVE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: openobserve-credentials
+                  key: ZO_ROOT_USER_EMAIL
+            - name: OPENOBSERVE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: openobserve-credentials
+                  key: ZO_ROOT_USER_PASSWORD
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          volumeMounts:
+            - name: config
+              mountPath: /conf
+              readOnly: true
+            - name: pod-logs
+              mountPath: /var/log/pods
+              readOnly: true
+            - name: collector-state
+              mountPath: /var/lib/otelcol
+      volumes:
+        - name: config
+          configMap:
+            name: openobserve-collector
+        - name: pod-logs
+          hostPath:
+            path: /var/log/pods
+            type: Directory
+        - name: collector-state
+          hostPath:
+            path: /var/lib/otelcol
+            type: DirectoryOrCreate
