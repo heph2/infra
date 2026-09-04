@@ -28,7 +28,6 @@ data:
         operators:
           - type: container
             id: container-parser
-            format: containerd
             add_metadata_from_filepath: true
 
     processors:
