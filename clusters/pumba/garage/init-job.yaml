@@ -46,7 +46,7 @@ spec:
               while ! status=$(request "$api/v1/status"); do
                 sleep 5
               done
-              node_id=$(printf '%s' "$status" | sed -n 's/.*"node":"\([^"]*\)".*/\1/p')
+              node_id=$(printf '%s' "$status" | sed -n 's/.*"node"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
               test -n "$node_id"
 
               layout=$(request "$api/v1/layout")
@@ -56,7 +56,7 @@ spec:
                   --data "[{\"id\":\"$node_id\",\"zone\":\"tyr\",\"capacity\":40000000000,\"tags\":[]}]" \
                   >/dev/null
                 layout=$(request "$api/v1/layout")
-                version=$(printf '%s' "$layout" | sed -n 's/.*"version":\([0-9][0-9]*\).*/\1/p' | head -n 1)
+                version=$(printf '%s' "$layout" | sed -n 's/.*"version"[[:space:]]*:[[:space:]]*\([0-9][0-9]*\).*/\1/p' | head -n 1)
                 test -n "$version"
                 request -X POST "$api/v1/layout/apply" \
                   -H 'Content-Type: application/json' \
