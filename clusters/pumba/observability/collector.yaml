@@ -32,6 +32,12 @@ spec:
       containers:
         - name: collector
           image: otel/opentelemetry-collector-contrib:0.128.0
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
           imagePullPolicy: IfNotPresent
           args:
             - --config=/conf/otelcol.yaml
