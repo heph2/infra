@@ -54,7 +54,46 @@
   ];
 
   services.caddy.virtualHosts."http://api.lorebound.shop".extraConfig = ''
-    reverse_proxy 127.0.0.1:30298
+    reverse_proxy 127.0.0.1:30298 {
+      header_up X-Forwarded-Proto https
+      header_up X-Forwarded-Host api.lorebound.shop
+    }
+  '';
+
+  # Private dashboard entrypoints. DNS-01 obtains public certificates, while
+  # the source-IP gate keeps these vhosts reachable only from the LAN.
+  services.caddy.virtualHosts."openobserve.pumba.pochi.casa".extraConfig = ''
+    encode zstd gzip
+    tls {
+      dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+      resolvers 1.1.1.1 8.8.8.8
+    }
+    @lan remote_ip 192.168.0.0/24
+    handle @lan {
+      reverse_proxy 127.0.0.1:30298 {
+        header_up Host {host}
+      }
+    }
+    handle {
+      respond "internal dashboard" 403
+    }
+  '';
+
+  services.caddy.virtualHosts."headlamp.pumba.pochi.casa".extraConfig = ''
+    encode zstd gzip
+    tls {
+      dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+      resolvers 1.1.1.1 8.8.8.8
+    }
+    @lan remote_ip 192.168.0.0/24
+    handle @lan {
+      reverse_proxy 127.0.0.1:30298 {
+        header_up Host {host}
+      }
+    }
+    handle {
+      respond "internal dashboard" 403
+    }
   '';
 
   services.unifi = {
@@ -179,6 +218,21 @@
     extraFlags = [
       "--tls-san pumba.pochi.casa"
     ];
+    manifests.traefik-config = {
+      target = "traefik-config.yaml";
+      content = {
+        apiVersion = "helm.cattle.io/v1";
+        kind = "HelmChartConfig";
+        metadata = {
+          name = "traefik";
+          namespace = "kube-system";
+        };
+        spec.valuesContent = ''
+          additionalArguments:
+            - "--entryPoints.web.forwardedHeaders.trustedIPs=127.0.0.1/32,192.168.0.104/32,10.42.0.0/16,10.43.0.0/16"
+        '';
+      };
+    };
   };
 
   networking.firewall.enable = true;

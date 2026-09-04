@@ -28,12 +28,24 @@ The collector starts at the end of each file, so the rollout does not backfill h
 
 ### 2. Provide private LAN dashboard access
 
-- Add Traefik `Ingress` resources for OpenObserve and Headlamp while keeping their Services `ClusterIP`.
-- Choose internal hostnames and TLS handling.
-- Add split-horizon/local DNS records resolving those names only inside the LAN.
-- Validate access from a LAN client and preserve the port-forward fallback.
+Decision: use public-domain names with split DNS and public ACME certificates:
 
-The cluster already has Traefik exposed on the Pumba node addresses (`192.168.0.104` and `192.168.0.105`), so this should not require exposing either dashboard publicly.
+- OpenObserve: `https://openobserve.pumba.pochi.casa`
+- Headlamp: `https://headlamp.pumba.pochi.casa`
+- Local DNS: LAN router records for both names, pointing to Tyr (`192.168.0.104`).
+- TLS: Caddy DNS-01 through Cloudflare, using the existing encrypted API-token wiring.
+- Access control: Tyr Caddy permits these vhosts only from `192.168.0.0/24` and proxies to the existing Traefik NodePort.
+- Kubernetes: Traefik `Ingress` resources route each hostname to its private `ClusterIP` Service.
+
+The cluster already has Traefik exposed on the Pumba node addresses (`192.168.0.104` and `192.168.0.105`), so this does not require public DNS records or public dashboard exposure. With the current design, local DNS should point to `192.168.0.104`, where Tyr Caddy terminates TLS and forwards to Traefik; do not add `.105` until a second TLS edge or a VIP is configured. Retain port-forward as a fallback during Tyr maintenance.
+
+Implementation status:
+
+- [x] Add the two Traefik `Ingress` resources.
+- [x] Add the Tyr Caddy configuration.
+- [ ] Add the two local DNS records on the LAN router.
+- [ ] Deploy the Tyr Caddy configuration.
+- [ ] Confirm certificate issuance and dashboard access from a LAN client.
 
 ### 3. Add filtered host telemetry
 

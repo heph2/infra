@@ -9,6 +9,7 @@ resources:
   - openobserve-config.yaml
   - openobserve-pvc.yaml
   - openobserve.yaml
+  - ingress.yaml
   - collector-serviceaccount.yaml
   - collector-config.yaml
   - collector.yaml

@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: openobserve
+  namespace: openobserve
+  labels:
+    app.kubernetes.io/name: openobserve
+    app.kubernetes.io/part-of: observability
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: openobserve.pumba.pochi.casa
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: openobserve
+                port:
+                  name: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: headlamp
+  namespace: headlamp
+  labels:
+    app.kubernetes.io/name: headlamp
+    app.kubernetes.io/part-of: observability
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: headlamp.pumba.pochi.casa
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: headlamp-headlamp
+                port:
+                  name: http
