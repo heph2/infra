@@ -19,6 +19,7 @@ spec:
         config-version: "2"
     spec:
       automountServiceAccountToken: false
+      serviceAccountName: openobserve-collector
       nodeSelector:
         kubernetes.io/os: linux
       tolerations:
