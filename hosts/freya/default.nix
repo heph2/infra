@@ -422,19 +422,15 @@ in
   services.resolved = {
     enable = true;
     settings.Resolve = {
-      DNSSEC = "true";
+      # Route every query through the MikroTik DNS resolver, including local
+      # split-DNS records such as *.pumba.pochi.casa.
+      DNSSEC = "allow-downgrade";
       Domains = [ "~." ];
-      FallbackDNS = [
-        "1.1.1.1#one.one.one.one"
-        "1.0.0.1#one.one.one.one"
-      ];
-      DNSOverTLS = "true";
+      FallbackDNS = [ ];
+      DNSOverTLS = "false";
     };
   };
-  networking.nameservers = [
-    "1.1.1.1#one.one.one.one"
-    "1.0.0.1#one.one.one.one"
-  ];
+  networking.nameservers = [ "192.168.0.1" ];
 
   nix.settings.trusted-substituters = [
     "https://ai.cachix.org"
