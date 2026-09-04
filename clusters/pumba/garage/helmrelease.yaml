@@ -66,16 +66,3 @@ spec:
       limits:
         cpu: 500m
         memory: 1Gi
-    environment:
-      - name: GARAGE_DEFAULT_ACCESS_KEY
-        valueFrom:
-          secretKeyRef:
-            name: garage-openobserve
-            key: accessKey
-      - name: GARAGE_DEFAULT_SECRET_KEY
-        valueFrom:
-          secretKeyRef:
-            name: garage-openobserve
-            key: secretKey
-      - name: GARAGE_DEFAULT_BUCKET
-        value: openobserve
