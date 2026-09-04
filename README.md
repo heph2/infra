@@ -55,4 +55,4 @@ This will build the closure using `--build-host` and `--target-host` for avoidin
 
 - [Repository usage](docs/repository-usage.md)
 - [RB5009 WireGuard over IPv6](docs/rb5009-wireguard-ipv6.md)
-- [K3s internal ingress notes](docs/k3s-internal-ingress.md)
+- [OpenObserve and telemetry roadmap](docs/openobserve-roadmap.md)
