@@ -66,3 +66,9 @@ spec:
       limits:
         cpu: 500m
         memory: 1Gi
+    environment:
+      - name: GARAGE_ADMIN_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: garage-admin
+            key: token

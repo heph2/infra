@@ -29,42 +29,50 @@ spec:
                 secretKeyRef:
                   name: garage-openobserve
                   key: secretKey
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: garage-admin
+                  key: token
           command:
             - /bin/sh
             - -ec
             - |
               api=http://garage-garage.garage.svc.cluster.local:3903
+              request() {
+                curl -fsS -H "Authorization: Bearer $ADMIN_TOKEN" "$@"
+              }
 
-              while ! status=$(curl -fsS "$api/v1/status"); do
+              while ! status=$(request "$api/v1/status"); do
                 sleep 5
               done
               node_id=$(printf '%s' "$status" | sed -n 's/.*"node":"\([^"]*\)".*/\1/p')
               test -n "$node_id"
 
-              layout=$(curl -fsS "$api/v1/layout")
+              layout=$(request "$api/v1/layout")
               if ! printf '%s' "$layout" | grep -q "\"$node_id\""; then
-                curl -fsS -X POST "$api/v1/layout" \
+                request -X POST "$api/v1/layout" \
                   -H 'Content-Type: application/json' \
                   --data "[{\"id\":\"$node_id\",\"zone\":\"tyr\",\"capacity\":40000000000,\"tags\":[]}]" \
                   >/dev/null
-                layout=$(curl -fsS "$api/v1/layout")
+                layout=$(request "$api/v1/layout")
                 version=$(printf '%s' "$layout" | sed -n 's/.*"version":\([0-9][0-9]*\).*/\1/p' | head -n 1)
                 test -n "$version"
-                curl -fsS -X POST "$api/v1/layout/apply" \
+                request -X POST "$api/v1/layout/apply" \
                   -H 'Content-Type: application/json' \
                   --data "{\"version\":$((version + 1))}" \
                   >/dev/null
               fi
 
-              if ! curl -fsS "$api/v1/key?search=openobserve" | grep -q "\"$ACCESS_KEY\""; then
-                curl -fsS -X POST "$api/v1/key/import" \
+              if ! request "$api/v1/key?search=openobserve" | grep -q "\"$ACCESS_KEY\""; then
+                request -X POST "$api/v1/key/import" \
                   -H 'Content-Type: application/json' \
                   --data "{\"name\":\"openobserve\",\"accessKeyId\":\"$ACCESS_KEY\",\"secretAccessKey\":\"$SECRET_KEY\"}" \
                   >/dev/null
               fi
 
-              if ! curl -fsS "$api/v1/bucket?globalAlias=openobserve" >/dev/null; then
-                curl -fsS -X POST "$api/v1/bucket" \
+              if ! request "$api/v1/bucket?globalAlias=openobserve" >/dev/null; then
+                request -X POST "$api/v1/bucket" \
                   -H 'Content-Type: application/json' \
                   --data "{\"globalAlias\":\"openobserve\",\"localAlias\":{\"accessKeyId\":\"$ACCESS_KEY\",\"alias\":\"openobserve\",\"allow\":{\"read\":true,\"write\":true,\"owner\":true}}}" \
                   >/dev/null

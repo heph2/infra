@@ -1,0 +1,13 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: garage-admin
+  namespace: garage
+spec:
+  encryptedData:
+    token: AgBSdm99k8WMHktkdYcUkf9T3fEItpjT9ndb4ZkTt2FXlxz4EPwbbngWa7MDxmmPdTyY9o4OgeUgKFTi52q8gNA4tpY4ZhN8d3dmE1RwbyK86FUmSk447Hkaivdc8Pnmj6OWbeOn05lgIwnBf7d3F34dMnPBlqA96GWjgu2VnnuAR/tEDcYUULNyglngNpPJH7bs9SkE9MYbPoUwb/02+aIZv6ifjw6iJNsaC/11I5wvphJu4JrrX8NcNH6ialzpfgzNbKNsg3IPCenR0MlfBo0NbV2if2/JBkLmlkFLoX2ds7GDIYJnC1F6xKANdnhXGCmCNqJ/rX4r5kXAIgIwwmvxNPw8Y5QKF59ve/94v8tOtikw/tnlqR6CP0rBw9gRVvyc7//LqSJ2o5HwZupJgEEfVCmTxRfrX+mwga82qzAsn3r2kUrVh551jUwVQfbmAwVpnfyuMcDDmWZDQ+m4KtGzz22BEFYgyYtcYN4UolguGWdsqQTySiheqsR4Rc+MLRQccODuzZY/SM4TDCg4iovfb/YBkaCJwTQtqxYteh5/XmrrNu6AOdRNJa+oP+KpB4nJYzXCVxNB7alr1XqFgP39CsOKHcs0/utTw08PhbzQmXOIWKMC0LRNc3UQRjvV8T/YfKTZ5QyCy2a+kkFw0SX4N0NrnZwxQYk1V+6sc3bjYyZTr+RAtdLew3gH2UV1z6u78ibmvXnwLCsyyVx+8Zt3OF22Pp8YN2nWI5UeyimAkCMhxx9+cHGRB0YFHepR+LsbsxVcy1wDpIQv2lTgtsiv
+  template:
+    metadata:
+      name: garage-admin
+      namespace: garage
