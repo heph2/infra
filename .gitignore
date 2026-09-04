@@ -4,6 +4,8 @@
 **/.terraform/*
 **/.terraform.lock.hcl/*
 
+./.pi-subagents
+
 # .tfstate files
 *.tfstate
 *.tfstate.*
