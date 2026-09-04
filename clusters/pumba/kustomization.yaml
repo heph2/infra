@@ -4,3 +4,4 @@ resources:
   - flux-system
   - operators.yaml
   - lorebound.yaml
+  - observability.yaml

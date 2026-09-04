@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openobserve
+  namespace: openobserve
+  labels:
+    app.kubernetes.io/name: openobserve
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: openobserve
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: openobserve
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: tyr
+      securityContext:
+        fsGroup: 10000
+      containers:
+        - name: openobserve
+          image: o2cr.ai/openobserve/openobserve:v0.92.2
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: openobserve-config
+            - secretRef:
+                name: openobserve-credentials
+          ports:
+            - name: http
+              containerPort: 5080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: openobserve-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openobserve
+  namespace: openobserve
+spec:
+  selector:
+    app.kubernetes.io/name: openobserve
+  ports:
+    - name: http
+      port: 5080
+      targetPort: http
