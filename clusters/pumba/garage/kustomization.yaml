@@ -4,3 +4,4 @@ resources:
   - namespace.yaml
   - sealed-credentials.yaml
   - helmrelease.yaml
+  - init-job.yaml

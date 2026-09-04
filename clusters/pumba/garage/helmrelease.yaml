@@ -30,15 +30,15 @@ spec:
         patches:
           - patch: |
               - op: add
-                path: /spec/template/spec/containers/0/command
+                path: /spec/ports/-
                 value:
-                  - /garage
-                  - server
-                  - --single-node
-                  - --default-bucket
+                  name: admin
+                  port: 3903
+                  protocol: TCP
+                  targetPort: 3903
             target:
-              kind: StatefulSet
-              name: garage
+              kind: Service
+              name: garage-garage
   values:
     deployment:
       replicaCount: 1
