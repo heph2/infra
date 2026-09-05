@@ -30,7 +30,9 @@ symlinkJoin {
     find "$out/share/plakar/plugins" -type f -name '.*' -delete
 
     rm "$out/bin/plakar"
+    # The cached helper inherits XDG_DATA_HOME, but not the wrapper's -datadir.
     makeWrapper ${lib.getExe plakar} "$out/bin/plakar" \
+      --set XDG_DATA_HOME "$out/share" \
       --add-flags "-datadir $out/share/plakar"
   '';
 
