@@ -17,7 +17,30 @@ let
     plugins.bitwarden
     plugins.remarkable
     plugins.routeros
+    plugins.sftp
   ]);
+  homeBackupExcludes = [
+    ".cache"
+    "*/cache2" # firefox
+    "*/Cache"
+    ".mozilla"
+    "*/.cargo"
+    ".compose-cache"
+    ".npm"
+    ".local/share"
+    ".ollama"
+    "*/.terraform.d"
+    ".rustup"
+    ".config/Slack/logs"
+    ".config/Code/CachedData"
+    ".container-diff"
+    ".npm/_cacache"
+    "*/node_modules"
+    "*/_build"
+    "*/.tox"
+    "*/venv"
+    "*/.venv"
+  ];
   llamaPackage = inputs.llama-cpp-nixpkgs.legacyPackages.${pkgs.system}.llama-cpp.override {
     rocmSupport = true;
     rocmGpuTargets = [ "gfx1200" ];
@@ -96,6 +119,10 @@ in
   hardware.opentabletdriver.enable = false;
   services.libinput.enable = true;
   services.xserver.wacom.enable = true;
+  services.denuvo-hvb = {
+    enable = true;
+    disableUmip = true;
+  };
   services.avahi = {
     enable = true;
     openFirewall = true;
@@ -143,30 +170,30 @@ in
     # binDirectory = "/var/lib/trcc-gif/pochi-frames";
   };
 
+  services.plakarbackup.jobs.home-heph = {
+    enable = true;
+    package = plakarPackage;
+    repository = "sftp://root@sauron/bck/freya/plakar/home-heph";
+    paths = [ home ];
+    exclude = homeBackupExcludes ++ [
+      "Downloads"
+      "Videos"
+      ".models"
+      "Games"
+    ];
+    tags = [
+      "freya"
+      "home"
+    ];
+    passphraseFile = config.age.secrets.plakar-routeros-passphrase.path;
+    user = user;
+    group = "users";
+    startAt = "hourly";
+    persistentTimer = true;
+  };
+
   services.borgbackup.jobs =
     let
-      common-excludes = [
-        ".cache"
-        "*/cache2" # firefox
-        "*/Cache"
-        ".mozilla"
-        "*/.cargo"
-        ".compose-cache"
-        ".npm"
-        ".local/share"
-        ".ollama"
-        "*/.terraform.d"
-        ".rustup"
-        ".config/Slack/logs"
-        ".config/Code/CachedData"
-        ".container-diff"
-        ".npm/_cacache"
-        "*/node_modules"
-        "*/_build"
-        "*/.tox"
-        "*/venv"
-        "*/.venv"
-      ];
       basicBorgJob = name: {
         encryption.mode = "none";
         environment.BORG_RSH = "ssh -o 'StrictHostKeyChecking=no' -i /home/heph/.ssh/sekai_ed";
@@ -183,7 +210,7 @@ in
       home-heph = basicBorgJob "freya/home-heph" // rec {
         paths = "/home/heph";
         exclude = map (x: paths + "/" + x) (
-          common-excludes
+          homeBackupExcludes
           ++ [
             "Downloads"
             "Videos"
@@ -436,11 +463,13 @@ in
     "https://ai.cachix.org"
     "https://heph2.cachix.org"
     "https://nixos-apple-silicon.cachix.org"
+    "https://pi.cachix.org"
   ];
   nix.settings.trusted-public-keys = [
     "ai.cachix.org-1:N9dzRK+alWwoKXQlnn0H6aUx0lU/mspIoz8hMvGvbbc="
     "heph2.cachix.org-1:aVuYQpvc6De8i9qWwP2V0ErH4VqSpOCWjv116AR1mYc="
     "nixos-apple-silicon.cachix.org-1:8psDu5SA5dAD7qA0zMy5UT292TxeEPzIz8VVEr2Js20="
+    "pi.cachix.org-1:lGeoGJaZ5ZDabuRzkcD5EBTNnDM4HJ1vqeOxlWk1Flk="
   ];
   nix.settings.extra-substituters = [
     "https://cache.numtide.com"
