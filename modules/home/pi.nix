@@ -44,57 +44,6 @@
         cdp = "9222";
       };
 
-      home.file.".pi/agent/sandbox.json".text = builtins.toJSON {
-        enabled = true;
-        allowBrowserProcess = true;
-        network = {
-          allowLocalBinding = true;
-          allowAllUnixSockets = true;
-          allowedDomains = [
-            "localhost"
-            "127.0.0.1"
-            "html.duckduckgo.com"
-            "*.npmjs.org"
-            "*.pypi.org"
-            "*.github.com"
-            "raw.githubusercontent.com"
-            "mcp.context7.com"
-            "vikunja.pochi.casa"
-          ];
-          deniedDomains = [ ];
-        };
-        filesystem = {
-          denyRead = [ "/Users" ];
-          allowRead = [
-            "."
-            "~/projects"
-            "~/.config"
-            "~/.cargo"
-            "~/.local"
-            "~/Library"
-            "~/.cache"
-            "/Applications/Google Chrome.app"
-            "/System/Volumes/Data/Applications/Google Chrome.app"
-          ];
-          allowWrite = [
-            "."
-            "/tmp"
-            "~/.pi/"
-            "~/.cache/uv"
-            "~/.rustup"
-            "~/.agent-browser"
-            "~/Library/Application Support/Google/Chrome"
-            "~/Library/Application Support/Google/Chrome for Testing/Crashpad"
-          ];
-          denyWrite = [
-            ".env"
-            ".env.*"
-            "*.pem"
-            "*.key"
-          ];
-        };
-      };
-
       home.file.".pi/agent/extensions/pi-tool-display/config.json".text = builtins.toJSON {
         # Keep tool output quiet by default; use /tool-display for temporary changes.
         readOutputMode = "hidden";
@@ -104,9 +53,6 @@
         showTruncationHints = false;
         showRtkCompactionHints = false;
 
-        # pi-sandbox already overrides bash for sandboxing; avoid dueling
-        # tool-ownership registration between the two extensions.
-        registerToolOverrides.bash = false;
       };
 
       home.file.".pi/agent/themes/catpuccino-mocha.json".text = builtins.toJSON {
@@ -212,8 +158,6 @@
             "npm:pi-subagents@0.33.1"
             "npm:@narumitw/pi-goal@0.9.2"
 
-            # Safer operation: sandbox bash/read/write/edit behind .pi/sandbox.json.
-            "git:github.com/carderne/pi-sandbox@d14e15a76b4ae030b07bdd3e6f42732ed3636679"
 
             # Research and context tools: search/fetch/PDF/video plus skill UX polish.
             "npm:pi-web-access@0.13.0"

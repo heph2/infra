@@ -16,6 +16,50 @@ let
       "call"
     ]
     ++ (pkgs.lib.splitString " " cmd);
+  awsBestPracticesSkill = pkgs.runCommand "aws-best-practices-skill" { } ''
+        cp -R ${inputs.aws-best-practices-skill} $out
+        chmod -R u+w $out
+        cat > $out/SKILL.md <<'EOF'
+    ---
+    name: aws-best-practices
+    description: Local AWS best-practices catalog. Use for AWS Well-Architected/security/reliability/performance/cost/operations/sustainability guidance. Read local catalog files first; avoid web unless user asks for live verification or local coverage is missing.
+    ---
+    EOF
+        awk 'BEGIN { frontmatter = 0; body = 0 } /^---$/ { frontmatter++; if (frontmatter == 2) { body = 1; next } } body { print }' ${inputs.aws-best-practices-skill}/SKILL.md >> $out/SKILL.md
+  '';
+  piSkills = {
+    chrome-cdp = inputs.chrome-cdp-skill + "/skills/chrome-cdp";
+    grill-me = inputs.mattpocock-skills + "/skills/productivity/grill-me";
+    imagegen = inputs.openai-skills + "/skills/.system/imagegen";
+    ponytail = inputs.ponytail + "/skills/ponytail";
+    tdd = inputs.superpowers + "/skills/test-driven-development";
+    ansible-good-practices = inputs.claude-ansible-skills + "/ansible-good-practices/skills/ansible-good-practices";
+    ansible-new-role = inputs.claude-ansible-skills + "/ansible-new-role/skills/ansible-new-role";
+    ansible-new-collection = inputs.claude-ansible-skills + "/ansible-new-collection/skills/ansible-new-collection";
+    ansible-new-ee = inputs.claude-ansible-skills + "/ansible-new-ee/skills/ansible-new-ee";
+    ansible-new-molecule = inputs.claude-ansible-skills + "/ansible-new-molecule/skills/ansible-new-molecule";
+    ansible-docs = inputs.claude-ansible-skills + "/ansible-docs/skills/ansible-docs";
+    ansible-zen = inputs.claude-ansible-skills + "/ansible-zen/skills/ansible-zen";
+    aws-best-practices = awsBestPracticesSkill;
+    nixos-host-workflow = ../../skills/nixos-host-workflow;
+    hledger-finance = ../../skills/hledger-finance;
+    vikunja = ../../skills/vikunja;
+  };
+
+  # crates.io's /api/v1 download endpoint 403s fetchurl's user agent.
+  herdrRustPlatform = pkgs.rustPlatform.overrideScope (
+    rself: rsuper: {
+      importCargoLock = pkgs.buildPackages.callPackage (builtins.toFile
+        "import-cargo-lock-static-crates-io.nix"
+        (builtins.replaceStrings [ "https://crates.io/api/v1/crates" ] [ "https://static.crates.io/crates" ]
+          (builtins.readFile (pkgs.path + "/pkgs/build-support/rust/import-cargo-lock.nix")))
+      ) { };
+    }
+  );
+
+  herdr = pkgs.callPackage "${inputs.herdr}/nix/package.nix" {
+    rustPlatform = herdrRustPlatform;
+  };
 in
 {
   imports = [
@@ -29,6 +73,21 @@ in
     EDITOR = "hx";
   };
 
+  home.file.".config/herdr/config.toml".text = ''
+    [keys]
+    prefix = "ctrl+b"
+    focus_pane_left  = "prefix+h"
+    focus_pane_down  = "prefix+j"
+    focus_pane_up    = "prefix+k"
+    focus_pane_right = "prefix+l"
+    split_horizontal = "prefix+double_quote"
+    split_vertical    = "prefix+percent"
+    new_tab   = "prefix+c"
+    close_tab = "prefix+ampersand"
+    workspace_picker = "prefix+w"
+    goto             = "prefix+g"
+    copy_mode  = "prefix+y"
+  '';
   programs.zsh.shellAliases = {
     mail = "mail-fzf";
     mail-search = "mail-search-fzf";
@@ -105,6 +164,7 @@ in
     brave
     speedtest-cli
     ranger
+    kubectl
     gnumake
     jq
     jless
@@ -133,6 +193,7 @@ in
     rclone
     mblaze
     afew
+    herdr
   ];
 
   programs.ssh.matchBlocks.freya = {
