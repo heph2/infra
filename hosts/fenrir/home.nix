@@ -33,11 +33,14 @@ let
     imagegen = inputs.openai-skills + "/skills/.system/imagegen";
     ponytail = inputs.ponytail + "/skills/ponytail";
     tdd = inputs.superpowers + "/skills/test-driven-development";
-    ansible-good-practices = inputs.claude-ansible-skills + "/ansible-good-practices/skills/ansible-good-practices";
+    ansible-good-practices =
+      inputs.claude-ansible-skills + "/ansible-good-practices/skills/ansible-good-practices";
     ansible-new-role = inputs.claude-ansible-skills + "/ansible-new-role/skills/ansible-new-role";
-    ansible-new-collection = inputs.claude-ansible-skills + "/ansible-new-collection/skills/ansible-new-collection";
+    ansible-new-collection =
+      inputs.claude-ansible-skills + "/ansible-new-collection/skills/ansible-new-collection";
     ansible-new-ee = inputs.claude-ansible-skills + "/ansible-new-ee/skills/ansible-new-ee";
-    ansible-new-molecule = inputs.claude-ansible-skills + "/ansible-new-molecule/skills/ansible-new-molecule";
+    ansible-new-molecule =
+      inputs.claude-ansible-skills + "/ansible-new-molecule/skills/ansible-new-molecule";
     ansible-docs = inputs.claude-ansible-skills + "/ansible-docs/skills/ansible-docs";
     ansible-zen = inputs.claude-ansible-skills + "/ansible-zen/skills/ansible-zen";
     aws-best-practices = awsBestPracticesSkill;
@@ -51,8 +54,10 @@ let
     rself: rsuper: {
       importCargoLock = pkgs.buildPackages.callPackage (builtins.toFile
         "import-cargo-lock-static-crates-io.nix"
-        (builtins.replaceStrings [ "https://crates.io/api/v1/crates" ] [ "https://static.crates.io/crates" ]
-          (builtins.readFile (pkgs.path + "/pkgs/build-support/rust/import-cargo-lock.nix")))
+        (
+          builtins.replaceStrings [ "https://crates.io/api/v1/crates" ] [ "https://static.crates.io/crates" ]
+            (builtins.readFile (pkgs.path + "/pkgs/build-support/rust/import-cargo-lock.nix"))
+        )
       ) { };
     }
   );
@@ -174,6 +179,7 @@ in
     ncdu
     unzip
     telegram-desktop
+    deltachat-desktop
     pwvucontrol
     wireplumber
     gh
