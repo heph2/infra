@@ -21,6 +21,7 @@ in
       }
       ./default.nix
       inputs.agenix.nixosModules.default
+      inputs.denuvo-hvb.nixosModules.default
       inputs.disko.nixosModules.disko
       inputs.spicetify-nix.nixosModules.default
       inputs.trcc_gif.nixosModules.trcc-gif
@@ -43,7 +44,7 @@ in
           hm.ssh-heph
           hm.firefox-heph
           hm.mail-heph
-          hm.pi
+          # hm.pi temporarily disabled while rebuilding Freya.
           hm.openwiki
           ./home.nix
         ];

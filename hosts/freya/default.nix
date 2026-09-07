@@ -70,6 +70,11 @@ in
   age.secrets.plakar-routeros-passphrase.file = ../../secrets/plakar-routeros-passphrase.age;
   age.secrets.plakar-bitwarden-session.file = ../../secrets/plakar-bitwarden-session.age;
 
+  services.usbmuxd = {
+    enable = true;
+    package = pkgs.usbmuxd2;
+  };
+
   services.plakar-routeros-backup = {
     enable = true;
     repository = "${home}/.backups/routeros";
@@ -717,6 +722,7 @@ in
     plakarPackage
     steamcmd
     uxplay
+    libimobiledevice
     llamaPackage
     inputs.sonora.packages.${pkgs.stdenv.hostPlatform.system}.default
     libinput
