@@ -653,6 +653,7 @@ in
       "plugdev"
       "dialout"
       "input"
+      "ydotool"
     ];
   };
 
@@ -702,6 +703,7 @@ in
   programs.gamemode.enable = true;
   programs.gamescope.enable = true;
   programs.handy.enable = true;
+  programs.ydotool.enable = true;
   services.open-webui = {
     enable = true;
     port = 11111;

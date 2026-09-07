@@ -116,6 +116,9 @@ in
       wootility
       wl-clipboard
       mpv
+      wtype
+      dotool
+      ydotool
       anydesk
       dwarf-fortress
       thunar
@@ -265,6 +268,13 @@ in
       user = "root";
     };
   };
+
+  home.file.".config/cosmic/com.system76.CosmicSettings.Shortcuts/v1/custom".text = ''
+    {
+        (modifiers: [Ctrl], key: "space"): Spawn("handy --toggle-transcription"),
+        (modifiers: [Ctrl, Shift], key: "space"): Spawn("handy --toggle-post-process"),
+    }
+  '';
 
   home.file.".config/helix/yazi-picker.sh".text = ''
     #!/usr/bin/env bash
