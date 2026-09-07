@@ -40,6 +40,7 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    denuvo-hvb.url = "github:pacjo/denuvo-hvb";
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
