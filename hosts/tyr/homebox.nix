@@ -25,7 +25,7 @@ in
   };
 
   systemd.services.homebox = {
-    serviceConfig.EnvironmentFile = "/run/agenix/homebox_oidc_secret";
+    serviceConfig.EnvironmentFile = config.age.secrets.homebox_oidc_secret.path;
   };
 
   services.caddy = {
@@ -43,7 +43,6 @@ in
 
   age.secrets.homebox_oidc_secret = {
     file = ../../secrets/homebox-oidc-client-secret.age;
-    path = "/run/agenix/homebox-oidc.env";
     mode = "640";
     owner = "homebox";
     group = "homebox";

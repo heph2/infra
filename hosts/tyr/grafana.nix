@@ -45,7 +45,6 @@ in
 
   age.secrets.grafana_oidc_client_secret = {
     file = ../../secrets/grafana-oidc-client-secret.age;
-    path = "/run/agenix/grafana-oidc";
     mode = "640";
     owner = "grafana";
     group = "grafana";
