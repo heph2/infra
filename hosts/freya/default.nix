@@ -709,12 +709,14 @@ in
   programs.gamescope.enable = true;
   programs.handy.enable = true;
   programs.ydotool.enable = true;
+  programs.nix-ld.enable = true;
   services.open-webui = {
     enable = true;
     port = 11111;
   };
 
   environment.systemPackages = with pkgs; [
+    inputs.claude-desktop-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.opencode
