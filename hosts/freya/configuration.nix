@@ -44,7 +44,7 @@ in
           hm.ssh-heph
           hm.firefox-heph
           hm.mail-heph
-          # hm.pi temporarily disabled while rebuilding Freya.
+          hm.pi
           hm.openwiki
           ./home.nix
         ];

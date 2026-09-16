@@ -763,6 +763,8 @@ in
     podman-tui
     remmina
     lm_sensors
+    btop
+    nvtopPackages.amd
     rofi
     scrcpy
     dive
