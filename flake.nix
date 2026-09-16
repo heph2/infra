@@ -101,7 +101,6 @@
     };
     herdr = {
       url = "github:ogulcancelik/herdr";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     trcc_gif = {
       url = "git+https://codeberg.org/heph/trcc_gif";
