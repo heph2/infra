@@ -158,7 +158,6 @@
             "npm:pi-subagents@0.33.1"
             "npm:@narumitw/pi-goal@0.9.2"
 
-
             # Research and context tools: search/fetch/PDF/video plus skill UX polish.
             "npm:pi-web-access@0.13.0"
             "npm:pi-skillful@0.3.11"
@@ -174,6 +173,9 @@
             # Runtime-discovered OpenCode Zen/Go models, so new free models show up immediately.
             "npm:pi-opencode-provider@0.7.3"
             "npm:@narumitw/pi-usage@0.52.1"
+
+            # Persistent project memory and automatic recall/capture.
+            "npm:@mem0/pi-agent-plugin"
 
             # Reuse the local Claude Code OAuth session as a pi provider.
             # Risk accepted interactively: this third-party extension uses non-public Anthropic protocol details.

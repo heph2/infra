@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   agenix,
   stardew-modding,
@@ -60,6 +61,11 @@ in
     secrets.vja-api-token = {
       file = ../../secrets/vja-api-token.age;
       path = "${config.home.homeDirectory}/.config/vja/token.json";
+    };
+    secrets.mem0-api-key = {
+      file = ../../secrets/mem0-api-key.age;
+      path = "${config.home.homeDirectory}/.config/mem0/api-key";
+      mode = "0400";
     };
   };
 
@@ -387,6 +393,12 @@ in
   #     };
   #   };
   # };
+
+  programs.zsh.initContent = lib.mkAfter ''
+    if [[ -r ${config.age.secrets.mem0-api-key.path} ]]; then
+      export MEM0_API_KEY="$(${pkgs.coreutils}/bin/cat ${config.age.secrets.mem0-api-key.path})"
+    fi
+  '';
 
   programs.zsh.shellAliases = {
     a = "amused";
