@@ -26,6 +26,7 @@ in {
   "homebox-oidc-client-secret.age".publicKeys = [ heph freya zima sauron tyr ];
   "vikunja-oidc-client-secret.age".publicKeys = [ heph freya tyr ];
   "vja-api-token.age".publicKeys = [ heph freya ];
+  "mem0-api-key.age".publicKeys = [ heph freya ];
   "pocket-id-encryption-key.age".publicKeys = [ heph freya sauron ];
   "netdata_token.age".publicKeys = [ sauron zima tyr ];
   "webdav_htpasswd.age".publicKeys = [ sauron heph freya ];
