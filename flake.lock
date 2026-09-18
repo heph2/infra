@@ -1642,11 +1642,11 @@
     },
     "pi-typesafe-router": {
       "locked": {
-        "lastModified": 1789738500,
-        "narHash": "sha256-cap3NYKvfuAvI8h4Xl3szDM847hlW/Cc1lLjH+BxhnA=",
+        "lastModified": 1789740526,
+        "narHash": "sha256-8cHlLPsOdhEEaes/H1HEzxuwpd0rFjycv1z1/mPhsp4=",
         "owner": "heph2",
         "repo": "pi-typesafe-router",
-        "rev": "5b96e87eb8a4ad10a30a74d5415b453b52a01003",
+        "rev": "79d78a86cc080e8d8d2cd340ef7f27fb00e2fe79",
         "type": "github"
       },
       "original": {
