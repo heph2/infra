@@ -49,6 +49,11 @@
     agenix.url = "github:ryantm/agenix";
     nix-ai-tools.url = "github:numtide/nix-ai-tools";
     pi.url = "github:lukasl-dev/pi.nix";
+    pi-typesafe-router.url = "github:heph2/pi-typesafe-router";
+    typesafe-ai-skills = {
+      url = "github:typesafe-ai/skills";
+      flake = false;
+    };
     paseo = {
       url = "github:getpaseo/paseo";
       inputs.nixpkgs.follows = "nixpkgs";

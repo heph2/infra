@@ -1640,6 +1640,21 @@
         "type": "github"
       }
     },
+    "pi-typesafe-router": {
+      "locked": {
+        "lastModified": 1789738500,
+        "narHash": "sha256-cap3NYKvfuAvI8h4Xl3szDM847hlW/Cc1lLjH+BxhnA=",
+        "owner": "heph2",
+        "repo": "pi-typesafe-router",
+        "rev": "5b96e87eb8a4ad10a30a74d5415b453b52a01003",
+        "type": "github"
+      },
+      "original": {
+        "owner": "heph2",
+        "repo": "pi-typesafe-router",
+        "type": "github"
+      }
+    },
     "plakar-nixpkgs": {
       "locked": {
         "lastModified": 1785967620,
@@ -1795,6 +1810,7 @@
         "paneru": "paneru",
         "paseo": "paseo",
         "pi": "pi",
+        "pi-typesafe-router": "pi-typesafe-router",
         "plakar-nixpkgs": "plakar-nixpkgs",
         "ponytail": "ponytail",
         "simple-nixos-mailserver": "simple-nixos-mailserver",
@@ -1805,6 +1821,7 @@
         "stardew-modding": "stardew-modding",
         "superpowers": "superpowers",
         "trcc_gif": "trcc_gif",
+        "typesafe-ai-skills": "typesafe-ai-skills",
         "voxtype": "voxtype"
       }
     },
@@ -2215,6 +2232,22 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "typesafe-ai-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789191725,
+        "narHash": "sha256-Lh2Y90TFv+njKqo/g5WXEHw0Rk1jQSH5POqKtrvy5kM=",
+        "owner": "typesafe-ai",
+        "repo": "skills",
+        "rev": "65a39f393687675ce170e6094757de20370365b9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "typesafe-ai",
+        "repo": "skills",
         "type": "github"
       }
     },
