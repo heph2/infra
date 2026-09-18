@@ -20,6 +20,7 @@
         imagegen = inputs.openai-skills + "/skills/.system/imagegen";
         ponytail = inputs.ponytail + "/skills/ponytail";
         tdd = inputs.superpowers + "/skills/test-driven-development";
+        typesafe-ai = inputs.typesafe-ai-skills + "/skills/typesafe-ai";
         ansible-good-practices =
           inputs.claude-ansible-skills + "/ansible-good-practices/skills/ansible-good-practices";
         ansible-new-role = inputs.claude-ansible-skills + "/ansible-new-role/skills/ansible-new-role";
@@ -38,10 +39,18 @@
       };
     in
     {
-      imports = [ inputs.pi.homeModules.default ];
+      imports = [
+        inputs.pi.homeModules.default
+        inputs.pi-typesafe-router.homeManagerModules.default
+      ];
 
       home.file.".agent-browser/config.json".text = builtins.toJSON {
         cdp = "9222";
+      };
+
+      programs.pi-typesafe-router = {
+        enable = true;
+        mode = "shadow";
       };
 
       home.file.".pi/agent/extensions/pi-tool-display/config.json".text = builtins.toJSON {

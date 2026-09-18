@@ -67,7 +67,27 @@ in
       path = "${config.home.homeDirectory}/.config/mem0/api-key";
       mode = "0400";
     };
+    secrets.typesafe-api-key = {
+      file = ../../secrets/typesafe-api-key.age;
+      path = "${config.home.homeDirectory}/.config/typesafe/api-key";
+      mode = "0400";
+    };
   };
+
+  # The pi Mem0 extension reads its API key from this config at process start.
+  # Keep the plaintext out of the Nix store; agenix materializes it first.
+  home.activation.mem0Config = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ -r "${config.age.secrets.mem0-api-key.path}" ]; then
+      install -d -m 0700 "$HOME/.pi/agent"
+      api_key="$(${pkgs.jq}/bin/jq -Rs . < "${config.age.secrets.mem0-api-key.path}")"
+      tmp_config="$(${pkgs.coreutils}/bin/mktemp "$HOME/.pi/agent/mem0-config.json.XXXXXX")"
+      trap 'rm -f "$tmp_config"' EXIT
+      printf '{"apiKey":%s,"userId":"heph","defaultScope":"project"}\n' "$api_key" > "$tmp_config"
+      chmod 0400 "$tmp_config"
+      mv -f "$tmp_config" "$HOME/.pi/agent/mem0-config.json"
+      trap - EXIT
+    fi
+  '';
 
   home.file.".config/vja/config.rc".text = ''
     [application]
@@ -397,6 +417,9 @@ in
   programs.zsh.initContent = lib.mkAfter ''
     if [[ -r ${config.age.secrets.mem0-api-key.path} ]]; then
       export MEM0_API_KEY="$(${pkgs.coreutils}/bin/cat ${config.age.secrets.mem0-api-key.path})"
+    fi
+    if [[ -r ${config.age.secrets.typesafe-api-key.path} ]]; then
+      export TYPESAFE_API_KEY="$(${pkgs.coreutils}/bin/cat ${config.age.secrets.typesafe-api-key.path})"
     fi
   '';
 
