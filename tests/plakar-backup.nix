@@ -10,7 +10,11 @@ assert service.serviceConfig.Group == "users";
 assert builtins.length service.serviceConfig.LoadCredential == 1;
 assert timer.timerConfig.OnCalendar == "hourly";
 assert timer.timerConfig.Persistent;
+assert !(builtins.hasAttr "plakarbackup-freya-system-gdrive" config.systemd.timers);
+assert lib.hasInfix "-concurrency 1"
+  config.systemd.services.plakarbackup-freya-system-gdrive.script;
 assert lib.hasInfix "sftp://root@sauron/bck/freya/plakar/home-heph" service.script;
+assert lib.hasInfix "-configdir /home/heph/.config/plakar" service.script;
 assert lib.hasInfix "/home/heph" service.script;
 assert lib.hasInfix "-ignore .cache" service.script;
 assert !lib.hasInfix "/bck/freya/home-heph" service.script;

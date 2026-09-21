@@ -8,6 +8,7 @@ let
   plugins = {
     bitwarden = plakarPkgs.callPackage ./bitwarden.nix { };
     remarkable = plakarPkgs.callPackage ./remarkable.nix { };
+    rclone = plakarPkgs.callPackage ./rclone.nix { };
     routeros = plakarPkgs.callPackage ./routeros.nix { };
     sftp = plakarPkgs.callPackage ./sftp.nix { };
   };
