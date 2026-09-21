@@ -10,12 +10,18 @@
     let
       cfg = config.services.plakarbackup;
       enabledJobs = lib.filterAttrs (_: job: job.enable) cfg.jobs;
+      enabledTimers = lib.filterAttrs (_: job: job.enableTimer) enabledJobs;
 
       backupCommand =
         job:
         lib.escapeShellArgs (
-          [
-            (lib.getExe job.package)
+          [ (lib.getExe job.package) ]
+          ++ lib.optionals (job.configDir != null) [
+            "-configdir"
+            job.configDir
+          ]
+          ++ job.globalArguments
+          ++ [
             "-stdio"
             "at"
             job.repository
@@ -97,6 +103,18 @@
                     description = "Plakar repository URI used for snapshots.";
                   };
 
+                  configDir = lib.mkOption {
+                    type = lib.types.nullOr lib.types.path;
+                    default = null;
+                    description = "Optional Plakar configuration directory.";
+                  };
+
+                  globalArguments = lib.mkOption {
+                    type = lib.types.listOf lib.types.str;
+                    default = [ ];
+                    description = "Additional arguments passed before `plakar at`.";
+                  };
+
                   paths = lib.mkOption {
                     type = lib.types.listOf lib.types.str;
                     default = [ ];
@@ -150,6 +168,12 @@
                     description = "Packages added to the backup service PATH.";
                   };
 
+                  enableTimer = lib.mkOption {
+                    type = lib.types.bool;
+                    default = true;
+                    description = "Whether to schedule this backup with a systemd timer.";
+                  };
+
                   startAt = lib.mkOption {
                     type = lib.types.str;
                     default = "weekly";
@@ -193,7 +217,7 @@
         );
 
         systemd.services = lib.mapAttrs' mkService enabledJobs;
-        systemd.timers = lib.mapAttrs' mkTimer enabledJobs;
+        systemd.timers = lib.mapAttrs' mkTimer enabledTimers;
       };
     };
 }
