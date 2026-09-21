@@ -16,6 +16,7 @@ let
   plakarPackage = pkgs.plakar.withPlugins (plugins: [
     plugins.bitwarden
     plugins.remarkable
+    plugins.rclone
     plugins.routeros
     plugins.sftp
   ]);
@@ -40,6 +41,24 @@ let
     "*/.tox"
     "*/venv"
     "*/.venv"
+  ];
+  recoverableSystemExcludes = [
+    "proc"
+    "sys"
+    "dev"
+    "run"
+    "tmp"
+    "var/cache"
+    "var/tmp"
+    "nix/store"
+    "*/.cache"
+    "*/node_modules"
+    "*/_build"
+    "*/.tox"
+    "*/venv"
+    "*/.venv"
+    "*/.npm/_cacache"
+    "*/.config/Code/CachedData"
   ];
   llamaPackage = inputs.llama-cpp-nixpkgs.legacyPackages.${pkgs.system}.llama-cpp.override {
     rocmSupport = true;
@@ -179,6 +198,7 @@ in
     enable = true;
     package = plakarPackage;
     repository = "sftp://root@sauron/bck/freya/plakar/home-heph";
+    configDir = "${home}/.config/plakar";
     paths = [ home ];
     exclude = homeBackupExcludes ++ [
       "Downloads"
@@ -195,6 +215,39 @@ in
     group = "users";
     startAt = "hourly";
     persistentTimer = true;
+  };
+
+  services.plakarbackup.jobs.freya-system-gdrive = {
+    enable = true;
+    package = plakarPackage;
+    repository = "@gdrive";
+    configDir = "${home}/.config/plakar";
+    globalArguments = [
+      "-concurrency"
+      "1"
+    ];
+    paths = [
+      "/"
+      "/boot"
+      "/mnt/data"
+    ];
+    exclude = recoverableSystemExcludes;
+    extraArguments = [
+      "-o"
+      "dont_traverse_fs=true"
+      "-check"
+    ];
+    snapshotName = "freya-system";
+    tags = [
+      "freya"
+      "system"
+      "google-drive"
+    ];
+    passphraseFile = config.age.secrets.plakar-routeros-passphrase.path;
+    user = "root";
+    group = "root";
+    # Manual-only until the first complete cloud snapshot and restore test pass.
+    enableTimer = false;
   };
 
   services.borgbackup.jobs =
