@@ -27,7 +27,6 @@ in
       inputs.trcc_gif.nixosModules.trcc-gif
       inputs.handy.nixosModules.default
       config.infra.modules.nixos.home-manager
-      # config.infra.modules.nixos.comfyui
       config.infra.modules.nixos.plakar-backup
       config.infra.modules.nixos.plakar-bitwarden-backup
       config.infra.modules.nixos.plakar-routeros-backup
