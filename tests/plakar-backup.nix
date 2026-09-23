@@ -7,6 +7,7 @@ assert service.description == "Back up home-heph with Plakar";
 assert service.serviceConfig.Type == "oneshot";
 assert service.serviceConfig.User == "heph";
 assert service.serviceConfig.Group == "users";
+assert service.unitConfig.RequiresMountsFor == [ "/home/heph" ];
 assert builtins.length service.serviceConfig.LoadCredential == 1;
 assert timer.timerConfig.OnCalendar == "hourly";
 assert timer.timerConfig.Persistent;
