@@ -12,8 +12,9 @@ buildGo126Module rec {
   src = fetchFromGitHub {
     owner = "PlakarKorp";
     repo = "integrations";
-    rev = "419d4e83dc5a986dcf68ccc966b368a6bdb1f0f4";
-    hash = "sha256-SoBxtmxB8EomP7/Km7CRGs5mVgDg0L2bTCUX1F3vOmc=";
+    # PR 168: keep rclone's OAuth token refresh context alive after Init.
+    rev = "81f18a7b1e62cd6587a019d7c67b67b58341a356";
+    hash = "sha256-9HNdtvmpuSoiCersl31xsbC7Ud/aEuao79aI7DVWnog=";
   };
 
   sourceRoot = "source/rclone";

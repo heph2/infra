@@ -56,12 +56,13 @@
           environment.HOME = config.users.users.${job.user}.home;
           path = [ pkgs.openssh ] ++ job.runtimePackages;
 
+          unitConfig.RequiresMountsFor = job.paths;
+
           serviceConfig = {
             Type = "oneshot";
             User = job.user;
             Group = job.group;
             UMask = "0077";
-            RequiresMountsFor = job.paths;
             LoadCredential = [ "repository-passphrase:${job.passphraseFile}" ];
           };
           script = backupScript job;
