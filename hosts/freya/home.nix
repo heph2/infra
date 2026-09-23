@@ -152,6 +152,7 @@ in
       aporetic
       agent-browser
       orcaPackage
+      bat
       w3m
       kdePackages.okular
       hledger
