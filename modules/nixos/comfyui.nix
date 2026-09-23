@@ -24,7 +24,7 @@
       services.comfyui = {
         enable = true;
         gpuSupport = "rocm";
-        enableManager = true;
+        enableManager = false;
         listenAddress = "127.0.0.1";
         port = 8188;
         openFirewall = false;
