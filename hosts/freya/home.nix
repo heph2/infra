@@ -11,6 +11,7 @@
 let
   cfg = config.xsession.windowManager.i3;
   obscuraPackage = inputs.obscura.packages.${pkgs.stdenv.hostPlatform.system}.obscura-browser-bin;
+  orcaPackage = pkgs.callPackage ../../pkgs/orca { };
 in
 {
   imports = [
@@ -150,6 +151,7 @@ in
       thunar
       aporetic
       agent-browser
+      orcaPackage
       w3m
       kdePackages.okular
       hledger
@@ -244,6 +246,7 @@ in
       libu2f-host
       pam_u2f
       rclone
+      oci-cli
     ]
     ++ (with haskellPackages; [
       ghcid

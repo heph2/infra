@@ -138,6 +138,11 @@ in
     readiness.host = "10.11.99.1";
   };
 
+  # Nix substitute storms (huge Python/npm closures) exhaust the default
+  # per-process fd ceiling (fs.nr_open = 1M) and fail with EMFILE mid-unpack.
+  boot.kernel.sysctl."fs.nr_open" = 10485760;
+  systemd.services.nix-daemon.serviceConfig.LimitNOFILE = 10485760;
+
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   hardware.opentabletdriver.enable = false;
@@ -231,7 +236,8 @@ in
       "/boot"
       "/mnt/data"
     ];
-    exclude = recoverableSystemExcludes;
+    # Never include the backup's own temporary packs in the /mnt/data source.
+    exclude = recoverableSystemExcludes ++ [ ".plakar-staging" ];
     extraArguments = [
       "-o"
       "dont_traverse_fs=true"
@@ -248,6 +254,15 @@ in
     group = "root";
     # Manual-only until the first complete cloud snapshot and restore test pass.
     enableTimer = false;
+  };
+
+  systemd.services.plakarbackup-freya-system-gdrive = {
+    # /tmp is on the root pool; large cloud backups must stage on the data disk.
+    environment.TMPDIR = "/mnt/data/.plakar-staging";
+    # RequiresMountsFor already includes /mnt/data through the job's source paths.
+    preStart = ''
+      ${pkgs.coreutils}/bin/install -d -m 0700 /mnt/data/.plakar-staging
+    '';
   };
 
   services.borgbackup.jobs =
