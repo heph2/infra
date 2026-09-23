@@ -14,6 +14,15 @@
         EOF
             awk 'BEGIN { frontmatter = 0; body = 0 } /^---$/ { frontmatter++; if (frontmatter == 2) { body = 1; next } } body { print }' ${inputs.aws-best-practices-skill}/SKILL.md >> $out/SKILL.md
       '';
+      orcaCliSkill = pkgs.runCommand "orca-cli-skill" { } ''
+        mkdir -p $out
+        cp ${
+          pkgs.fetchurl {
+            url = "https://raw.githubusercontent.com/stablyai/orca/v1.4.209/skills/orca-cli/SKILL.md";
+            hash = "sha256-ZSKjNVmTs3er59elyPagD5cm4aamuaqcAVZR6ND15rg=";
+          }
+        } $out/SKILL.md
+      '';
       piSkills = {
         chrome-cdp = inputs.chrome-cdp-skill + "/skills/chrome-cdp";
         grill-me = inputs.mattpocock-skills + "/skills/productivity/grill-me";
@@ -21,6 +30,7 @@
         ponytail = inputs.ponytail + "/skills/ponytail";
         tdd = inputs.superpowers + "/skills/test-driven-development";
         typesafe-ai = inputs.typesafe-ai-skills + "/skills/typesafe-ai";
+        orca-cli = orcaCliSkill;
         ansible-good-practices =
           inputs.claude-ansible-skills + "/ansible-good-practices/skills/ansible-good-practices";
         ansible-new-role = inputs.claude-ansible-skills + "/ansible-new-role/skills/ansible-new-role";
