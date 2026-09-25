@@ -5,7 +5,12 @@
 # NixOS-WSL specific options are documented on the NixOS-WSL repository:
 # https://github.com/nix-community/NixOS-WSL
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   imports = [
@@ -20,7 +25,19 @@
   };
 
   environment.systemPackages = with pkgs; [
-    mg vim htop ncdu helix
+    mosh
+    mg
+    vim
+    htop
+    ncdu
+    helix
+  ];
+
+  networking.firewall.allowedUDPPortRanges = [
+    {
+      from = 60000;
+      to = 61000;
+    }
   ];
 
   system.stateVersion = "25.11"; # Did you read the comment?

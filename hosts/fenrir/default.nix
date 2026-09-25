@@ -194,6 +194,7 @@ in
   virtualisation.docker.enable = true;
 
   environment.systemPackages = with pkgs; [
+    mosh
     inputs.nix-ai-tools.packages.${pkgs.system}.opencode
     inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
     inputs.nix-ai-tools.packages.${pkgs.system}.codex
@@ -239,6 +240,12 @@ in
     ports = [ 22 ];
   };
   networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.firewall.allowedUDPPortRanges = [
+    {
+      from = 60000;
+      to = 61000;
+    }
+  ];
   networking.firewall.enable = true;
 
   system.stateVersion = "25.05";
