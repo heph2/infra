@@ -62,7 +62,12 @@ let
     }
   );
 
-  herdr = pkgs.callPackage "${inputs.herdr}/nix/package.nix" {
+  herdrPkgs = pkgs.extend (
+    _: _: {
+      zig_0_16 = inputs.herdr.inputs.nixpkgs.legacyPackages.${pkgs.system}.zig_0_16;
+    }
+  );
+  herdr = herdrPkgs.callPackage "${inputs.herdr}/nix/package.nix" {
     rustPlatform = herdrRustPlatform;
   };
 in
