@@ -44,7 +44,7 @@ in
   };
 
   networking.defaultGateway6 = {
-    address = "fe80::6f4:1cff:fe18:162";
+    address = "fe80::d221:f9ff:fe33:d1b1";
     interface = "wlan0";
   };
 
