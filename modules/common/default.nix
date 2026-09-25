@@ -5,6 +5,16 @@
   ...
 }:
 {
+  # Mosh starts its server over SSH, then carries the session over UDP.
+  # Keep the default mosh port range open for incoming sessions.
+  environment.systemPackages = [ pkgs.mosh ];
+  networking.firewall.allowedUDPPortRanges = [
+    {
+      from = 60000;
+      to = 61000;
+    }
+  ];
+
   services.fail2ban = {
     enable = true;
     maxretry = 5;
