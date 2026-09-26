@@ -195,6 +195,7 @@ in
 
   environment.systemPackages = with pkgs; [
     mosh
+    obsidian
     inputs.nix-ai-tools.packages.${pkgs.system}.opencode
     inputs.nix-ai-tools.packages.${pkgs.system}.claude-code
     inputs.nix-ai-tools.packages.${pkgs.system}.codex
