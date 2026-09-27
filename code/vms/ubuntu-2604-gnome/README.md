@@ -126,11 +126,25 @@ organization confirms otherwise.
 Inside the freshly installed VM:
 
 1. Install all Ubuntu updates and reboot.
-2. Install the current Microsoft Edge package from Microsoft's official
-   download page.
-3. Install the current Microsoft Intune app using Microsoft's official Linux
-   enrollment instructions. Do not commit the downloaded package or any
-   enrollment data here.
+2. Install Microsoft Edge and the Microsoft Intune app with Microsoft's
+   official Intune installer script (`Linux/Intune Installer` in
+   `github.com/microsoft/shell-intune-samples`). It configures the
+   packages.microsoft.com `prod` and Edge apt repositories — including the
+   separate GPG keys Ubuntu 26.04 needs — and installs `microsoft-edge-stable`
+   and `intune-portal`:
+
+   ```bash
+   curl -fsSL -o /tmp/intune-installer.sh \
+     "https://raw.githubusercontent.com/microsoft/shell-intune-samples/master/Linux/Intune%20Installer/installer.sh"
+   chmod +x /tmp/intune-installer.sh
+   sudo bash /tmp/intune-installer.sh --verbose
+   ```
+
+   The script is idempotent and logs to `~/intune-installer.log`.
+
+3. Reboot once so the `intune-portal` and `microsoft-identity-broker`
+   services start from a clean boot. Do not commit the downloaded script,
+   packages, or any enrollment data here.
 4. Launch the Intune app, sign in with the work/school account, and complete
    the organization's compliance prompts.
 5. Sign in to Edge with the same work account and verify access to the required
@@ -179,5 +193,7 @@ remove the incomplete domain/volume manually before retrying.
 
 - [Microsoft Intune supported platforms](https://learn.microsoft.com/en-us/intune/fundamentals/ref-supported-platforms)
 - [Enroll a Linux device in Microsoft Intune](https://learn.microsoft.com/en-us/intune/user-help/enrollment/enroll-linux)
+- [Microsoft Intune installer script](https://github.com/microsoft/shell-intune-samples/tree/master/Linux/Intune%20Installer)
+- [Get the Microsoft Intune app for Linux](https://learn.microsoft.com/en-us/intune/user-help/company-portal/intune-app-linux)
 - [Ubuntu 26.04 release schedule](https://documentation.ubuntu.com/release-notes/26.04/schedule/)
 - [Ubuntu 26.04 releases](https://releases.ubuntu.com/resolute/)
