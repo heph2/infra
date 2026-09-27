@@ -90,8 +90,17 @@ in
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./disk-config.nix
-    ./intune.nix
   ];
+
+  fileSystems."/mnt/intune-vm" = {
+    device = "/dev/disk/by-label/INTUNE_VM";
+    fsType = "ext4";
+    options = [
+      "nofail"
+      "x-systemd.automount"
+      "x-systemd.device-timeout=5s"
+    ];
+  };
 
   # specialisation."VFIO".configuration = {
   #   imports = [ ./vfio.nix ];
