@@ -165,6 +165,12 @@
           auth.type = "oauth";
           lifecycle = "eager";
         };
+        mcpServers.wallet = {
+          transport = "streamable-http";
+          url = "https://mcp.wallet.budgetbakers.com";
+          auth.type = "oauth";
+          lifecycle = "eager";
+        };
       };
 
       programs.pi.coding-agent = {
