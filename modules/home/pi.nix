@@ -165,10 +165,10 @@
           auth.type = "oauth";
           lifecycle = "eager";
         };
+        # Wallet uses a token injected by the host's agenix activation.
         mcpServers.wallet = {
           transport = "streamable-http";
           url = "https://mcp.wallet.budgetbakers.com";
-          auth.type = "oauth";
           lifecycle = "eager";
         };
       };
