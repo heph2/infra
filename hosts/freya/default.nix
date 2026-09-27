@@ -70,6 +70,7 @@ in
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./disk-config.nix
+    ./intune.nix
   ];
 
   # specialisation."VFIO".configuration = {
