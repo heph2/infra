@@ -68,6 +68,11 @@ in
       path = "${config.home.homeDirectory}/.config/mem0/api-key";
       mode = "0400";
     };
+    secrets.wallet-mcp-token = {
+      file = ../../secrets/wallet-mcp-token.age;
+      path = "${config.home.homeDirectory}/.config/wallet/mcp-token";
+      mode = "0400";
+    };
     secrets.typesafe-api-key = {
       file = ../../secrets/typesafe-api-key.age;
       path = "${config.home.homeDirectory}/.config/typesafe/api-key";
@@ -86,6 +91,21 @@ in
       printf '{"apiKey":%s,"userId":"heph","defaultScope":"project"}\n' "$api_key" > "$tmp_config"
       chmod 0400 "$tmp_config"
       mv -f "$tmp_config" "$HOME/.pi/agent/mem0-config.json"
+      trap - EXIT
+    fi
+  '';
+
+  # Inject the agenix-managed Wallet token after Home Manager writes the base MCP config.
+  home.activation.walletMcpConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ -r "${config.age.secrets.wallet-mcp-token.path}" ] && [ -r "$HOME/.pi/agent/mcp.json" ]; then
+      install -d -m 0700 "$HOME/.pi/agent"
+      tmp_config="$(${pkgs.coreutils}/bin/mktemp "$HOME/.pi/agent/mcp.json.XXXXXX")"
+      trap 'rm -f "$tmp_config"' EXIT
+      ${pkgs.jq}/bin/jq --rawfile token "${config.age.secrets.wallet-mcp-token.path}" \
+        '.mcpServers.wallet.auth = null | .mcpServers.wallet.headers.Authorization = ("Bearer " + ($token | gsub("[\\r\\n]"; ""))) | del(.mcpServers.wallet.auth)' \
+        "$HOME/.pi/agent/mcp.json" > "$tmp_config"
+      chmod 0400 "$tmp_config"
+      mv -f "$tmp_config" "$HOME/.pi/agent/mcp.json"
       trap - EXIT
     fi
   '';
