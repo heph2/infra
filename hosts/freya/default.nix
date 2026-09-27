@@ -229,7 +229,7 @@ in
     configDir = "${home}/.config/plakar";
     globalArguments = [
       "-concurrency"
-      "1"
+      "16"
     ];
     paths = [
       "/"
