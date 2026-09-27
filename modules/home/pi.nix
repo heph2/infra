@@ -49,18 +49,10 @@
       };
     in
     {
-      imports = [
-        inputs.pi.homeModules.default
-        inputs.pi-typesafe-router.homeManagerModules.default
-      ];
+      imports = [ inputs.pi.homeModules.default ];
 
       home.file.".agent-browser/config.json".text = builtins.toJSON {
         cdp = "9222";
-      };
-
-      programs.pi-typesafe-router = {
-        enable = true;
-        mode = "shadow";
       };
 
       home.file.".pi/agent/extensions/pi-tool-display/config.json".text = builtins.toJSON {
@@ -166,6 +158,15 @@
         };
       };
 
+      home.file.".pi/agent/mcp.json".text = builtins.toJSON {
+        mcpServers.linear = {
+          transport = "streamable-http";
+          url = "https://mcp.linear.app/mcp";
+          auth.type = "oauth";
+          lifecycle = "eager";
+        };
+      };
+
       programs.pi.coding-agent = {
         enable = true;
         skills = builtins.attrValues piSkills;
@@ -187,6 +188,8 @@
             # 0.9.0 dropped the extension-owned fixed editor.
             "npm:pi-powerline-footer@0.12.1"
             "npm:@victor-software-house/pi-agent-browser"
+            # Official Linear remote MCP server (OAuth).
+            "npm:pi-mcp-extension@1.5.0"
 
             # Additional providers and account-usage visibility.
             # Runtime-discovered OpenCode Zen/Go models, so new free models show up immediately.
