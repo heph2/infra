@@ -50,15 +50,35 @@ let
     "tmp"
     "var/cache"
     "var/tmp"
-    "nix/store"
+    "*cache*"
+    "*Cache*"
+    # Downloaded package-manager and language caches.
+    "*/.bun/install/cache"
+    ".npm"
+    "*/.cargo/registry"
+    "*/.cargo/git"
+    "*/go/pkg/mod"
+    "*/go/pkg/sumdb"
+    "*/.local/share/pnpm/store"
+    "*/.gradle/caches"
+    "*/.m2/repository"
+    "*/.terraform"
+    "*/.terraform.d/plugin-cache"
+    # Regenerable development output and transient system state.
     "*/.cache"
+    "*/.direnv"
     "*/node_modules"
     "*/_build"
+    "*/target"
+    "*/__pycache__"
     "*/.tox"
     "*/venv"
     "*/.venv"
     "*/.npm/_cacache"
     "*/.config/Code/CachedData"
+    "var/lib/systemd/coredump"
+    "*/.local/share/Trash"
+    "nix/store"
   ];
   llamaPackage = inputs.llama-cpp-nixpkgs.legacyPackages.${pkgs.system}.llama-cpp.override {
     rocmSupport = true;
@@ -226,7 +246,7 @@ in
   services.plakarbackup.jobs.freya-system-gdrive = {
     enable = true;
     package = plakarPackage;
-    repository = "@gdrive";
+    repository = "@gdrive:plakar/freya";
     configDir = "${home}/.config/plakar";
     globalArguments = [
       "-concurrency"

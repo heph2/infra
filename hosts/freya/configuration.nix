@@ -31,28 +31,42 @@ in
       config.infra.modules.nixos.plakar-bitwarden-backup
       config.infra.modules.nixos.plakar-routeros-backup
       config.infra.modules.nixos.plakar-usb-backup
-      {
-        home-manager.backupFileExtension = "backup";
-        home-manager.users.heph.imports = [
-          hm.heph
-          hm.user-tools
-          hm.terminal
-          hm.helix
-          hm.git-heph
-          hm.zsh-p10k
-          hm.ssh-heph
-          hm.firefox-heph
-          hm.mail-heph
-          hm.pi
-          hm.openwiki
-          ./home.nix
-        ];
-        home-manager.extraSpecialArgs = {
-          inherit inputs;
-          agenix = inputs.agenix;
-          stardew-modding = inputs.stardew-modding;
-        };
-      }
+      (
+        { pkgs, ... }:
+        {
+          home-manager.backupFileExtension = "backup";
+          home-manager.backupCommand = pkgs.writeShellScript "home-manager-backup" ''
+            target="$1"
+            extension="''${HOME_MANAGER_BACKUP_EXT:-backup}"
+            backup="$target.$extension"
+            index=0
+            while [ -e "$backup" ] || [ -L "$backup" ]; do
+              index=$((index + 1))
+              backup="$target.$extension.$index"
+            done
+            mv -- "$target" "$backup"
+          '';
+          home-manager.users.heph.imports = [
+            hm.heph
+            hm.user-tools
+            hm.terminal
+            hm.helix
+            hm.git-heph
+            hm.zsh-p10k
+            hm.ssh-heph
+            hm.firefox-heph
+            hm.mail-heph
+            hm.pi
+            hm.openwiki
+            ./home.nix
+          ];
+          home-manager.extraSpecialArgs = {
+            inherit inputs;
+            agenix = inputs.agenix;
+            stardew-modding = inputs.stardew-modding;
+          };
+        }
+      )
       { nixpkgs.config.allowUnfree = true; }
       ../../modules/common/default.nix
       (
