@@ -1640,21 +1640,6 @@
         "type": "github"
       }
     },
-    "pi-typesafe-router": {
-      "locked": {
-        "lastModified": 1789740526,
-        "narHash": "sha256-8cHlLPsOdhEEaes/H1HEzxuwpd0rFjycv1z1/mPhsp4=",
-        "owner": "heph2",
-        "repo": "pi-typesafe-router",
-        "rev": "79d78a86cc080e8d8d2cd340ef7f27fb00e2fe79",
-        "type": "github"
-      },
-      "original": {
-        "owner": "heph2",
-        "repo": "pi-typesafe-router",
-        "type": "github"
-      }
-    },
     "plakar-nixpkgs": {
       "locked": {
         "lastModified": 1785967620,
@@ -1810,7 +1795,6 @@
         "paneru": "paneru",
         "paseo": "paseo",
         "pi": "pi",
-        "pi-typesafe-router": "pi-typesafe-router",
         "plakar-nixpkgs": "plakar-nixpkgs",
         "ponytail": "ponytail",
         "simple-nixos-mailserver": "simple-nixos-mailserver",
