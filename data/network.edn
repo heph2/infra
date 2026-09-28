@@ -1,0 +1,32 @@
+{:networks
+ [{:id "lan" :cidr "192.168.1.0/24" :description "Home LAN"}
+  {:id "router-lab" :cidr "10.1.1.0/24" :description "Router segment"}
+  {:id "router-services" :cidr "10.1.90.0/24" :description "Router services segment"}
+  {:id "homelab-v6" :cidr "2a07:7e81:85f5::/64" :description "Home public IPv6"}
+  {:id "hermes-ipv4" :cidr "135.181.85.238/32" :description "Hermes public IPv4"}
+  {:id "hermes-v6" :cidr "2a01:4f9:c012:4045::/64" :description "Hermes public IPv6"}]
+ :hosts
+ [{:id "fafnir"
+   :role "router"
+   :addresses ["10.1.1.1" "10.1.90.1"]
+   :notes "Router segments declared in hosts/fafnir/default.nix."}
+  {:id "zima"
+   :role "server"
+   :addresses ["192.168.1.30" "2a07:7e81:85f5::cafe"]
+   :notes "Address declared in hosts/zima/default.nix."}
+  {:id "tyr"
+   :role "server"
+   :addresses ["2a07:7e81:85f5::babe"]
+   :notes "Address declared in hosts/tyr/default.nix."}
+  {:id "sauron"
+   :role "nas"
+   :addresses ["2a07:7e81:85f5::beef"]
+   :notes "Address declared in hosts/sauron/default.nix."}
+  {:id "fenrir"
+   :role "laptop"
+   :addresses ["2a07:7e81:85f5::dead"]
+   :notes "Address declared in hosts/fenrir/default.nix."}
+  {:id "hermes"
+   :role "vps"
+   :addresses ["135.181.85.238" "2a01:4f9:c012:4045::1"]
+   :notes "Addresses declared in hosts/hermes/networking.nix."}]}

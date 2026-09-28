@@ -10,6 +10,7 @@
       formatter = pkgs.nixpkgs-fmt;
 
       packages = {
+        alfred = pkgs.callPackage ./pkgs/alfred.nix { };
         obscura = inputs'.obscura.packages.obscura-browser-bin;
 
         # Exposed so `nix build .#openwiki` and `pkgs/openwiki/update.sh`
@@ -23,6 +24,9 @@
           buildInputs = [
             sops
             just
+            babashka
+            hledger
+            vja
             ssh-to-age
             age
             ragenix

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+export ALFRED_DATA_FILE="${ALFRED_DATA_FILE:-$root/data/network.edn}"
+export ALFRED_FLAKE="${ALFRED_FLAKE:-$root}"
+exec bb -cp "$root/cli" -m alfred "$@"
