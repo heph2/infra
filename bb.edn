@@ -1,0 +1,4 @@
+{:paths ["cli"]
+ :tasks
+ {test {:doc "Run Alfred's tests"
+        :task (shell "bb" "test/alfred_test.clj")}}}
