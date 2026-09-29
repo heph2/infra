@@ -21,7 +21,7 @@ symlinkJoin {
         HOME="$TMPDIR" ${lib.getExe plakar} \
           -datadir "$out/share/plakar" \
           -cachedir "$TMPDIR/cache" \
-          pkg add "$archive"
+          pkg add -allow-unsigned "$archive"
       done
     done
 
