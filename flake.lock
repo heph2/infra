@@ -711,7 +711,7 @@
       "inputs": {
         "bun2nix": "bun2nix",
         "nixpkgs": [
-          "nixpkgs"
+          "handy-nixpkgs"
         ]
       },
       "locked": {
@@ -725,6 +725,22 @@
       "original": {
         "owner": "cjpais",
         "repo": "Handy",
+        "type": "github"
+      }
+    },
+    "handy-nixpkgs": {
+      "locked": {
+        "lastModified": 1790614890,
+        "narHash": "sha256-++Rits15TV+CJgOYmZX6ycHWZaS0FEJJA7DLZP8mF+k=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "dc8993a5c130c05a8565579014968a112d416d76",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixpkgs-26.05-darwin",
+        "repo": "nixpkgs",
         "type": "github"
       }
     },
@@ -1700,6 +1716,7 @@
         "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts",
         "handy": "handy",
+        "handy-nixpkgs": "handy-nixpkgs",
         "herdr": "herdr",
         "hermes-agent": "hermes-agent",
         "home-manager": "home-manager_2",

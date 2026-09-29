@@ -6,6 +6,9 @@
     stable-nixpkgs.url = "github:nixos/nixpkgs/release-25.05";
     # Keep llama.cpp updates independent from the main nixpkgs input.
     llama-cpp-nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Handy's bun2nix formatter still evaluates x86_64-darwin; use the last
+    # nixpkgs branch supporting that platform until Handy drops that path.
+    handy-nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-26.05-darwin";
     sonora.url = "github:nolight132/sonora";
     simple-nixos-mailserver = {
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver/main";
@@ -59,7 +62,7 @@
     };
     handy = {
       url = "github:cjpais/Handy";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "handy-nixpkgs";
     };
     voxtype = {
       url = "github:peteonrails/voxtype";

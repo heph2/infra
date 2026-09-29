@@ -20,6 +20,11 @@ buildGo126Module rec {
   subPackages = [ "cmd/importer" ];
 
   postInstall = ''
+    # Plakar 1.1.6 validates connector classes against its resource taxonomy;
+    # the plugin's legacy `source` class is no longer accepted.
+    substituteInPlace manifest.yaml \
+      --replace-fail 'class: source' 'class: identity'
+
     pluginRoot="$TMPDIR/bitwarden-plugin"
     install -Dm644 manifest.yaml "$pluginRoot/manifest.yaml"
     install -Dm644 importer/schema.json "$pluginRoot/importer/schema.json"
