@@ -2,6 +2,8 @@
   infra.modules.homeManager.user-tools =
     { pkgs, ... }:
     {
+      home.packages = [ (pkgs.callPackage ../../pkgs/alfred.nix { }) ];
+
       programs = {
         bash.enable = true;
         direnv = {

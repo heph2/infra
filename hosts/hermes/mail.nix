@@ -16,14 +16,9 @@
   mailserver = {
     stateVersion = 3;
     enable = true;
-    borgbackup = {
-      enable = true;
-      repoLocation = "ssh://root@100.126.120.86//bck/hermes";
-      cmdPreexec = ''export BORG_RSH="ssh -o StrictHostKeyChecking=no"'';
-    };
     fqdn = "mail.mbauce.com";
     domains = [ "mbauce.com" ];
-    loginAccounts = {
+    accounts = {
       "me@mbauce.com" = {
         hashedPasswordFile = "/var/lib/mail-accounts/me/pssw";
         aliases = [
@@ -95,31 +90,42 @@
     config.age.secrets.cloudflare.path
   ];
 
-  services.dovecot2 = {
-    mailPlugins.globally.enable = [ "old_stats" ];
-    extraConfig = ''
-      service old-stats {
-        unix_listener old-stats {
-          user = dovecot-exporter
-          group = dovecot-exporter
-          mode = 0660
-        }
-        fifo_listener old-stats-mail {
-          mode = 0660
-          user = dovecot2
-          group = dovecot2
-        }
-        fifo_listener old-stats-user {
-          mode = 0660
-          user = dovecot2
-          group = dovecot2
-        }
-      }
-      plugin {
-        old_stats_refresh = 30 secs
-        old_stats_track_cmds = yes
-      }
-    '';
+  services.dovecot2.settings = {
+    mail_plugins.old_stats = true;
+    "service old-stats" = {
+      "unix_listener old-stats" = {
+        user = "dovecot-exporter";
+        group = "dovecot-exporter";
+        mode = "0660";
+      };
+      "fifo_listener old-stats-mail" = {
+        mode = "0660";
+        user = "dovecot2";
+        group = "dovecot2";
+      };
+      "fifo_listener old-stats-user" = {
+        mode = "0660";
+        user = "dovecot2";
+        group = "dovecot2";
+      };
+    };
+    plugin = {
+      old_stats_refresh = "30 secs";
+      old_stats_track_cmds = true;
+    };
+  };
+
+  services.plakarbackup.jobs.hermes-mail = {
+    enable = true;
+    repository = "sftp://root@100.126.120.86/bck/hermes";
+    paths = [ "/var/vmail" ];
+    tags = [
+      "hermes"
+      "mail"
+    ];
+    user = "virtualMail";
+    group = "virtualMail";
+    startAt = "hourly";
   };
 
   services.postfix = {

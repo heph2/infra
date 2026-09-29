@@ -43,7 +43,9 @@
 
       backupScript = job: ''
         set -euo pipefail
-        export PLAKAR_PASSPHRASE="$(${pkgs.coreutils}/bin/cat "$CREDENTIALS_DIRECTORY/repository-passphrase")"
+        ${lib.optionalString (job.passphraseFile != null) ''
+          export PLAKAR_PASSPHRASE="$(${pkgs.coreutils}/bin/cat "$CREDENTIALS_DIRECTORY/repository-passphrase")"
+        ''}
         exec ${backupCommand job}
       '';
 
@@ -63,7 +65,9 @@
             User = job.user;
             Group = job.group;
             UMask = "0077";
-            LoadCredential = [ "repository-passphrase:${job.passphraseFile}" ];
+            LoadCredential = lib.optional (
+              job.passphraseFile != null
+            ) "repository-passphrase:${job.passphraseFile}";
           };
           script = backupScript job;
         };
@@ -147,8 +151,9 @@
                   };
 
                   passphraseFile = lib.mkOption {
-                    type = lib.types.path;
-                    description = "File containing the Plakar repository passphrase.";
+                    type = lib.types.nullOr lib.types.path;
+                    default = null;
+                    description = "Optional file containing the Plakar repository passphrase.";
                   };
 
                   user = lib.mkOption {

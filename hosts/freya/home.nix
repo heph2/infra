@@ -95,20 +95,36 @@ in
     fi
   '';
 
-  # Inject the agenix-managed Wallet token after Home Manager writes the base MCP config.
-  home.activation.walletMcpConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [ -r "${config.age.secrets.wallet-mcp-token.path}" ] && [ -r "$HOME/.pi/agent/mcp.json" ]; then
-      install -d -m 0700 "$HOME/.pi/agent"
-      tmp_config="$(${pkgs.coreutils}/bin/mktemp "$HOME/.pi/agent/mcp.json.XXXXXX")"
-      trap 'rm -f "$tmp_config"' EXIT
-      ${pkgs.jq}/bin/jq --rawfile token "${config.age.secrets.wallet-mcp-token.path}" \
-        '.mcpServers.wallet.auth = null | .mcpServers.wallet.headers.Authorization = ("Bearer " + ($token | gsub("[\\r\\n]"; ""))) | del(.mcpServers.wallet.auth)' \
-        "$HOME/.pi/agent/mcp.json" > "$tmp_config"
-      chmod 0400 "$tmp_config"
-      mv -f "$tmp_config" "$HOME/.pi/agent/mcp.json"
-      trap - EXIT
-    fi
-  '';
+  # Inject the agenix-managed Wallet token after agenix has materialized it.
+  # Home Manager activation can run before the user agenix service, so doing
+  # this as an ordered user unit avoids a silent first-login race.
+  systemd.user.services.wallet-mcp-config = {
+    Unit = {
+      Description = "Inject the wallet MCP token into Pi configuration";
+      Requires = [ "agenix.service" ];
+      After = [ "agenix.service" ];
+    };
+    Install.WantedBy = [ "default.target" ];
+    Service = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "wallet-mcp-config" ''
+        set -euo pipefail
+        secret="${config.age.secrets.wallet-mcp-token.path}"
+        target="$HOME/.pi/agent/mcp.json"
+        test -r "$secret"
+        test -r "$target"
+        install -d -m 0700 "$HOME/.pi/agent"
+        tmp_config="$(${pkgs.coreutils}/bin/mktemp "$target.XXXXXX")"
+        trap 'rm -f "$tmp_config"' EXIT
+        ${pkgs.jq}/bin/jq --rawfile token "$secret" \
+          '.mcpServers.wallet.auth = null | .mcpServers.wallet.headers.Authorization = ("Bearer " + ($token | gsub("[\\r\\n]"; ""))) | del(.mcpServers.wallet.auth)' \
+          "$target" > "$tmp_config"
+        chmod 0400 "$tmp_config"
+        mv -f "$tmp_config" "$target"
+        trap - EXIT
+      '';
+    };
+  };
 
   home.file.".config/vja/config.rc".text = ''
     [application]
