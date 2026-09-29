@@ -594,6 +594,8 @@ in
     "vfio"
     "wacom"
     "amdgpu"
+    "i2c-dev"
+    "i2c-piix4"
     "usbmon"
     "uinput"
   ];
@@ -637,6 +639,7 @@ in
     pkgs.libfido2
     pkgs.yubikey-personalization
     pkgs.wooting-udev-rules
+    pkgs.openrgb
   ];
   security.pam.services = {
     login.u2fAuth = true;
@@ -861,6 +864,7 @@ in
     podman-tui
     remmina
     lm_sensors
+    openrgb
     btop
     nvtopPackages.amd
     rofi
