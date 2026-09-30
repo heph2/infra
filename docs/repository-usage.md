@@ -29,38 +29,3 @@ For full validation before deployment:
 ```bash
 nixos-rebuild build --flake .#<host>
 ```
-
-## ComfyUI on Freya
-
-Freya uses `modules/nixos/comfyui.nix`, which imports `utensils/comfyui-nix` and enables the NixOS service with ROCm for the AMD GPU.
-
-Service basics:
-
-```bash
-sudo systemctl status comfyui
-sudo systemctl restart comfyui
-journalctl -u comfyui -f
-```
-
-ComfyUI listens on localhost only:
-
-```text
-http://127.0.0.1:8188
-```
-
-From another machine, tunnel it instead of opening the firewall:
-
-```bash
-ssh -L 8188:127.0.0.1:8188 freya
-```
-
-Data lives under `/var/lib/comfyui` by default:
-
-```text
-/var/lib/comfyui/models
-/var/lib/comfyui/output
-/var/lib/comfyui/input
-/var/lib/comfyui/custom_nodes
-```
-
-The module enables ComfyUI Manager. Runtime custom node/python installs go into the service data directory, while the ComfyUI package itself remains in the Nix store.
