@@ -15,6 +15,7 @@ assert timer.timerConfig.OnCalendar == "hourly";
 assert timer.timerConfig.Persistent;
 assert !(builtins.hasAttr "plakarbackup-freya-system-gdrive" config.systemd.timers);
 assert lib.hasInfix "-concurrency 16" cloudService.script;
+assert !(lib.hasInfix "-check" cloudService.script);
 assert (cloudService.environment.TMPDIR or null) == stagingDir;
 assert lib.hasInfix "-ignore .plakar-staging" cloudService.script;
 assert lib.elem "/mnt/data" cloudService.unitConfig.RequiresMountsFor;

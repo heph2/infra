@@ -273,7 +273,6 @@ in
     extraArguments = [
       "-o"
       "dont_traverse_fs=true"
-      "-check"
     ];
     snapshotName = "freya-system";
     tags = [
