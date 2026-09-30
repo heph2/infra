@@ -80,10 +80,12 @@ let
     "*/.local/share/Trash"
     "nix/store"
   ];
-  llamaPackage = inputs.llama-cpp-nixpkgs.legacyPackages.${pkgs.system}.llama-cpp.override {
-    rocmSupport = true;
-    rocmGpuTargets = [ "gfx1200" ];
-  };
+  llamaPackage =
+    inputs.llama-cpp-nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-cpp.override
+      {
+        rocmSupport = true;
+        rocmGpuTargets = [ "gfx1200" ];
+      };
 in
 {
   imports = [
@@ -785,6 +787,8 @@ in
     };
   };
 
+  boot.zfs.forceImportRoot = false;
+
   documentation.dev.enable = true;
   documentation.man = {
     man-db.enable = false;
@@ -793,7 +797,7 @@ in
 
   nixpkgs.overlays = [
     (self: super: {
-      lutris = inputs.stable-nixpkgs.legacyPackages.${super.system}.lutris.override {
+      lutris = inputs.stable-nixpkgs.legacyPackages.${self.stdenv.hostPlatform.system}.lutris.override {
         extraLibraries =
           pkgs: with pkgs; [
             libadwaita
@@ -821,7 +825,6 @@ in
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.claude-code
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.opencode
-    inputs.paseo.packages.${pkgs.stdenv.hostPlatform.system}.paseo
     plakarPackage
     steamcmd
     uxplay
