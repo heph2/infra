@@ -40,7 +40,11 @@ nix run .#hetzner.plan
 nix run .#cloudflare.plan
 ```
 
-Use `nix develop .#hetzner` or `nix develop .#cloudflare` for interactive Terraform commands.
+Use `nix develop .#hetzner`, `nix develop .#cloudflare`, or `nix develop .#netcup-supabase` for interactive Terraform commands. The separate Netcup/Supabase root uses `NETCUP_*` and `SUPABASE_ACCESS_TOKEN` for provider credentials:
+
+```bash
+nix run .#netcup-supabase.plan
+```
 
 ## ComfyUI on Freya
 
