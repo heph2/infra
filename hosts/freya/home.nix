@@ -17,7 +17,7 @@ in
   imports = [
     agenix.homeManagerModules.default
     stardew-modding.homeManagerModules.default
-    inputs.voxtype.homeManagerModules.default
+    # inputs.voxtype.homeManagerModules.default
     #    ../../modules/graphical/firefox/default.nix
   ];
 
@@ -27,20 +27,20 @@ in
     XDG_DATA_DIRS = "$XDG_DATA_DIRS:/usr/share:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
   };
 
-  programs.voxtype = {
-    enable = true;
-    # Vulkan build = GPU transcription on the RX 9060 XT (whisper.cpp gpu-vulkan feature).
-    package = inputs.voxtype.packages.${pkgs.stdenv.hostPlatform.system}.vulkan;
-    model.name = "base.en";
-    service.enable = true;
-    settings.hotkey = {
-      enabled = true;
-      key = "RIGHTALT";
-    };
-    # ponytail: gpu_device left unset (Vulkan device 0). If it picks the Raphael
-    # iGPU instead of the dGPU, set settings.whisper.gpu_device to the right index
-    # from `vulkaninfo --summary`.
-  };
+  # programs.voxtype = {
+  #   enable = true;
+  #   # Vulkan build = GPU transcription on the RX 9060 XT (whisper.cpp gpu-vulkan feature).
+  #   package = inputs.voxtype.packages.${pkgs.stdenv.hostPlatform.system}.vulkan;
+  #   model.name = "base.en";
+  #   service.enable = true;
+  #   settings.hotkey = {
+  #     enabled = true;
+  #     key = "RIGHTALT";
+  #   };
+  #   # ponytail: gpu_device left unset (Vulkan device 0). If it picks the Raphael
+  #   # iGPU instead of the dGPU, set settings.whisper.gpu_device to the right index
+  #   # from `vulkaninfo --summary`.
+  # };
 
   programs.stardew-modding.enable = true;
   programs.emacs = {
@@ -224,9 +224,9 @@ in
       easyeffects
       high-tide
       winbox
-      rpcs3
+      pkgs.stable.rpcs3
       deltachat-desktop
-      bambu-studio
+      # bambu-studio
       orca-slicer
       nix-output-monitor
       brave
@@ -271,7 +271,7 @@ in
       devenv
       anki
       gh
-      git-annex
+      pkgs.stable.git-annex
       faugus-launcher
       chromium
       age
@@ -291,47 +291,47 @@ in
       yeganesh
     ]);
 
-  programs.ssh.matchBlocks = {
-    "*".addKeysToAgent = "yes";
+  programs.ssh.settings = {
+    "*".AddKeysToAgent = "yes";
     fenrir = {
-      port = 22;
-      hostname = "192.168.0.165";
-      user = "root";
-      identityFile = "/home/heph/.ssh/sekai_ed";
+      Port = 22;
+      HostName = "192.168.0.165";
+      User = "root";
+      IdentityFile = "/home/heph/.ssh/sekai_ed";
     };
     vellutata = {
-      port = 22;
-      hostname = "193.57.159.213";
-      user = "vellutata";
-      identityFile = "/home/heph/.ssh/asn_id";
+      Port = 22;
+      HostName = "193.57.159.213";
+      User = "vellutata";
+      IdentityFile = "/home/heph/.ssh/asn_id";
     };
     "vellutata.senza.cloud" = {
-      port = 22;
-      hostname = "vellutata.senza.cloud";
-      user = "vellutata";
-      identityFile = "/home/heph/.ssh/asn_id";
+      Port = 22;
+      HostName = "vellutata.senza.cloud";
+      User = "vellutata";
+      IdentityFile = "/home/heph/.ssh/asn_id";
     };
     "risotto.senza.cloud" = {
-      port = 22;
-      hostname = "risotto.senza.cloud";
-      user = "risotto";
-      identityFile = "/home/heph/.ssh/asn_id";
+      Port = 22;
+      HostName = "risotto.senza.cloud";
+      User = "risotto";
+      IdentityFile = "/home/heph/.ssh/asn_id";
     };
     risotto = {
-      port = 22;
-      hostname = "5.231.80.72";
-      user = "risotto";
-      identityFile = "/home/heph/.ssh/asn_id";
+      Port = 22;
+      HostName = "5.231.80.72";
+      User = "risotto";
+      IdentityFile = "/home/heph/.ssh/asn_id";
     };
     remarkable = {
-      port = 22;
-      hostname = "10.11.99.1";
-      user = "root";
-      identityFile = "/home/heph/.ssh/test-id_rsa";
+      Port = 22;
+      HostName = "10.11.99.1";
+      User = "root";
+      IdentityFile = "/home/heph/.ssh/test-id_rsa";
     };
     pixie = {
-      hostname = "pixie";
-      user = "root";
+      HostName = "pixie";
+      User = "root";
     };
   };
 
@@ -384,12 +384,12 @@ in
   programs.rofi = {
     enable = true;
     theme = "arthur";
-    terminal = "${pkgs.alacritty}/bin/alacritty";
+    settings.terminal = "${pkgs.alacritty}/bin/alacritty";
     plugins = [
       pkgs.rofi-calc
       pkgs.rofi-power-menu
     ];
-    extraConfig = {
+    settings = {
       modi = "combi";
       combi-modi = "windowcd,drun,ssh";
       run-shell-command = "sudo virsh start win11-2";
