@@ -15,7 +15,7 @@ appimageTools.wrapType2 rec {
 
   extraInstallCommands =
     let
-      contents = appimageTools.extractType2 { inherit pname version src; };
+      contents = appimageTools.extract { inherit pname version src; };
     in
     ''
       install -Dm444 ${contents}/orca-ide.desktop $out/share/applications/orca-ide.desktop
