@@ -3,42 +3,42 @@
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
-      matchBlocks = {
+      settings = {
         mikrotik = {
-          port = 22;
-          hostname = "192.168.0.1";
-          user = "admin";
-          identityFile = "/home/heph/.ssh/plakar";
+          Port = 22;
+          HostName = "192.168.0.1";
+          User = "admin";
+          IdentityFile = "/home/heph/.ssh/plakar";
         };
         zima = {
-          port = 22;
-          hostname = "192.168.0.105";
-          user = "root";
-          identityFile = "/home/heph/.ssh/sekai_ed";
+          Port = 22;
+          HostName = "192.168.0.105";
+          User = "root";
+          IdentityFile = "/home/heph/.ssh/sekai_ed";
         };
         hermes = {
-          port = 22;
-          hostname = "135.181.85.238";
-          user = "root";
-          identityFile = "/home/heph/.ssh/sekai_ed";
+          Port = 22;
+          HostName = "135.181.85.238";
+          User = "root";
+          IdentityFile = "/home/heph/.ssh/sekai_ed";
         };
         tyr = {
-          port = 22;
-          hostname = "192.168.0.104";
-          user = "root";
-          identityFile = "/home/heph/.ssh/sekai_ed";
+          Port = 22;
+          HostName = "192.168.0.104";
+          User = "root";
+          IdentityFile = "/home/heph/.ssh/sekai_ed";
         };
         sauron = {
-          port = 22;
-          hostname = "192.168.0.106";
-          user = "root";
-          identityFile = "/home/heph/.ssh/sekai_ed";
+          Port = 22;
+          HostName = "192.168.0.106";
+          User = "root";
+          IdentityFile = "/home/heph/.ssh/sekai_ed";
         };
         github = {
-          port = 22;
-          hostname = "github.com";
-          user = "git";
-          identityFile = "/home/heph/.ssh/sr-ht_rsa";
+          Port = 22;
+          HostName = "github.com";
+          User = "git";
+          IdentityFile = "/home/heph/.ssh/sr-ht_rsa";
         };
       };
     };
