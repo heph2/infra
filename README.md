@@ -8,7 +8,7 @@ It is structured to manage multiple machines and user configurations.
 - `flake.nix`: Flake entrypoint
 - `hosts`: NixOs configurations for each machine
 - `modules`: Reausable specific modules
-- `terraform`: Terraform code for cloud based machine setup
+- `terraform`: Terranix definitions and provider locks for cloud infrastructure
 - `secrets`: Sops-nix and age directory
 - `pkgs`: Custom packages and scripts
 

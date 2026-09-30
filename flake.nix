@@ -32,6 +32,11 @@
     };
     nur.url = "github:nix-community/NUR";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    terranix = {
+      url = "github:terranix/terranix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+    };
     sops-nix.url = "github:Mic92/sops-nix";
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL";
@@ -141,6 +146,7 @@
     inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
+        inputs.terranix.flakeModule
         ./modules/dendritic
         ./modules/home
         ./modules/nixos
@@ -163,5 +169,16 @@
         "aarch64-darwin"
         "aarch64-linux"
       ];
+
+      perSystem =
+        { system, ... }:
+        {
+          _module.args.terraform =
+            (import inputs.nixpkgs {
+              inherit system;
+              config.allowUnfree = true;
+            }).terraform;
+        };
+
     };
 }

@@ -10,6 +10,7 @@ This repo is a flake-parts based infra flake. The root `flake.nix` only wires in
 - `modules/nixos/`: shared NixOS modules registered as `infra.modules.nixos.<name>`.
 - `modules/home/`: shared Home Manager modules registered as `infra.modules.homeManager.<name>`.
 - `docs/`: operational notes like this file.
+- `terraform/*.nix`: Terranix definitions for the independent Hetzner and Cloudflare state roots.
 
 ## Adding a NixOS service module
 
@@ -29,6 +30,17 @@ For full validation before deployment:
 ```bash
 nixos-rebuild build --flake .#<host>
 ```
+
+## Cloud infrastructure
+
+Terranix generates Terraform JSON for the independent roots while keeping their existing state backends:
+
+```bash
+nix run .#hetzner.plan
+nix run .#cloudflare.plan
+```
+
+Use `nix develop .#hetzner` or `nix develop .#cloudflare` for interactive Terraform commands.
 
 ## ComfyUI on Freya
 
