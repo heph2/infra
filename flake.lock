@@ -1574,26 +1574,6 @@
         "type": "github"
       }
     },
-    "paseo": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1790682703,
-        "narHash": "sha256-BD+rFg2t25luowLQJomL96xDE+3Xt+8zwtbLc+H/RA8=",
-        "owner": "getpaseo",
-        "repo": "paseo",
-        "rev": "aff476b01b97078cfedc2d17b44f598960f2978d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "getpaseo",
-        "repo": "paseo",
-        "type": "github"
-      }
-    },
     "pi": {
       "inputs": {
         "bun2nix": "bun2nix_3",
@@ -1732,7 +1712,6 @@
         "obscura": "obscura",
         "openai-skills": "openai-skills",
         "paneru": "paneru",
-        "paseo": "paseo",
         "pi": "pi",
         "plakar-nixpkgs": "plakar-nixpkgs",
         "ponytail": "ponytail",
@@ -2219,15 +2198,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1790474872,
-        "narHash": "sha256-DAleQSKMcYkqTcuKhi16ZOTuhL/1Y6lelivg2dNGElw=",
+        "lastModified": 1780004034,
+        "narHash": "sha256-zsOG1mBTXN4gdsTb1pUPKXATfhV5ZjgEsIUk07asaGo=",
         "owner": "peteonrails",
         "repo": "voxtype",
-        "rev": "6d2fc6ddbf791ac00d6a54dc002664010c16b100",
+        "rev": "8d49248baa53f29cb33007c9625a37281c72e799",
         "type": "github"
       },
       "original": {
         "owner": "peteonrails",
+        "ref": "v0.7.5",
         "repo": "voxtype",
         "type": "github"
       }

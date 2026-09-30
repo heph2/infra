@@ -56,16 +56,14 @@
       url = "github:typesafe-ai/skills";
       flake = false;
     };
-    paseo = {
-      url = "github:getpaseo/paseo";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     handy = {
       url = "github:cjpais/Handy";
       inputs.nixpkgs.follows = "handy-nixpkgs";
     };
     voxtype = {
-      url = "github:peteonrails/voxtype";
+      # 1.1.0 pulls OpenVINO's nested Git submodules during the Vulkan build;
+      # keep the known-good 0.7.5 release until that dependency is vendored.
+      url = "github:peteonrails/voxtype/v0.7.5";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     obscura = {
