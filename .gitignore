@@ -41,5 +41,6 @@ override.tf.json
 .terraformrc
 terraform.rc
 terraform/*/backend.conf
+terraform/*/config.tf.json
 secrets/age-privkey.txt
 secrets/ssh-sops.priv

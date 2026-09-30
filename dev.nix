@@ -1,12 +1,25 @@
 {
   perSystem =
-    {
-      pkgs,
-      self',
-      inputs',
-      ...
+    { pkgs
+    , self'
+    , inputs'
+    , terraform
+    , ...
     }:
     {
+      terranix.terranixConfigurations = {
+        hetzner = {
+          modules = [ ./terraform/hetzner.nix ];
+          terraformWrapper.package = terraform;
+          workdir = "terraform/hetzner";
+        };
+        cloudflare = {
+          modules = [ ./terraform/cloudflare.nix ];
+          terraformWrapper.package = terraform;
+          workdir = "terraform/cloudflare";
+        };
+      };
+
       formatter = pkgs.nixpkgs-fmt;
 
       packages = {
