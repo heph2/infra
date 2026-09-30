@@ -18,6 +18,11 @@
           terraformWrapper.package = terraform;
           workdir = "terraform/cloudflare";
         };
+        netcup-supabase = {
+          modules = [ ./terraform/netcup-supabase.nix ];
+          terraformWrapper.package = terraform;
+          workdir = "terraform/netcup-supabase";
+        };
       };
 
       formatter = pkgs.nixpkgs-fmt;
