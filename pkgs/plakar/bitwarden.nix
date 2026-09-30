@@ -21,9 +21,9 @@ buildGo126Module rec {
 
   postInstall = ''
     # Plakar 1.1.6 validates connector classes against its resource taxonomy;
-    # the plugin's legacy `source` class is no longer accepted.
+    # omit the plugin's legacy `source` class, which is no longer accepted.
     substituteInPlace manifest.yaml \
-      --replace-fail 'class: source' 'class: identity'
+      --replace-fail 'class: source' ""
 
     pluginRoot="$TMPDIR/bitwarden-plugin"
     install -Dm644 manifest.yaml "$pluginRoot/manifest.yaml"

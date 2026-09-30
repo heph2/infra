@@ -20,6 +20,10 @@ buildGo126Module rec {
   subPackages = [ "cmd/importer" ];
 
   postInstall = ''
+    # Plakar 1.1.6 no longer recognizes the legacy `source` class.
+    substituteInPlace manifest.yaml \
+      --replace-fail 'class: source' ""
+
     pluginRoot="$TMPDIR/remarkable-plugin"
     install -Dm644 manifest.yaml "$pluginRoot/manifest.yaml"
     install -Dm644 importer/schema.json "$pluginRoot/importer/schema.json"
