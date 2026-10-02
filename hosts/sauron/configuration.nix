@@ -8,6 +8,7 @@
       inputs.disko.nixosModules.disko
       inputs.nix-minecraft.nixosModules.minecraft-servers
       inputs.bo3-server.nixosModules.default
+      inputs.hermes-agent.nixosModules.default
       { nixpkgs.overlays = [ inputs.nix-minecraft.overlay ]; }
       { nixpkgs.config.allowUnfree = true; }
       ../../modules/common/default.nix

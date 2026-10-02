@@ -27,6 +27,7 @@ in
     ./webdav.nix
     ./paperless.nix
     ./minecraft.nix
+    ./hermes-agent.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
