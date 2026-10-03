@@ -907,7 +907,14 @@ in
     enableSSHSupport = true;
   };
 
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    # Keep password authentication limited to the administrative user.
+    extraConfig = ''
+      Match User heph
+        PasswordAuthentication yes
+    '';
+  };
   networking.firewall.allowedTCPPorts = [
     22
     24800
