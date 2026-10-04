@@ -2,7 +2,7 @@
 let
   compose = "${pkgs.docker-compose}/bin/docker-compose";
   composeFile = "/etc/lorebound/compose.yaml";
-  environmentFile = "/var/lib/lorebound/.env";
+  environmentFile = config.age.secrets.lorebound-env.path;
   composeCommand = "${compose} --file ${composeFile} --env-file ${environmentFile}";
   startLorebound = pkgs.writeShellScript "start-lorebound" ''
     set -euo pipefail
@@ -12,6 +12,13 @@ let
   '';
 in
 {
+  age.secrets.lorebound-env = {
+    file = ../../secrets/gengar-lorebound-env.age;
+    mode = "0400";
+    owner = "root";
+    group = "root";
+  };
+
   virtualisation.docker.enable = true;
   environment.systemPackages = [ pkgs.docker-compose ];
   environment.etc."lorebound/compose.yaml".source = ./lorebound-compose.yaml;
@@ -33,8 +40,6 @@ in
     listenAddress = "127.0.0.1";
   };
 
-  systemd.tmpfiles.rules = [ "d /var/lib/lorebound 0700 root root -" ];
-
   systemd.services.lorebound-stack = {
     description = "Lorebound Medusa backend, PostgreSQL, and Redis containers";
     after = [
@@ -42,7 +47,6 @@ in
       "network-online.target"
     ];
     wants = [ "network-online.target" ];
-    wantedBy = [ "multi-user.target" ];
     unitConfig.ConditionPathExists = environmentFile;
     serviceConfig = {
       Type = "oneshot";

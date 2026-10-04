@@ -4,6 +4,7 @@
     system = "aarch64-linux";
     modules = [
       ./default.nix
+      inputs.agenix.nixosModules.default
       inputs.disko.nixosModules.disko
       { nixpkgs.hostPlatform = "aarch64-linux"; }
       (
