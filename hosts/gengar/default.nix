@@ -1,6 +1,9 @@
 { ... }:
 {
-  imports = [ ./disk-config.nix ];
+  imports = [
+    ./disk-config.nix
+    ./lorebound.nix
+  ];
 
   networking.hostName = "gengar";
   networking.useDHCP = true;
