@@ -42,6 +42,7 @@ in {
   "github-token.age".publicKeys = [ heph freya ];
   "hermes-agent-env.age".publicKeys = [ heph freya hermes ];
   "hermes-agent-session-token.age".publicKeys = [ freya sauronRsa ];
+  "hermes-agent-api-server.env.age".publicKeys = [ freya sauron ];
   "hermes-agent-dashboard-password.age".publicKeys = [ freya ];
   "vaultwarden-oidc-client-secret.age".publicKeys = [ heph freya tyr ];
   "miniflux-db.password.age".publicKeys = [ heph freya tyr ];

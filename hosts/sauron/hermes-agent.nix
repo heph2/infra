@@ -5,10 +5,20 @@
     owner = "hermes";
     mode = "0400";
   };
+  age.secrets.hermes-agent-api-server-env = {
+    file = ../../secrets/hermes-agent-api-server.env.age;
+    owner = "hermes";
+    mode = "0400";
+  };
 
   services.hermes-agent = {
     enable = true;
     addToSystemPackages = true;
+    environment = {
+      API_SERVER_HOST = "127.0.0.1";
+      API_SERVER_PORT = "8642";
+    };
+    environmentFiles = [ config.age.secrets.hermes-agent-api-server-env.path ];
     backend = {
       mode = "serve";
       host = "192.168.0.106";
