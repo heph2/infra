@@ -11,6 +11,8 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINvI0NxnjLWyG+oxLInkBvaKWqV6BWeTPLH5YeaCDYLG";
   hermes =
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJODYFqjgPr4z6UmG0k/jx7LJ/WcJaysVmc8FgQyuJSS";
+  gengar =
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPJNdqrQa4WFfk3BclCAPxLyYQZ9zddcQDqUW7myXQjx";
   users = [ freya heph ];
 in {
   "wg-key-freya.age".publicKeys = [ freya heph ];
@@ -40,4 +42,5 @@ in {
   "vaultwarden-oidc-client-secret.age".publicKeys = [ heph freya tyr ];
   "miniflux-db.password.age".publicKeys = [ heph freya tyr ];
   "miniflux-oidc-client-secret.age".publicKeys = [ heph freya tyr ];
+  "gengar-lorebound-env.age".publicKeys = [ heph freya gengar ];
 }

@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: lorebound
       POSTGRES_USER: lorebound
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in /var/lib/lorebound/.env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in /run/agenix/lorebound-env}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -18,8 +18,8 @@ services:
     image: redis:7-alpine
     restart: unless-stopped
     environment:
-      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD in /var/lib/lorebound/.env}
-    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:?Set REDIS_PASSWORD in /var/lib/lorebound/.env}"]
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD in /run/agenix/lorebound-env}
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:?Set REDIS_PASSWORD in /run/agenix/lorebound-env}"]
     volumes:
       - redis_data:/data
     healthcheck:
@@ -44,11 +44,11 @@ services:
       MEDUSA_WORKER_MODE: shared
       DISABLE_MEDUSA_ADMIN: "false"
       MEDUSA_BACKEND_URL: https://api.lorebound.shop
-      STORE_CORS: ${STORE_CORS:?Set STORE_CORS in /var/lib/lorebound/.env}
+      STORE_CORS: ${STORE_CORS:?Set STORE_CORS in /run/agenix/lorebound-env}
       ADMIN_CORS: https://api.lorebound.shop
-      AUTH_CORS: ${AUTH_CORS:?Set AUTH_CORS in /var/lib/lorebound/.env}
-      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in /var/lib/lorebound/.env}
-      COOKIE_SECRET: ${COOKIE_SECRET:?Set COOKIE_SECRET in /var/lib/lorebound/.env}
+      AUTH_CORS: ${AUTH_CORS:?Set AUTH_CORS in /run/agenix/lorebound-env}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in /run/agenix/lorebound-env}
+      COOKIE_SECRET: ${COOKIE_SECRET:?Set COOKIE_SECRET in /run/agenix/lorebound-env}
       FILE_STORAGE_PROVIDER: s3
       S3_FILE_URL: ${S3_FILE_URL:?Set S3_FILE_URL to the public R2 bucket domain}
       S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?Set the R2 access key ID}
