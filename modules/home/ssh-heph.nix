@@ -1,3 +1,4 @@
+{ lib, ... }:
 {
   infra.modules.homeManager.ssh-heph = {
     programs.ssh = {
@@ -22,6 +23,12 @@
           User = "root";
           IdentityFile = "/home/heph/.ssh/sekai_ed";
         };
+        gengar = {
+          Port = 22;
+          HostName = "92.4.163.95";
+          User = "root";
+          IdentityFile = "/home/heph/.ssh/id_rsa";
+        };
         tyr = {
           Port = 22;
           HostName = "192.168.0.104";
@@ -42,5 +49,17 @@
         };
       };
     };
+
+    # OpenSSH rejects read-only config files in the Nix store when that store
+    # is owned by an unmapped uid (e.g. rootless/containerized Nix).
+    home.file.".ssh/config".force = true;
+    home.activation.materializeSshConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      config="$HOME/.ssh/config"
+      if [ -L "$config" ]; then
+        $DRY_RUN_CMD cp -- "$config" "$config.tmp"
+        $DRY_RUN_CMD chmod 600 "$config.tmp"
+        $DRY_RUN_CMD mv -- "$config.tmp" "$config"
+      fi
+    '';
   };
 }

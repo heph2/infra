@@ -147,6 +147,7 @@
         #./hosts/fafnir/default.nix ## Router
         ./hosts/freya/configuration.nix # # Desktop
         ./hosts/hermes/configuration.nix # # Hetzner VPS
+        ./hosts/gengar/configuration.nix # # Oracle Cloud ARM instance
         ./hosts/tyr/configuration.nix # # Intel NUC
         ./hosts/timballo/configuration.nix # # Laptop t480
         ./hosts/zima/configuration.nix # # ZimaBoard
