@@ -7,6 +7,8 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKmSgm97MHi+1dwh79BpyePwiXAcD2R+ceUKbBn6pVRv";
   sauron =
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKECQ6GB+aeG76Sx8Ht4JJH0JmRrMNsf/uoA42eDZFK0";
+  sauronRsa =
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCyBxXlNlsu4Q7fnox5xHrSf6teUfls0hfKzupR7qP5DTK/5KbPMnHoDtrONGVxsim6ChfDnsrVn/1DvDsQT+lbGzJAQ9ykUcyxKRxRRxLAeoQpWnZU0UNAW4hkJeD1QmZxxyd+x/CL2TouL15SPJgKNmvjZ//dM9uGD4SJL4gXwOiCJIgv6Z+TwI2gJ45Okcx2btvkHrnoVAipGH9HJVwJZUkxEB6Qsiqf6bPWHMpUxY+W70A2mga3epWynlLf/ChpAvnNhD+mBaVtG+GOuVfq6K4sLES7k0Y4bAvfU5mf4mX+YSLDKbipyIQbPTpTz6io154EFBNws7UZ6KNy1g2BOaPecPQh/iSnAm5oc9I5SkW6V52IbMJ8RiIqboZQ1T2SIAw6p84gJFHzxJD7Iohv2OF2+3tO8jRsnlOt7Tkt56KEBx3f4Uxol9KaInokfGOKoa+7KeoiiYK1q68+ki2a2kGAZX8mhjGsZ07NkBnAMifVxQT9GRZHhjMuwDjZT1jmK36HUXrLGIpwAwCwePT/n/pA/4V42aC9LIJqzXeOux6KprWPw3S1jQPGXDlVxb+g/p6YgwWygWbIod+1mbNf273YkQQtcdTwDPFc3oBCXfy/snAm5z7/UnRpz9IHDkIglYpP30sgPqkd5cyL6Zle+kyq5qnWJxzHhrMcgTcEw== root@sauron";
   tyr =
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINvI0NxnjLWyG+oxLInkBvaKWqV6BWeTPLH5YeaCDYLG";
   hermes =
@@ -39,6 +41,8 @@ in {
   "shortcut-api-token.age".publicKeys = [ heph freya ];
   "github-token.age".publicKeys = [ heph freya ];
   "hermes-agent-env.age".publicKeys = [ heph freya hermes ];
+  "hermes-agent-session-token.age".publicKeys = [ freya sauronRsa ];
+  "hermes-agent-dashboard-password.age".publicKeys = [ freya ];
   "vaultwarden-oidc-client-secret.age".publicKeys = [ heph freya tyr ];
   "miniflux-db.password.age".publicKeys = [ heph freya tyr ];
   "miniflux-oidc-client-secret.age".publicKeys = [ heph freya tyr ];
