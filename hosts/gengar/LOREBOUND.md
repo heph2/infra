@@ -12,10 +12,10 @@ Edit the encrypted secret locally from the infra repository's `secrets/` directo
 
 ```sh
 cd /home/heph/code/infra/secrets
-agenix -e gengar-lorebound-env.age
+AGENIX_RULES="$PWD/secrets.nix" nix run github:ryantm/agenix -- -e gengar-lorebound-env.age -i "$HOME/.ssh/sekai_ed"
 ```
 
-If `agenix` is not installed, use `nix run github:ryantm/agenix -- -e gengar-lorebound-env.age` from that same directory. Replace the template values with the following variables:
+The `-i` path must be the private SSH key matching a recipient in `secrets.nix`; `sekai_ed` is the maintainer key available on the current workstation. If your key is elsewhere, substitute its path. Replace the template values with the following variables:
 
 ```dotenv
 LOREBOUND_IMAGE_TAG=84226066129f6f64cdb633c43605ede2d726922d

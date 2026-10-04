@@ -42,5 +42,5 @@ in {
   "vaultwarden-oidc-client-secret.age".publicKeys = [ heph freya tyr ];
   "miniflux-db.password.age".publicKeys = [ heph freya tyr ];
   "miniflux-oidc-client-secret.age".publicKeys = [ heph freya tyr ];
-  "gengar-lorebound-env.age".publicKeys = [ heph gengar ];
+  "gengar-lorebound-env.age".publicKeys = [ heph freya gengar ];
 }
