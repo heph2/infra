@@ -19,6 +19,7 @@ The `-i` path must be the private SSH key matching a recipient in `secrets.nix`;
 
 ```dotenv
 LOREBOUND_IMAGE_TAG=84226066129f6f64cdb633c43605ede2d726922d
+GHCR_TOKEN=<GitHub classic PAT with read:packages>
 POSTGRES_PASSWORD=<random-hex>
 REDIS_PASSWORD=<random-hex>
 JWT_SECRET=<random-secret>
@@ -32,7 +33,7 @@ S3_BUCKET=<R2-bucket-name>
 S3_ENDPOINT=https://<Cloudflare-account-ID>.r2.cloudflarestorage.com
 ```
 
-The encrypted template already contains random database and app secrets; keep them or regenerate them locally with `openssl rand -hex 32` (hex is safe for database and Redis passwords in their connection URLs). The template uses the already-published image tag shown above; update it only when selecting a newer published commit. Fill in all blank R2 values before starting the service. Keep `S3_FILE_URL` (the public asset URL) distinct from `S3_ENDPOINT` (the private S3-compatible API endpoint). The service is deliberately not enabled at boot by default; do not start it until all required values are valid and the NixOS configuration has deployed the agenix secret.
+The encrypted template already contains random database and app secrets; keep them or regenerate them locally with `openssl rand -hex 32` (hex is safe for database and Redis passwords in their connection URLs). The template uses the already-published image tag shown above; update it only when selecting a newer published commit. Create a GitHub classic personal access token for the `heph2` account with the `read:packages` scope and access to `lorebound-backend`; place it in `GHCR_TOKEN`. Never paste the token into chat or shell history. The start script logs in with `--password-stdin` using a temporary root-only Docker config under `/run`, which it deletes when startup finishes. Fill in all blank R2 values before starting the service. Keep `S3_FILE_URL` (the public asset URL) distinct from `S3_ENDPOINT` (the private S3-compatible API endpoint). The service is deliberately not enabled at boot by default; do not start it until all required values are valid and the NixOS configuration has deployed the agenix secret.
 
 ## Retrieve the R2 values in Cloudflare
 
@@ -47,7 +48,7 @@ The encrypted template already contains random database and app secrets; keep th
 Before starting the service, verify OCI permits inbound TCP 80 and 443 to Gengar in the VCN security list or attached NSG, and that the instance has a public IP, a public-subnet route through an Internet Gateway, and the NixOS firewall permits those ports. Then, after the encrypted environment is ready and the NixOS configuration is deployed:
 
 ```sh
-sudo systemctl enable --now lorebound-stack
+sudo systemctl start lorebound-stack
 sudo systemctl status lorebound-stack
 curl --fail https://api.lorebound.shop/health
 ```

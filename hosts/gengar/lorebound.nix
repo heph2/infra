@@ -6,6 +6,19 @@ let
   composeCommand = "${compose} --file ${composeFile} --env-file ${environmentFile}";
   startLorebound = pkgs.writeShellScript "start-lorebound" ''
     set -euo pipefail
+
+    registryConfig="$(${pkgs.coreutils}/bin/mktemp -d /run/lorebound-docker-config.XXXXXX)"
+    trap '${pkgs.coreutils}/bin/rm -rf "$registryConfig"' EXIT
+    export DOCKER_CONFIG="$registryConfig"
+
+    ghcrToken="$(${pkgs.gawk}/bin/awk -F= '$1 == "GHCR_TOKEN" { sub(/^[^=]*=/, ""); print; exit }' ${environmentFile})"
+    if [ -z "$ghcrToken" ]; then
+      echo "GHCR_TOKEN is missing from the agenix environment" >&2
+      exit 1
+    fi
+    printf '%s' "$ghcrToken" | ${pkgs.docker}/bin/docker login ghcr.io --username heph2 --password-stdin
+    unset ghcrToken
+
     ${composeCommand} up --detach postgres redis
     ${composeCommand} run --rm backend pnpm exec medusa db:migrate
     ${composeCommand} up --detach backend
