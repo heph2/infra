@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ inputs, ... }:
 {
   infra.modules.homeManager.ssh-heph = {
     programs.ssh = {
@@ -53,13 +53,15 @@
     # OpenSSH rejects read-only config files in the Nix store when that store
     # is owned by an unmapped uid (e.g. rootless/containerized Nix).
     home.file.".ssh/config".force = true;
-    home.activation.materializeSshConfig = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-      config="$HOME/.ssh/config"
-      if [ -L "$config" ]; then
-        $DRY_RUN_CMD cp -- "$config" "$config.tmp"
-        $DRY_RUN_CMD chmod 600 "$config.tmp"
-        $DRY_RUN_CMD mv -- "$config.tmp" "$config"
-      fi
-    '';
+    home.activation.materializeSshConfig =
+      inputs.home-manager.lib.hm.dag.entryAfter [ "linkGeneration" ]
+        ''
+          config="$HOME/.ssh/config"
+          if [ -L "$config" ]; then
+            $DRY_RUN_CMD cp -- "$config" "$config.tmp"
+            $DRY_RUN_CMD chmod 600 "$config.tmp"
+            $DRY_RUN_CMD mv -- "$config.tmp" "$config"
+          fi
+        '';
   };
 }
