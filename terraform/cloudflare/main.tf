@@ -67,10 +67,6 @@ resource "cloudflare_record" "photoprism" {
   proxied = false
 }
 
-data "cloudflare_zone" "lorebound_shop" {
-  name = "lorebound.shop"
-}
-
 ##### mbauce.com
 resource "cloudflare_record" "mail" {
   zone_id = "c76d32c0ea57d5c2dc646543a5906a4f"
@@ -115,7 +111,7 @@ resource "cloudflare_record" "mail_dmarc" {
 
 ##### lorebound.shop
 resource "cloudflare_record" "lorebound_mail_mx" {
-  zone_id  = data.cloudflare_zone.lorebound_shop.id
+  zone_id  = "a21c3fd2ac408f79d7ad6374265c078a"
   name     = "@"
   value    = "mail.mbauce.com"
   priority = 10
@@ -124,7 +120,7 @@ resource "cloudflare_record" "lorebound_mail_mx" {
 }
 
 resource "cloudflare_record" "lorebound_mail_spf" {
-  zone_id = data.cloudflare_zone.lorebound_shop.id
+  zone_id = "a21c3fd2ac408f79d7ad6374265c078a"
   name    = "@"
   value   = "v=spf1 a:mail.mbauce.com -all"
   type    = "TXT"
@@ -132,7 +128,7 @@ resource "cloudflare_record" "lorebound_mail_spf" {
 }
 
 resource "cloudflare_record" "lorebound_mail_dmarc" {
-  zone_id = data.cloudflare_zone.lorebound_shop.id
+  zone_id = "a21c3fd2ac408f79d7ad6374265c078a"
   name    = "_dmarc"
   value   = "v=DMARC1; p=quarantine"
   type    = "TXT"
