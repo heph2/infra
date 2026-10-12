@@ -17,7 +17,10 @@
     stateVersion = 3;
     enable = true;
     fqdn = "mail.mbauce.com";
-    domains = [ "mbauce.com" ];
+    domains = [
+      "mbauce.com"
+      "lorebound.shop"
+    ];
     accounts = {
       "me@mbauce.com" = {
         hashedPasswordFile = "/var/lib/mail-accounts/me/pssw";
@@ -68,6 +71,14 @@
           #    stop;
           #}
         '';
+      };
+      "lorebound@lorebound.shop" = {
+        hashedPasswordFile = "/var/lib/mail-accounts/me/pssw";
+        aliases = [
+          "support@lorebound.shop"
+          "no-reply@lorebound.shop"
+          "hello@lorebound.shop"
+        ];
       };
     };
     x509.useACMEHost = config.mailserver.fqdn;
