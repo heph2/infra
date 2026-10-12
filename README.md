@@ -54,6 +54,7 @@ This will build the closure using `--build-host` and `--target-host` for avoidin
 ## Operations
 
 - [Repository usage](docs/repository-usage.md)
+- [Hypothetical Clan 26.05 refactor and isolated Tyr prototype](docs/clan-refactor.md)
 - [RB5009 WireGuard over IPv6](docs/rb5009-wireguard-ipv6.md)
 - [OpenObserve and telemetry roadmap](docs/openobserve-roadmap.md)
 - [Alfred personal operations CLI](docs/alfred.md)
