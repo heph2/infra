@@ -15,7 +15,6 @@
   sops.secrets."murmur/password" = { };
   networking = {
     hostName = "hermes";
-    defaultGateway = "172.31.1.1";
     firewall.allowedTCPPorts = [
       80
       25

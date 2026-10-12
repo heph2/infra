@@ -4,7 +4,10 @@
   networking = {
     nameservers =
       [ "2a01:4ff:ff00::add:2" "2a01:4ff:ff00::add:1" "185.12.64.2" ];
-    defaultGateway = "172.31.1.1";
+    defaultGateway = {
+      address = "172.31.1.1";
+      interface = "eth0";
+    };
     defaultGateway6 = {
       address = "fe80::1";
       interface = "eth0";

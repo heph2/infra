@@ -120,10 +120,6 @@
         group = "dovecot2";
       };
     };
-    plugin = {
-      old_stats_refresh = "30 secs";
-      old_stats_track_cmds = true;
-    };
   };
 
   services.plakarbackup.jobs.hermes-mail = {
