@@ -37,7 +37,7 @@ in
   networking.hostName = hostname; # Define your hostname.
 
   # IPV6 Configuration
-  networking.interfaces.enp1s0 = {
+  networking.interfaces.enp10s0 = {
     ipv6.addresses = [
       {
         address = "2a07:7e81:85f5::beef";
@@ -47,7 +47,7 @@ in
   };
   networking.defaultGateway6 = {
     address = "fe80::6f4:1cff:fe18:162";
-    interface = "enp1s0";
+    interface = "enp10s0";
   };
 
   boot.loader.grub.enable = true; # Enables wireless support via wpa_suppli
