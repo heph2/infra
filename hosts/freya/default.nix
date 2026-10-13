@@ -818,6 +818,13 @@ in
     enable = true;
     port = 11111;
   };
+  services.filebrowser = {
+    enable = true;
+    settings = {
+      address = "[::]";
+      port = 8080;
+    };
+  };
 
   environment.systemPackages = with pkgs; [
     inputs.claude-desktop-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
