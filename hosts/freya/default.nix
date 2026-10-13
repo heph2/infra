@@ -825,6 +825,7 @@ in
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.codex
     inputs.nix-ai-tools.packages.${pkgs.stdenv.hostPlatform.system}.opencode
     plakarPackage
+    (callPackage ../../pkgs/photocraft.nix { })
     steamcmd
     uxplay
     libimobiledevice
