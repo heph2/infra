@@ -78,6 +78,7 @@
           "support@lorebound.shop"
           "no-reply@lorebound.shop"
           "hello@lorebound.shop"
+          "etsy@lorebound.shop"
         ];
       };
     };
@@ -102,7 +103,6 @@
   ];
 
   services.dovecot2.settings = {
-    mail_plugins.old_stats = true;
     "service old-stats" = {
       "unix_listener old-stats" = {
         user = "dovecot-exporter";
