@@ -109,16 +109,8 @@ resource "cloudflare_record" "mail_dmarc" {
 resource "cloudflare_record" "lorebound_api_a" {
   zone_id = "a21c3fd2ac408f79d7ad6374265c078a"
   name    = "api.lorebound.shop"
-  value   = "135.181.85.238"
+  value   = "92.4.163.95"
   type    = "A"
-  proxied = true
-}
-
-resource "cloudflare_record" "lorebound_api_aaaa" {
-  zone_id = "a21c3fd2ac408f79d7ad6374265c078a"
-  name    = "api.lorebound.shop"
-  value   = "2a01:4f9:c012:4045::1"
-  type    = "AAAA"
   proxied = true
 }
 
