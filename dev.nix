@@ -27,6 +27,7 @@
             babashka
             hledger
             vja
+            opentofu
             ssh-to-age
             age
             ragenix
