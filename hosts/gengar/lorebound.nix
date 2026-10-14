@@ -32,6 +32,13 @@ in
     group = "root";
   };
 
+  age.secrets.gengar-cloudflare-dns-token = {
+    file = ../../secrets/gengar-cloudflare-dns-token.age;
+    mode = "0400";
+    owner = "caddy";
+    group = "caddy";
+  };
+
   virtualisation.docker.enable = true;
   environment.systemPackages = [ pkgs.docker-compose ];
   environment.etc."lorebound/compose.yaml".source = ./lorebound-compose.yaml;
@@ -43,10 +50,24 @@ in
 
   services.caddy = {
     enable = true;
+    acmeCA = "https://acme-v02.api.letsencrypt.org/directory";
     virtualHosts."api.lorebound.shop".extraConfig = ''
+      tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        resolvers 1.1.1.1
+      }
       reverse_proxy 127.0.0.1:9000
     '';
   };
+
+  services.caddy.package = pkgs.caddy.withPlugins {
+    plugins = [ "github.com/caddy-dns/cloudflare@v0.2.2" ];
+    hash = "sha256-xAw+kBA+rdhzABdogwNCo9zEtNMPG7zj5rgPpFxvpDo=";
+  };
+
+  systemd.services.caddy.serviceConfig.EnvironmentFile = [
+    config.age.secrets.gengar-cloudflare-dns-token.path
+  ];
 
   services.prometheus.exporters.node = {
     enable = true;
