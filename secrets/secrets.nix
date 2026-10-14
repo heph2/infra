@@ -49,4 +49,5 @@ in {
   "miniflux-db.password.age".publicKeys = [ heph freya tyr ];
   "miniflux-oidc-client-secret.age".publicKeys = [ heph freya tyr ];
   "gengar-lorebound-env.age".publicKeys = [ heph freya gengar ];
+  "gengar-cloudflare-dns-token.age".publicKeys = [ heph gengar ];
 }
