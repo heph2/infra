@@ -118,6 +118,14 @@ in
     owner = "systemd-network";
     group = "systemd-network";
   };
+  age.secrets.cloudflare-api-token = {
+    file = ../../secrets/cloudflare_api_token.age;
+    owner = "heph";
+  };
+  age.secrets.terraform-b2 = {
+    file = ../../secrets/terraform-b2.age;
+    owner = "heph";
+  };
   age.secrets.plakar-routeros-passphrase.file = ../../secrets/plakar-routeros-passphrase.age;
   age.secrets.plakar-bitwarden-session.file = ../../secrets/plakar-bitwarden-session.age;
 
@@ -836,6 +844,8 @@ in
     steamcmd
     uxplay
     libimobiledevice
+    (callPackage ../../pkgs/iloader.nix { })
+    (callPackage ../../pkgs/idevice-pair.nix { })
     llamaPackage
     inputs.sonora.packages.${pkgs.stdenv.hostPlatform.system}.default
     libinput
