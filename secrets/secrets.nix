@@ -18,6 +18,7 @@ let
   users = [ freya heph ];
 in {
   "wg-key-freya.age".publicKeys = [ freya heph ];
+  "terraform-b2.age".publicKeys = [ freya heph ];
   "wg-key-fenrir.age".publicKeys = [ heph freya ];
   "plakar-routeros-passphrase.age".publicKeys = [ freya heph ];
   "plakar-bitwarden-session.age".publicKeys = [ freya heph ];
