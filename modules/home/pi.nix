@@ -197,9 +197,10 @@
             # Official Linear remote MCP server (OAuth).
             "npm:pi-mcp-extension@1.5.0"
 
-            # Additional providers and account-usage visibility.
-            # Runtime-discovered OpenCode Zen/Go models, so new free models show up immediately.
-            "npm:pi-opencode-provider@0.7.3"
+            # Account-usage visibility.
+            # Not pi-opencode-provider: its startup blocks on three network fetches
+            # (models.dev + OpenCode Zen/Go /models, ~8s on a slow path) and pi's
+            # built-in opencode/opencode-go catalogs already cover the models.
             "npm:@narumitw/pi-usage@0.52.1"
 
             # Persistent project memory and automatic recall/capture.
