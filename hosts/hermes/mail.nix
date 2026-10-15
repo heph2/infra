@@ -78,6 +78,7 @@
           "support@lorebound.shop"
           "no-reply@lorebound.shop"
           "hello@lorebound.shop"
+          "medusa@lorebound.shop"
           "etsy@lorebound.shop"
         ];
       };
