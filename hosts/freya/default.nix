@@ -490,6 +490,9 @@ in
         "2a0f:85c1:c4d:1234::6/128"
       ];
       listenPort = 51820;
+      # The IPv6 path through this tunnel drops packets between ~1280 and 1400
+      # bytes (PMTU blackhole), which stalls TLS handshakes over IPv6.
+      mtu = 1280;
       privateKeyFile = config.age.secrets.wg.path;
 
       peers = [
