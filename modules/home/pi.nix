@@ -158,31 +158,23 @@
         };
       };
 
-      home.file.".pi/agent/mcp.json".text = builtins.toJSON {
-        mcpServers.linear = {
-          transport = "streamable-http";
-          url = "https://mcp.linear.app/mcp";
-          auth.type = "oauth";
-          lifecycle = "eager";
-        };
-        # Wallet uses a token injected by the host's agenix activation.
-        mcpServers.wallet = {
-          transport = "streamable-http";
-          url = "https://mcp.wallet.budgetbakers.com";
-          lifecycle = "eager";
-        };
-      };
-
       programs.pi.coding-agent = {
         enable = true;
         skills = builtins.attrValues piSkills;
+        # pi's built-in mcp extension (OAuth sign-in: `pi mcp login <name>`).
+        mcp.mcpServers = {
+          linear.url = "https://mcp.linear.app/mcp";
+          wallet.url = "https://mcp.wallet.budgetbakers.com";
+        };
         settings = {
+          defaultProvider = "openai-codex";
+          defaultModel = "gpt-6-luna";
           hideThinkingBlock = true;
           theme = "catpuccino-mocha";
           packages = [
             # Agent orchestration and explicit goal tracking.
-            "npm:pi-subagents@0.33.1"
-            "npm:@narumitw/pi-goal@0.9.2"
+            "npm:pi-subagents@0.79.0"
+            "npm:@narumitw/pi-goal@0.54.12"
 
             # Research and context tools: search/fetch/PDF/video plus skill UX polish.
             "npm:pi-web-access@0.13.0"
@@ -194,8 +186,6 @@
             # 0.9.0 dropped the extension-owned fixed editor.
             "npm:pi-powerline-footer@0.12.1"
             "npm:@victor-software-house/pi-agent-browser"
-            # Official Linear remote MCP server (OAuth).
-            "npm:pi-mcp-extension@1.5.0"
 
             # Account-usage visibility.
             # Not pi-opencode-provider: its startup blocks on three network fetches
