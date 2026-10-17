@@ -846,6 +846,7 @@ in
     (callPackage ../../pkgs/photocraft.nix { })
     steamcmd
     uxplay
+    jetbrains.idea
     libimobiledevice
     (callPackage ../../pkgs/iloader.nix { })
     (callPackage ../../pkgs/idevice-pair.nix { })
